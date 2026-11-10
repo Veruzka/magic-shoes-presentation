@@ -14,6 +14,7 @@ The visual rules we're using. **Shared** values live in one place, `src/styles/b
 | `--color-accent` | `#c9ae84` sand | highlights | base.css |
 | `--glass-bg` / `--glass-border` | white at 60% / 80% | info button and panel | base.css |
 | `--glass-card-bg`, `--glass-card-blur`, `--glass-card-boost`, `--glass-card-depth`, `--glass-card-rim`, `--glass-card-grain` | frosted glass: a milky sheen fading into faint warm smoke, 26px blur with a color boost, a glow inside the edges, a rim that catches light at the top-left, and fine grain at 9% | the Style lab glass card | base.css |
+| `--dimple-size`, `--dimple-shine`, `--dimple-rim`, `--dimple-blur` | 12px bumps, 20% highlight, 6% rim, 1px blur | the Dimpled glass look (Style lab) | base.css |
 | `--glass-divider` / `--glass-track` / `--glass-thumb` | brown at 14% / brown at 8% / white at 90% | the card's hairlines, pill track and chosen option | base.css |
 | Cloud sky | `--cream-top`, `--cream-middle`, `--cream-bottom` | Clouds background | `src/backgrounds/cloud-studio.css` |
 | Box | `--box-top`, `--box-left`, `--box-right` | the box under the shoe | cloud-studio.css |

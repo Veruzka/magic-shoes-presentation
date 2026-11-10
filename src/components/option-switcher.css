@@ -129,3 +129,25 @@
   outline: 2px solid var(--color-accent);
   outline-offset: 1px;
 }
+
+/* ---------- Dimpled ("hammered lens") glass ---------- */
+
+/* Every browser: light blur, and a grid of tiny bumps, each with a bright
+   highlight (top-left) and a soft shadowed rim — so it reads as dimpled glass. */
+.switcher-panel--dimpled {
+  backdrop-filter: blur(var(--dimple-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--dimple-blur)) saturate(150%);
+}
+
+.switcher-panel--dimpled::before {
+  opacity: 1;
+  background-image:
+    radial-gradient(circle at 35% 32%, rgb(255 255 255 / var(--dimple-shine)) 0 14%, transparent 38%),
+    radial-gradient(circle at 50% 50%, transparent 52%, rgb(90 70 45 / var(--dimple-rim)) 66%, transparent 74%);
+  background-size: var(--dimple-size) var(--dimple-size);
+}
+
+/* Chrome-based browsers: each bump also bends what's behind it, like a lens. */
+.switcher-panel--dimpled.can-bend {
+  backdrop-filter: url(#dimpled-glass) blur(var(--dimple-blur)) saturate(150%);
+}

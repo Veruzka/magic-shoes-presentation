@@ -10,6 +10,7 @@ import { shoes } from './shoes/index.js';
 import { soleMoves } from './shoes/sole-moves.js';
 import { optionSwitcher, switcherPanel } from './components/option-switcher.js';
 import { infoButton } from './components/info-panel.js';
+import { glassStyles, setGlassStyle } from './components/glass-styles.js';
 
 // Add new sections here, in page order. Each one returns a DOM element.
 const sections = [hero];
@@ -26,41 +27,50 @@ const shoeOpening = watchScrollProgress(heroSection, (progress) =>
 );
 
 // Prototype tool: the "Style lab" glass card (top-right) to flip between options.
-document.body.append(
-  switcherPanel(
-    'Style lab',
-    optionSwitcher({
-      title: 'Background',
-      options: backgrounds,
-      current: loadChoice('background', backgrounds),
-      onPick(background) {
-        showBackground(heroSection, background);
-        saveChoice('background', background);
-        parallax.refresh(); // pick up the new background's moving layers
-      },
-    }),
-    optionSwitcher({
-      title: 'Shoe',
-      options: shoes,
-      current: loadChoice('shoe', shoes),
-      onPick(shoe) {
-        showShoe(heroSection, shoe);
-        saveChoice('shoe', shoe);
-        parallax.refresh(); // the hero may have changed height
-        shoeOpening.refresh(); // pose the new shoe for the current scroll position
-      },
-    }),
-    optionSwitcher({
-      title: 'Sole',
-      options: soleMoves,
-      current: loadChoice('sole-move', soleMoves),
-      onPick(move) {
-        setSoleMove(heroSection, move);
-        saveChoice('sole-move', move);
-      },
-    }),
-  ),
+const styleLab = switcherPanel(
+  'Style lab',
+  optionSwitcher({
+    title: 'Background',
+    options: backgrounds,
+    current: loadChoice('background', backgrounds),
+    onPick(background) {
+      showBackground(heroSection, background);
+      saveChoice('background', background);
+      parallax.refresh(); // pick up the new background's moving layers
+    },
+  }),
+  optionSwitcher({
+    title: 'Shoe',
+    options: shoes,
+    current: loadChoice('shoe', shoes),
+    onPick(shoe) {
+      showShoe(heroSection, shoe);
+      saveChoice('shoe', shoe);
+      parallax.refresh(); // the hero may have changed height
+      shoeOpening.refresh(); // pose the new shoe for the current scroll position
+    },
+  }),
+  optionSwitcher({
+    title: 'Sole',
+    options: soleMoves,
+    current: loadChoice('sole-move', soleMoves),
+    onPick(move) {
+      setSoleMove(heroSection, move);
+      saveChoice('sole-move', move);
+    },
+  }),
+  optionSwitcher({
+    title: 'Glass',
+    options: glassStyles,
+    current: loadChoice('glass', glassStyles),
+    onPick(style) {
+      setGlassStyle(styleLab, style);
+      saveChoice('glass', style);
+    },
+  }),
 );
+setGlassStyle(styleLab, loadChoice('glass', glassStyles));
+document.body.append(styleLab);
 
 // The "i" button (bottom-right): shows how the app is built, read from docs/.
 document.body.append(infoButton());

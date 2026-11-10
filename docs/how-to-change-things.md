@@ -109,7 +109,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 ---
 
 ## Style lab card (prototype tool)
-**What:** the frosted-glass card in the top-right corner, headed "STYLE LAB". It has one row per setting (Background, Shoe, Sole). Each row has a segmented pill, and the chosen option sits on a soft white "thumb".
+**What:** the glass card in the top-right corner, headed "STYLE LAB". It has one row per setting (Background, Shoe, Sole, Glass). Each row has a segmented pill, and the chosen option sits on a soft white "thumb".
 **Files:** `src/components/option-switcher.js` and `.css`. The card's heading and rows are set in `src/main.js`.
 **Safe to change:**
 - the heading text (`'Style lab'` in `main.js`) and each row's `title`
@@ -119,6 +119,11 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
   - `--glass-card-grain`: the texture
   - `--glass-card-rim`: the light-catching edge
   - `--glass-divider`, `--glass-track` and `--glass-thumb`: the hairlines and pills
+
+- **Glass looks** (the "Glass" row), listed in `src/components/glass-styles.js`:
+  - **Dimpled:** hammered "lens" glass, a grid of tiny round bumps. Every browser shows the bumps' soft highlights. Chrome-based browsers (Chrome, Edge, Arc) also bend the background through each bump like a lens; Safari and Firefox can't do that part.
+  - **Frosted:** smooth frosted glass.
+  - The dimpled settings are in `base.css`: `--dimple-size` (bump size), `--dimple-shine` and `--dimple-rim` (how visible each bump is) and `--dimple-blur`. How strongly each bump bends the background is `LENS_STRENGTH` in `glass-styles.js`.
 
 > **Example:** for a smokier glass, raise the `0.14` in `--glass-card-bg` to `0.2`. For more visible frosting texture, raise `--glass-card-grain` from `0.09` to `0.14`.
 
@@ -149,6 +154,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 | `separatingShoe(shoe, move)` | `src/components/separating-shoe.js` | Splits the Sketch drawing into body + sole and moves the sole | shoe + move → the shoe and its controls | Ask me |
 | `splitDrawing(...)` / `drawTopFace(...)` | `src/components/separating-shoe.js` | Cuts out the gray sole and paints its top surface | drawing + sole settings → two pictures | Ask me |
 | `optionSwitcher({ title, options, current, onPick })` | `src/components/option-switcher.js` | Makes one row of the Style lab card (name + segmented pill) | title, list, current pick, what to do on click → the row | Careful |
+| `setGlassStyle(card, style)` | `src/components/glass-styles.js` | Gives the Style lab card the Dimpled or Frosted look | card + a glass style → nothing | Careful |
 | `switcherPanel(heading, ...rows)` | `src/components/option-switcher.js` | Makes the frosted Style lab card that holds the rows | heading text + rows → the card | Careful |
 | `infoButton()` | `src/components/info-panel.js` | Makes the "i" button and its panel | nothing → the button | Careful |
 | `createParallax()` | `src/core/parallax.js` | Moves layers at different speeds on scroll (`data-speed`) | nothing → controls (refresh, stop) | Ask me |

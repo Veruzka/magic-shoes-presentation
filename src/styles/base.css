@@ -46,6 +46,11 @@
     rgb(255 255 255 / 0.6)
   );                                             /* light catches the top-left corner, then fades */
   --glass-card-grain: 0.09;                      /* how visible the frosted grain is (0 = none) */
+  /* Dimpled ("hammered lens") glass — the Style lab's other glass look */
+  --dimple-size: 12px;   /* size of each little bump */
+  --dimple-shine: 0.2;   /* brightness of each bump's highlight (0–1) */
+  --dimple-rim: 0.06;    /* darkness of each bump's rim (0–1) */
+  --dimple-blur: 1px;    /* a little softening on top of the lens effect */
   --glass-divider: rgb(110 90 60 / 0.14);  /* hairlines between rows */
   --glass-track: rgb(110 90 60 / 0.08);    /* behind the segmented options */
   --glass-thumb: rgb(255 255 255 / 0.9);   /* the chosen option */

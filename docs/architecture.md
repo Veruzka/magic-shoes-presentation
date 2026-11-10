@@ -61,7 +61,7 @@ Plain lists you can edit: where each cloud and flower sits (`src/data/`), where 
 `src/core/remember-choice.js` stores your last Background, Shoe and Sole picks in your browser, so a reload shows the same thing.
 
 ### Style lab card
-The frosted-glass "STYLE LAB" card in the top-right corner (`src/components/option-switcher.js`). It lets you flip between options to compare them (Background, Shoe, Sole), with one segmented pill per row. It's a prototype tool, to be removed once we've decided.
+The frosted-glass "STYLE LAB" card in the top-right corner (`src/components/option-switcher.js`). It lets you flip between options to compare them (Background, Shoe, Sole, Glass), with one segmented pill per row. The Glass row switches the card between Dimpled lens glass (`src/components/glass-styles.js`) and Frosted glass. It's a prototype tool, to be removed once we've decided.
 
 ### Info button + panel
 The small "i" in the bottom-right corner (`src/components/info-panel.js`). It opens a panel that shows this page and the design-improvements list, read straight from the `docs/` folder, so they never disagree.
