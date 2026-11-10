@@ -10,7 +10,6 @@ import { shoes } from './shoes/index.js';
 import { soleMoves } from './shoes/sole-moves.js';
 import { optionSwitcher, switcherPanel } from './components/option-switcher.js';
 import { infoButton } from './components/info-panel.js';
-import { glassStyles, setGlassStyle } from './components/glass-styles.js';
 
 // Add new sections here, in page order. Each one returns a DOM element.
 const sections = [hero];
@@ -59,17 +58,7 @@ const styleLab = switcherPanel(
       saveChoice('sole-move', move);
     },
   }),
-  optionSwitcher({
-    title: 'Glass',
-    options: glassStyles,
-    current: loadChoice('glass', glassStyles),
-    onPick(style) {
-      setGlassStyle(styleLab, style);
-      saveChoice('glass', style);
-    },
-  }),
 );
-setGlassStyle(styleLab, loadChoice('glass', glassStyles));
 document.body.append(styleLab);
 
 // The "i" button (bottom-right): shows how the app is built, read from docs/.

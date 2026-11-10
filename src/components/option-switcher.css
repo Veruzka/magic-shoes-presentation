@@ -10,14 +10,15 @@
   padding: 16px 18px 6px;
   border-radius: var(--radius-card);
   background: var(--glass-card-bg);
-  box-shadow: var(--glass-card-depth), var(--shadow-ui);
-  backdrop-filter: blur(var(--glass-card-blur)) var(--glass-card-boost);
-  -webkit-backdrop-filter: blur(var(--glass-card-blur)) var(--glass-card-boost);
+  border: 1px solid var(--glass-card-border);
+  box-shadow: var(--glass-card-highlight), var(--glass-card-shadow);
+  backdrop-filter: blur(var(--glass-card-blur)) saturate(var(--glass-card-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-card-blur)) saturate(var(--glass-card-saturate));
   color: var(--color-text);
   font-size: var(--text-sm);
 }
 
-/* Frosted grain: a very fine noise texture over the glass. */
+/* Fine grain across the glass, like real frosted glass. */
 .switcher-panel::before {
   content: '';
   position: absolute;
@@ -25,23 +26,8 @@
   z-index: -1;
   border-radius: inherit;
   opacity: var(--glass-card-grain);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.24 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  pointer-events: none;
-}
-
-/* Light-catching rim: a 1px border that's bright at the top-left and fades. */
-.switcher-panel::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: var(--glass-card-rim);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#000 0 0) content-box exclude,
-    linear-gradient(#000 0 0);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
   pointer-events: none;
 }
 
@@ -95,7 +81,7 @@
   padding: 3px;
   border-radius: var(--radius-pill);
   background: var(--glass-track);
-  box-shadow: inset 0 1px 2px rgb(110 90 60 / 0.08);
+  border: 1px solid var(--glass-track-border);
 }
 
 .option-switcher__option {
@@ -130,24 +116,3 @@
   outline-offset: 1px;
 }
 
-/* ---------- Dimpled ("hammered lens") glass ---------- */
-
-/* Every browser: light blur, and a grid of tiny bumps, each with a bright
-   highlight (top-left) and a soft shadowed rim — so it reads as dimpled glass. */
-.switcher-panel--dimpled {
-  backdrop-filter: blur(var(--dimple-blur)) saturate(150%);
-  -webkit-backdrop-filter: blur(var(--dimple-blur)) saturate(150%);
-}
-
-.switcher-panel--dimpled::before {
-  opacity: 1;
-  background-image:
-    radial-gradient(circle at 35% 32%, rgb(255 255 255 / var(--dimple-shine)) 0 14%, transparent 38%),
-    radial-gradient(circle at 50% 50%, transparent 52%, rgb(90 70 45 / var(--dimple-rim)) 66%, transparent 74%);
-  background-size: var(--dimple-size) var(--dimple-size);
-}
-
-/* Chrome-based browsers: each bump also bends what's behind it, like a lens. */
-.switcher-panel--dimpled.can-bend {
-  backdrop-filter: url(#dimpled-glass) blur(var(--dimple-blur)) saturate(150%);
-}

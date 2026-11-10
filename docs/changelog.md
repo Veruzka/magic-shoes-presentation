@@ -7,9 +7,10 @@ One short entry per work session, newest first.
 - The three switcher pills are now one **frosted-glass card** in the top-right corner, headed **STYLE LAB** with a small accent dot, modeled on your reference.
 - It has one row per setting, hairlines between rows, and **segmented pills** where the chosen option sits on a soft white thumb.
 - The glass is see-through, so the cream background (or the Meadow flowers) shows through blurred.
-- **Frosted look:** fine grain, a light-catching rim, a glow inside the edges, a stronger blur with a color boost, and a faint warm smoky tint, so it reads as glass even over the plain cream sky.
-- **Dimpled glass** (from your second reference): a hammered "lens" glass with a grid of tiny bumps. In Chrome-based browsers each bump bends the background like a lens; Safari and Firefox show the bumps' highlights only.
-- A new **Glass** row (Dimpled / Frosted) lets you compare the two looks. Dimpled shows first.
+- **Glass look, after three tries:**
+  - A smoky frosted glass with a light-catching rim: not quite right.
+  - A dimpled "lens" glass: *"doesn't look good"*, so it was removed.
+  - **Final, from your samples:** classic **glassmorphism**, with a heavy blur, a light milky tint, a thin even white border, fine grain, a soft wide shadow, and pills made of lighter glass.
 - New shared glass variables are in `base.css`.
 
 
