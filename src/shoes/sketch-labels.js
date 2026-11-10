@@ -15,12 +15,12 @@
 //          ('sensor' = wherever the sensor landed), bend: how much it curves
 
 // When the labels appear, as fractions of the pinned scroll. They only start once
-// every part has finished moving (the last part ends at 0.45), so motion and text
-// never happen at the same time. They come in one after another, in list order.
-//   start  when the first label starts fading in
-//   each   how much later each next label starts
-//   fade   how long each label takes to fade in fully
-export const labelTiming = { start: 0.55, each: 0.1, fade: 0.15 };
+// every part has finished moving (the last part ends at 0.35), so motion and text
+// never happen at the same time. All three fade in together.
+//   start  when the labels start fading in
+//   each   how much later each next label starts (0 = all at once)
+//   fade   how long the fade-in takes
+export const labelTiming = { start: 0.55, each: 0, fade: 0.15 };
 
 export const sketchLabels = [
   {

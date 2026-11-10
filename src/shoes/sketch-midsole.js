@@ -9,8 +9,9 @@ import { sketchSensor } from './sketch-sensor.js';
 export const sketchMidsole = {
   name: 'white-midsole',
 
-  // Starts midway through the gray sole's move (0 → 0.3), and finishes a little later.
-  stage: { start: 0.15, end: 0.45 },
+  // Starts just after the gray sole (which moves 0 → 0.3), so the two separate
+  // together and the gap between them stays tight while they fan out.
+  stage: { start: 0.05, end: 0.35 },
   // 'even' = travels just far enough that the gap above it (to the shoe) and the
   // gap below it (to the gray sole) come out the same. Worked out automatically
   // from the pieces' real shapes. (A number like 0.5 = half the gray sole's path.)

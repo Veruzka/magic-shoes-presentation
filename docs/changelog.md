@@ -2,6 +2,10 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: tighter fan, labels together
+- The white midsole now starts just after the gray sole (5% instead of 15%), so the two separate together and the gap between them stays tight while fanning out. The final, even spacing is unchanged.
+- All three labels fade in **at the same time**, with the Outsole's timing and fade (from 55% of the scroll, over 15%).
+
 ## 2026-11-10: smoother motion, text after the parts
 **What changed**
 - **Smoother fanning:** the parts now glide toward the scroll position over a few frames instead of jumping on every mouse-wheel notch. In a simulated wheel scroll down and back up, all 342 frames ran at a steady 60 per second, with no slow frames.

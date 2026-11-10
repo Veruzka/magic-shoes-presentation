@@ -91,7 +91,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 ## Layers coming apart (Sketch shoe)
 **What:** as you scroll, the Sketch shoe comes apart from the bottom up, like puzzle pieces. Each piece leaves a clean gap and a soft sketch outline on what's left.
 1. **Gray rubber sole:** moves during 0–30% of the scroll. Its top surface has the molded tread.
-2. **White foam midsole** (with the clear pods): starts midway (15%) and finishes at 45%. It travels about a third as far as the gray sole, so there's more space below it than above it. Its top surface is a smooth matte tray with a raised lip, with a small **wireless-charging sensor** lying in the middle: a copper coil on a black disc, two copper wires, and a green circuit board.
+2. **White foam midsole** (with the clear pods): starts just after the gray sole (5%) and finishes at 35%, so the two separate together. It travels about a third as far as the gray sole, so there's more space below it than above it. Its top surface is a smooth matte tray with a raised lip, with a small **wireless-charging sensor** lying in the middle: a copper coil on a black disc, two copper wires, and a green circuit board.
 
 **Files:**
 - `src/shoes/sketch-sole.js`: the gray sole layer.
@@ -130,7 +130,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 
 These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (traced outline areas, like the toe bumper), `mustContain` (the white layer only exists where real white foam is) and `minThickness` (anything thinner is ignored, so no strings).
 
-> **Labels:** each one in `sketch-labels.js` has `title`, `text`, `part` (which piece it moves with), `at` (where the text sits, in drawing pixels), `align` (`'right'` for labels on the left of the shoe, `'left'` for the right) and `arrow` (`from`, `to` and `bend`; `to: 'sensor'` points at the sensor wherever it lands). Labels only appear **after every part has finished moving**: keep scrolling and they fade in one after another, while nothing moves. When you scroll back, they fade out first and then the shoe closes. The timing is `labelTiming` at the top of `sketch-labels.js`: `start` (when the first one begins), `each` (the delay between labels) and `fade` (how long each fade takes).
+> **Labels:** each one in `sketch-labels.js` has `title`, `text`, `part` (which piece it moves with), `at` (where the text sits, in drawing pixels), `align` (`'right'` for labels on the left of the shoe, `'left'` for the right) and `arrow` (`from`, `to` and `bend`; `to: 'sensor'` points at the sensor wherever it lands). Labels only appear **after every part has finished moving**: keep scrolling and they all fade in together, while nothing moves. When you scroll back, they fade out first and then the shoe closes. The timing is `labelTiming` at the top of `sketch-labels.js`: `start` (when the first one begins), `each` (the delay between labels) and `fade` (how long each fade takes).
 
 > **Example:** to make the white midsole start later, change `stage: { start: 0.15, end: 0.45 }` to `{ start: 0.25, end: 0.55 }` in `sketch-midsole.js`. To make the gray sole drop even further, change `y: 160` to `y: 200` in `sole-moves.js`. To make the sensor bigger, change `size: 115` to `size: 140` in `sketch-sensor.js`.
 
