@@ -74,7 +74,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 **Safe to change:**
 - `--shoe-width`: the shoe area size. It's `min(70vw, 460px)`: 70% of the screen width, never more than 460px.
 - `--shoe-clear-space`: the empty space around the shoe. It's 32px, as you asked.
-- `--fan-scroll-length`: how much scrolling the whole sequence takes (parts fan out, then labels fade in). Now 220% of the screen height.
+- `--fan-scroll-length`: how much scrolling the whole sequence takes (parts fan out, then labels fade in). Now 160% of the screen height. The page ends there.
 - The `shoe-float` steps: how high the shoe rises and how much it tilts.
 
 > **Example:** to make the shoe bigger on desktop, change `460px` to `540px` in `--shoe-width`.
@@ -90,8 +90,8 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 
 ## Layers coming apart (Sketch shoe)
 **What:** as you scroll, the Sketch shoe comes apart from the bottom up, like puzzle pieces. Each piece leaves a clean gap and a soft sketch outline on what's left.
-1. **Gray rubber sole:** moves during 0–30% of the scroll. Its top surface has the molded tread.
-2. **White foam midsole** (with the clear pods): starts just after the gray sole (5%) and finishes at 35%, so the two separate together. It travels about a third as far as the gray sole, so there's more space below it than above it. Its top surface is a smooth matte tray with a raised lip, with a small **wireless-charging sensor** lying in the middle: a copper coil on a black disc, two copper wires, and a green circuit board.
+1. **Gray rubber sole:** moves during 0–41% of the scroll. Its top surface has the molded tread.
+2. **White foam midsole** (with the clear pods): starts just after the gray sole (7%) and finishes at 48%, so the two separate together. It travels about a third as far as the gray sole, so there's more space below it than above it. Its top surface is a smooth matte tray with a raised lip, with a small **wireless-charging sensor** lying in the middle: a copper coil on a black disc, two copper wires, and a green circuit board.
 
 **Files:**
 - `src/shoes/sketch-sole.js`: the gray sole layer.
@@ -130,9 +130,9 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 
 These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (traced outline areas, like the toe bumper), `mustContain` (the white layer only exists where real white foam is) and `minThickness` (anything thinner is ignored, so no strings).
 
-> **Labels:** each one in `sketch-labels.js` has `title`, `text`, `part` (which piece it moves with), `at` (where the text sits, in drawing pixels), `align` (`'right'` for labels on the left of the shoe, `'left'` for the right) and `arrow` (`from`, `to` and `bend`; `to: 'sensor'` points at the sensor wherever it lands). Labels only appear **after every part has finished moving**: keep scrolling and they fade in **stacked**: Outsole, then Midsole (as Outsole is almost fully shown), then FSR, in even steps, while nothing moves. When you scroll back, they fade out first and then the shoe closes. The timing is `labelTiming` at the top of `sketch-labels.js`: `start` (when the first one begins), `fade` (how long each fade takes) and `each` (the even step between labels).
+> **Labels:** each one in `sketch-labels.js` has `title`, `text`, `part` (which piece it moves with), `at` (where the text sits, in drawing pixels), `align` (`'right'` for labels on the left of the shoe, `'left'` for the right) and `arrow` (`from`, `to` and `bend`; `to: 'sensor'` points at the sensor wherever it lands). Labels only appear **after every part has finished moving**: keep scrolling and they fade in **one by one**: Outsole, then Midsole exactly when Outsole is fully shown, then FSR, in even steps, while nothing moves. The page ends with the hero, so scrolling never moves you past it. When you scroll back, they fade out first and then the shoe closes. The timing is `labelTiming` at the top of `sketch-labels.js`: `start` (when the first one begins), `fade` (how long each fade takes) and `each` (the step between labels; equal to `fade` means each starts right as the previous finishes).
 
-> **Example:** to make the white midsole start later, change `stage: { start: 0.15, end: 0.45 }` to `{ start: 0.25, end: 0.55 }` in `sketch-midsole.js`. To make the gray sole drop even further, change `y: 160` to `y: 200` in `sole-moves.js`. To make the sensor bigger, change `size: 115` to `size: 140` in `sketch-sensor.js`.
+> **Example:** to make the white midsole start later, change `stage: { start: 0.07, end: 0.48 }` to `{ start: 0.15, end: 0.5 }` in `sketch-midsole.js`. To make the gray sole drop even further, change `y: 160` to `y: 200` in `sole-moves.js`. To make the sensor bigger, change `size: 115` to `size: 140` in `sketch-sensor.js`.
 
 ---
 

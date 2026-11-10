@@ -10,7 +10,7 @@
   --float-duration: var(--duration-float);
 
   /* How much scrolling it takes to fan the shoe fully open (shoes with parts only). */
-  --fan-scroll-length: 220vh; /* parts fan out first, then the labels fade in */
+  --fan-scroll-length: 160vh; /* parts fan out first, then the labels fade in; the page ends here */
 
   position: relative;
 }

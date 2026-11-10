@@ -78,14 +78,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Temporary spacer so there's room to scroll until more sections exist. */
-#app::after {
-  content: '';
-  display: block;
-  height: 100vh;
-  background: var(--color-surface);
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

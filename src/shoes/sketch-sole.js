@@ -8,7 +8,7 @@ export const sketchSole = {
   name: 'gray-sole',
 
   // When it moves, as fractions of the scroll (0 = top, 1 = end of the pinned scroll).
-  stage: { start: 0, end: 0.3 },
+  stage: { start: 0, end: 0.41 },
   // How far it travels, as a share of the path chosen in sole-moves.js (1 = all of it).
   travel: 1,
 

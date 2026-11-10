@@ -14,14 +14,15 @@
 //   arrow  from: where the line starts, to: what it points at
 //          ('sensor' = wherever the sensor landed), bend: how much it curves
 
-// When the labels appear, as fractions of the pinned scroll. They only start once
-// every part has finished moving (the last part ends at 0.35), so motion and text
-// never happen at the same time. They come in stacked, in list order: each one
-// starts when the one before it is almost fully shown, in even steps.
+// When the labels appear, as fractions of the pinned scroll (the whole page).
+// They only start once every part has finished moving (the last part ends at
+// 0.48), so motion and text never happen at the same time. They come in one by
+// one, in list order: each starts exactly when the one before it is fully shown.
+// All three are done at 0.94, a little before the end of the page.
 //   start  when the first label (Outsole) starts fading in
 //   fade   how long each label takes to fade in fully
-//   each   how much later each next label starts (0.12 of a 0.15 fade = ~80% shown)
-export const labelTiming = { start: 0.42, fade: 0.15, each: 0.12 };
+//   each   how much later each next label starts (= fade: no overlap, even steps)
+export const labelTiming = { start: 0.52, fade: 0.14, each: 0.14 };
 
 export const sketchLabels = [
   {

@@ -2,6 +2,11 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: page stays put; labels one by one
+- **The page no longer moves on.** I removed the temporary empty block below the hero, so the shoe section is the whole page. Scrolling only fans out the parts and then shows the text, and at the end everything stays in place.
+- **Labels one by one, with no overlap:** Outsole (52→66% of the scroll), then Midsole exactly when Outsole is fully shown (66→80%), then FSR (80→94%), all finishing before the end.
+- The pinned scroll is shorter (220% → 160% of the screen height). The part timings were rescaled so they fan out at the same pace as before.
+
 ## 2026-11-10: stacked labels
 - The labels now come in **stacked**, in even steps: Outsole first (from 42% of the scroll), Midsole as Outsole is almost fully shown (54%), then FSR (66%). Scrolling back reverses them.
 
