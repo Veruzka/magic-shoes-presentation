@@ -16,11 +16,12 @@
 
 // When the labels appear, as fractions of the pinned scroll. They only start once
 // every part has finished moving (the last part ends at 0.35), so motion and text
-// never happen at the same time. All three fade in together.
-//   start  when the labels start fading in
-//   each   how much later each next label starts (0 = all at once)
-//   fade   how long the fade-in takes
-export const labelTiming = { start: 0.55, each: 0, fade: 0.15 };
+// never happen at the same time. They come in stacked, in list order: each one
+// starts when the one before it is almost fully shown, in even steps.
+//   start  when the first label (Outsole) starts fading in
+//   fade   how long each label takes to fade in fully
+//   each   how much later each next label starts (0.12 of a 0.15 fade = ~80% shown)
+export const labelTiming = { start: 0.42, fade: 0.15, each: 0.12 };
 
 export const sketchLabels = [
   {
