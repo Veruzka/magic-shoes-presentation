@@ -2,6 +2,9 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: checkpoint 2
+**Saved as checkpoint 2** (`checkpoint-02-layers-labels-fsr`) and pushed to GitHub; see [checkpoints.md](checkpoints.md).
+
 ## 2026-11-10: FSR as a 3D render
 - **New look for the sensor on the white midsole:** a high-end 3D render of the real **FSR** (force-sensing resistor), based on your photos and in the style of your third reference. It has a round black pad with silver interlocking lines, a slim mint-teal see-through tail with silver tracks, and a white tab with two pins, lit like a studio product shot.
 - It lies in a **keyhole-shaped pocket** that follows its outline: round for the pad, a channel for the tail. The pad points toward the toe.

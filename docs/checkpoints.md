@@ -15,6 +15,7 @@ Newest at the bottom.
 | # | Name tag | Date | What works at this point | What's still open |
 |---|---|---|---|---|
 | 1 | `checkpoint-01-gray-sole` (also on GitHub) | 2026-11-09 | **Clouds** (main look) and **Meadow** backgrounds; **Photo** and **Sketch** shoes; switchers for Background, Shoe and Sole. On the Sketch shoe, the **gray sole detaches cleanly** like a puzzle piece (Down-left or Down): the shoe keeps a thin sketch outline, and the sole is solid with flowing molded tread on top. Living docs and the "i" info panel. | The shape of the sole's top surface is a guess. Next: more changes to the sole. |
+| 2 | `checkpoint-02-layers-labels-fsr` (also on GitHub) | 2026-11-10 | Everything in checkpoint 1, plus: the **white foam midsole** separates as a second layer with **even gaps**, the **FSR** is a 3D render lying in a keyhole pocket on the midsole, **labels** (Outsole, Midsole, FSR) fade in one by one after the parts fan out, the big **"Magic Shoes" title** sits behind the shoe, motion is **smoothed**, the page stays on the shoe (no scrolling past it), and the **Style lab** card is frosted glass. Live at magic-shoes.vercel.app. | FSR is small at page size; "FSR" is hard to read in the script font; phone layout of labels is tight. |
 
 ## Going back to a checkpoint
 Just ask: *"go back to checkpoint 1"*. Claude will:
