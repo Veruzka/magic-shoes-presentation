@@ -2,7 +2,7 @@
 //
 // To add a new style: put a cut-out image (transparent background) in
 // src/assets/, import it below, and add one entry to the list.
-// A style with `sole` has its gray bottom sole detach as you scroll
+// A style with `layers` comes apart layer by layer as you scroll
 // (see src/components/separating-shoe.js); one without just floats.
 //
 // Set aside for now: the earlier 5-part exploded view (sketch-parts.js and
@@ -11,6 +11,7 @@
 import shoePhoto from '../assets/shoe-photo.png';
 import shoeSketch from '../assets/shoe-sketch.png';
 import { sketchSole } from './sketch-sole.js';
+import { sketchMidsole } from './sketch-midsole.js';
 
 // The first one is shown until you pick another with the switcher.
 export const shoes = [
@@ -25,6 +26,7 @@ export const shoes = [
     label: 'Sketch',
     image: shoeSketch,
     alt: 'Marker sketch of a chunky running sneaker with a see-through upper and foam sole',
-    sole: sketchSole,
+    // Comes apart in layers as you scroll, bottom first.
+    layers: [sketchSole, sketchMidsole],
   },
 ];

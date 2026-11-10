@@ -19,9 +19,9 @@
   visibility: hidden;
 }
 
-/* The sole sits behind the body, so its top surface stays hidden until it pulls away.
+/* The layers sit behind the body (bottom layer furthest back), so their top surfaces stay hidden until they pull away.
    It tilts around its toe. */
-.separating-shoe__sole {
+.separating-shoe__layer {
   transform-origin: 0% 80%;
   will-change: transform;
 }

@@ -6,7 +6,7 @@ flowchart TD
   page["Page shell<br/>index.html + main.js"]
   hero["Hero section<br/>the first screen"]
   bg["Backgrounds<br/>Clouds or Meadow"]
-  shoe["Shoes<br/>Photo or Sketch<br/>(sole detaches)"]
+  shoe["Shoes<br/>Photo or Sketch<br/>(comes apart in layers)"]
   data["Settings and images<br/>data files, assets"]
   helpers["Helpers<br/>scroll depth,<br/>scroll progress,<br/>remember picks"]
   styles["Shared look<br/>base.css"]
@@ -43,10 +43,10 @@ The first screen you see (`src/sections/hero.js`). It holds a **background** and
 Interchangeable looks behind the shoe, listed in `src/backgrounds/index.js`. **Clouds** is the main look: a cream gradient, soft misty clouds and a beige box under the shoe. **Meadow** is the alternative: blurry flowers with a dark tint. Each background also says which text color reads well on top of it.
 
 ### Shoes
-Interchangeable shoe styles, listed in `src/shoes/index.js`. **Photo** is a realistic beige low-top that just floats. **Sketch** is a marker drawing of a chunky runner whose gray bottom sole detaches as you scroll.
+Interchangeable shoe styles, listed in `src/shoes/index.js`. **Photo** is a realistic beige low-top that just floats. **Sketch** is a marker drawing of a chunky runner that comes apart in layers as you scroll.
 
-### Detaching sole
-`src/components/separating-shoe.js` splits the Sketch drawing in the browser into the shoe body and the gray sole, cutting along one smooth seam line like a puzzle piece. It then slides the sole away during the first 30% of the scroll. The sole's hidden top surface is painted with the sole's own gray colors.
+### Layers coming apart
+`src/components/separating-shoe.js` splits the Sketch drawing in the browser, layer by layer from the bottom up: first the **gray sole**, then the **white foam midsole**. Each cut follows one smooth seam, like a puzzle piece. Each layer has its own settings file (`src/shoes/sketch-sole.js`, `src/shoes/sketch-midsole.js`), its own timing, and a painted top surface (gray tread, white foam tray).
 
 ### Settings and images
 Plain lists you can edit: where each cloud and flower sits (`src/data/`), where the gray sole is in the drawing, and which paths it can take (`src/shoes/`). The shoe images live in `src/assets/`.

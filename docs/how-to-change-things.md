@@ -76,35 +76,36 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 
 ---
 
-## Detaching gray sole (Sketch shoe)
-**What:** as you scroll, the Sketch shoe's gray bottom sole slides away, leaving a clean gap. The sole's hidden top surface is painted gray.
+## Layers coming apart (Sketch shoe)
+**What:** as you scroll, the Sketch shoe comes apart from the bottom up, like puzzle pieces. Each piece leaves a clean gap and a soft sketch outline on what's left.
+1. **Gray rubber sole:** moves during 0–30% of the scroll. Its top surface has the molded tread.
+2. **White foam midsole** (with the clear pods): starts midway (15%) and finishes at 45%. It travels half as far, so the gaps are even. Its top surface is a smooth matte tray with a raised lip.
+
 **Files:**
-- `src/shoes/sole-moves.js`: where the sole travels to.
-- `src/shoes/sketch-sole.js`: where the gray sole is in the drawing and how its top surface looks.
-- `src/components/separating-shoe.js`: the motion (careful).
+- `src/shoes/sketch-sole.js`: the gray sole layer.
+- `src/shoes/sketch-midsole.js`: the white midsole layer.
+- `src/shoes/sole-moves.js`: the path all layers follow (Down-left / Down).
+- `src/shoes/index.js`: the order of the layers (`layers: [sketchSole, sketchMidsole]`).
+- `src/components/separating-shoe.js`: how the cutting and motion work (ask me).
 
-**Safe to change:**
-- **Travel:** in `sole-moves.js`, `x` and `y` (pixels on a desktop-size shoe) and `turn` (degrees) for each option.
-- **Tread texture** on the sole's top surface: flowing molded ridges, with swirls at the toe and heel and long waves through the middle. The settings are `topFace.tread` in `sketch-sole.js`:
-  - `spacing`: distance between ridges (bigger means fewer, wider ridges).
-  - `ridgeLight`: how bright the lit side of each ridge is.
-  - `grooveDark`: how dark the grooves are.
-  - `waviness`: how much the waves meander (0 gives straight lines).
-- **Top surface:** `topFace` in `sketch-sole.js`:
-  - `depth`: how deep it looks.
-  - `grainSoftness`: how blurry the grain is.
-  - `farEdgeShade`: how much darker the far edge is.
-- **Timing:** `SOLE_STAGE` at the top of `separating-shoe.js`. `end: 0.3` means "finished after 30% of the scroll".
+**Safe to change, in each layer file:**
+- `stage`: when it moves, as fractions of the scroll. For example `start: 0.15, end: 0.45`.
+- `travel`: how far it goes, as a share of the chosen path (`1` is all of it, `0.5` is half).
+- `topFace`:
+  - gray sole: `tread` sets the ridges
+  - white midsole: `floorLight`, `floorDark`, `lipWidth`, `lipLight`, `recessShade` and `grain` set the tray
+- `outline`: the soft sketch line along the new edge (`colour`, `width`).
 
-**How the cut works:** the sole is cut along one smooth line, the **seam**, where the gray rubber meets the white foam. Everything below the seam leaves with the sole (gray, shine, ink, edge glow) and everything above stays on the shoe, like a puzzle cut. The seam settings are in `seam` in `sketch-sole.js`:
-- `smoothing`: how smooth the cut line is (bigger is smoother).
-- `edgeBlend`: how soft the cut edge is, in pixels.
-- `foamBrightness`, `foamMaxColour`, `upperMinColour`, `foamRunToStop`: how the seam is found (careful).
-- `cleanupBand` and `cleanupDarkerThan`: a thin clean-up strip just above the cut. Dark ink or gray bits inside it also leave with the sole, so the foam left behind is pure white. Make `cleanupBand` bigger if a dark line is ever left on the foam.
-- `outline`: the thin ink line drawn along the shoe's new bottom edge, so it matches the drawing's own outline (as on the back of the heel). It has a `colour` and a `width`, and `keepWithin` stops the clean-up from erasing the drawing's real outline.
-- `alsoSole`: an outline of extra areas that always leave with the sole. Right now that's the rubber toe bumper, whose light-gray shine would otherwise be mistaken for foam. If a bit of gray is ever left behind, add its area here.
+**How each cut works:** the cut follows one smooth **seam** where a layer meets the part above it, never pixel by pixel.
+- **Gray sole:** the cut stops at the white foam.
+- **White midsole:** the cut stops at the colored cork or cream toe cap.
+- **Below the seam:** everything leaves with the layer.
+- **Just above the seam:** a thin clean-up strip catches leftover bits.
+- **The drawing's own outer outline** is always kept.
 
-> **Example:** to make the sole drop further, change `y: 100` to `y: 150` in `sole-moves.js`. To make the tread ridges bolder, change `spacing: 26` to `spacing: 34` in `sketch-sole.js`.
+These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (traced outline areas, like the toe bumper), `mustContain` (the white layer only exists where real white foam is) and `minThickness` (anything thinner is ignored, so no strings).
+
+> **Example:** to make the white midsole start later, change `stage: { start: 0.15, end: 0.45 }` to `{ start: 0.25, end: 0.55 }` in `sketch-midsole.js`. To make the gray sole drop further, change `y: 100` to `y: 150` in `sole-moves.js`.
 
 ---
 
@@ -147,8 +148,9 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 | `showShoe(section, shoe)` | `src/sections/hero.js` | Swaps the shoe; turns pinning on for shoes that come apart | hero + a shoe → nothing | Careful |
 | `setShoeOpening(section, progress)` | `src/sections/hero.js` | Tells the shoe how far apart to be | hero + a number 0–1 → nothing | Careful |
 | `setSoleMove(section, move)` | `src/sections/hero.js` | Switches the sole's path | hero + a move → nothing | Careful |
-| `separatingShoe(shoe, move)` | `src/components/separating-shoe.js` | Splits the Sketch drawing into body + sole and moves the sole | shoe + move → the shoe and its controls | Ask me |
-| `splitDrawing(...)` / `drawTopFace(...)` | `src/components/separating-shoe.js` | Cuts out the gray sole and paints its top surface | drawing + sole settings → two pictures | Ask me |
+| `separatingShoe(shoe, move)` | `src/components/separating-shoe.js` | Splits the Sketch drawing into layers and moves each one on scroll | shoe (with `layers`) + path → the shoe and its controls | Ask me |
+| `splitDrawing(...)` / `cutLayer(...)` | `src/components/separating-shoe.js` | Cuts each layer out, bottom up, and draws the outlines | drawing + layer settings → one picture per layer + the body | Ask me |
+| `drawTreadFace(...)` / `drawTrayFace(...)` | `src/components/separating-shoe.js` | Paints a layer's top surface (gray tread / white foam tray) | layer settings → painted surface | Ask me |
 | `optionSwitcher({ title, options, current, onPick })` | `src/components/option-switcher.js` | Makes one row of the Style lab card (name + segmented pill) | title, list, current pick, what to do on click → the row | Careful |
 | `switcherPanel(heading, ...rows)` | `src/components/option-switcher.js` | Makes the frosted Style lab card that holds the rows | heading text + rows → the card | Careful |
 | `infoButton()` | `src/components/info-panel.js` | Makes the "i" button and its panel | nothing → the button | Careful |

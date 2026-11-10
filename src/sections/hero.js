@@ -47,8 +47,8 @@ export function showShoe(section, shoe) {
   const floater = section.querySelector('.hero__floater');
   let controls = null;
 
-  if (shoe.sole) {
-    // Gray sole detaches like a puzzle piece.
+  if (shoe.layers) {
+    // Comes apart layer by layer, like puzzle pieces.
     controls = separatingShoe(shoe, loadChoice('sole-move', soleMoves));
   } else if (shoe.parts) {
     // The earlier 5-part exploded view (set aside for now, kept working).

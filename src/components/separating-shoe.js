@@ -1,21 +1,21 @@
-// A whole shoe drawing whose gray bottom sole detaches as you scroll,
-// like lifting one piece out of a puzzle.
+// A whole shoe drawing that comes apart in layers as you scroll, like lifting
+// pieces out of a puzzle — bottom layer first.
 //
-// When the page loads, the drawing is split (in the browser) into two pictures:
-//   1. the shoe body — the drawing with the gray sole cut out (leaves a clean gap)
-//   2. the sole piece — the gray sole, plus its top surface (which the drawing
-//      never shows), filled with the same gray texture as its visible side
+// When the page loads, the drawing is split (in the browser), one layer at a
+// time from the bottom up. Each layer is cut from whatever is left after the
+// layer below it:
+//   • the layer piece — its pixels, plus its top surface (which the drawing
+//     never shows), painted to match
+//   • what's left — with a clean gap and a soft sketch outline along the new edge
 //
-// Then setProgress(0…1) poses the sole for how far the visitor has scrolled:
-//   0.00 – 0.30  the sole slides from its place to its separated spot
-//   after 0.30   nothing more happens (room for the next parts, later)
+// Then setProgress(0…1) poses every layer for how far the visitor has scrolled.
+// Each layer has its own stage (when it moves) and travel (how far, as a share
+// of the chosen path in sole-moves.js).
 //
-// Where the sole is in the drawing: src/shoes/sketch-sole.js
-// Where it travels to:              src/shoes/sole-moves.js
+// The layers, bottom to top:  src/shoes/sketch-sole.js     (gray rubber sole)
+//                             src/shoes/sketch-midsole.js  (white foam midsole)
+// The paths they travel:      src/shoes/sole-moves.js
 import './separating-shoe.css';
-
-// When the sole moves, as fractions of the scroll.
-const SOLE_STAGE = { start: 0, end: 0.3 };
 
 // The shoe's width on a desktop screen; sole-moves.js distances are measured on this.
 const DESKTOP_SHOE_WIDTH = 414;
@@ -25,7 +25,7 @@ const clamp01 = (n) => Math.min(Math.max(n, 0), 1);
 const between = (value, start, end) => clamp01((value - start) / (end - start));
 const easeInOut = (t) => (1 - Math.cos(Math.PI * t)) / 2; // soft start and stop
 
-export function separatingShoe({ image, alt, sole }, move) {
+export function separatingShoe({ image, alt, layers }, move) {
   const element = document.createElement('div');
   element.className = 'separating-shoe';
   element.setAttribute('role', 'img');
@@ -37,34 +37,40 @@ export function separatingShoe({ image, alt, sole }, move) {
   original.src = image;
   original.alt = '';
 
+  // One canvas per layer (bottom layer drawn first, so it sits behind), then the body.
+  const layerCanvases = layers.map((layer) => {
+    const canvas = document.createElement('canvas');
+    canvas.className = `separating-shoe__layer separating-shoe__layer--${layer.name}`;
+    return canvas;
+  });
   const bodyCanvas = document.createElement('canvas');
   bodyCanvas.className = 'separating-shoe__body';
-  const soleCanvas = document.createElement('canvas');
-  soleCanvas.className = 'separating-shoe__sole';
 
-  element.append(original, soleCanvas, bodyCanvas);
+  element.append(original, ...layerCanvases, bodyCanvas);
 
   let currentMove = move;
   let currentProgress = 0;
 
   original.decode().then(() => {
-    splitDrawing(original, sole, bodyCanvas, soleCanvas);
+    splitDrawing(original, layers, bodyCanvas, layerCanvases);
     element.classList.add('is-split');
     setProgress(currentProgress);
   });
 
-  // Poses the sole for a scroll amount between 0 and 1.
+  // Poses every layer for a scroll amount between 0 and 1.
   function setProgress(progress) {
     currentProgress = progress;
-    const amount = easeInOut(between(progress, SOLE_STAGE.start, SOLE_STAGE.end));
     const scale = element.clientWidth / DESKTOP_SHOE_WIDTH;
-    const x = currentMove.x * amount * scale;
-    const y = currentMove.y * amount * scale;
-    const turn = currentMove.turn * amount;
-    soleCanvas.style.transform = `translate(${x}px, ${y}px) rotate(${turn}deg)`;
+    layers.forEach((layer, i) => {
+      const amount = easeInOut(between(progress, layer.stage.start, layer.stage.end)) * layer.travel;
+      const x = currentMove.x * amount * scale;
+      const y = currentMove.y * amount * scale;
+      const turn = currentMove.turn * amount;
+      layerCanvases[i].style.transform = `translate(${x}px, ${y}px) rotate(${turn}deg)`;
+    });
   }
 
-  // Switch between the travel options in sole-moves.js.
+  // Switch between the travel paths in sole-moves.js (all layers follow it).
   function setMove(newMove) {
     currentMove = newMove;
     setProgress(currentProgress);
@@ -73,108 +79,149 @@ export function separatingShoe({ image, alt, sole }, move) {
   return { element, setProgress, setMove };
 }
 
-// ---------- splitting the drawing into body + sole ----------
+// ---------- splitting the drawing into layers ----------
 
-function splitDrawing(img, sole, bodyCanvas, soleCanvas) {
+function splitDrawing(img, layers, bodyCanvas, layerCanvases) {
   const width = img.naturalWidth;
   const height = img.naturalHeight;
-  for (const canvas of [bodyCanvas, soleCanvas]) {
+  for (const canvas of [bodyCanvas, ...layerCanvases]) {
     canvas.width = width;
     canvas.height = height;
   }
 
-  // Read every pixel of the drawing.
+  // Start with every pixel of the drawing; each cut takes its layer away.
   const source = makeCanvas(width, height);
   source.ctx.drawImage(img, 0, 0);
-  const pixels = source.ctx.getImageData(0, 0, width, height);
+  let remaining = source.ctx.getImageData(0, 0, width, height);
 
-  // Find the seam: one smooth line where the gray sole meets the white foam.
-  const seam = findSeam(pixels, sole.seam);
-  const outlinedColumns = sole.alsoSole ? raiseSeamToCover(seam, sole.alsoSole, width, height) : new Set();
+  layers.forEach((layer, i) => {
+    const { piece, rest, edge } = cutLayer(remaining, layer, width, height);
 
-  // Split along the seam, like a puzzle cut: everything below goes with the sole
-  // (gray, highlights, ink, edge glow), everything above stays with the body.
-  // Right on the line the two share pixels smoothly, so neither edge is jagged.
-  const body = new ImageData(new Uint8ClampedArray(pixels.data), width, height);
-  const solePixels = new ImageData(new Uint8ClampedArray(pixels.data), width, height);
-  const blend = sole.seam.edgeBlend;
+    // What's left gets a soft sketch outline along its new bottom edge.
+    const restCanvas = makeCanvas(width, height);
+    restCanvas.ctx.putImageData(rest, 0, 0);
+    drawCutOutline(restCanvas.ctx, smooth(edge, 5), layer.outline);
+    remaining = restCanvas.ctx.getImageData(0, 0, width, height);
 
+    // The layer piece: its top surface first (behind), then its own pixels on top.
+    // The top surface starts at the piece's real top pixels (not the cut line),
+    // so it never sticks out past the piece as a thin string.
+    const ctx = layerCanvases[i].getContext('2d');
+    const topEdge = smooth(highestSolid(piece), 5);
+    if (layer.topFace.style === 'tread') drawTreadFace(ctx, piece, layer, topEdge);
+    else drawTrayFace(ctx, layer, topEdge);
+    const sidePixels = makeCanvas(width, height);
+    sidePixels.ctx.putImageData(piece, 0, 0);
+    ctx.drawImage(sidePixels.canvas, 0, 0);
+  });
+
+  bodyCanvas.getContext('2d').putImageData(remaining, 0, 0);
+}
+
+// Cuts one layer out of an image along a smooth seam (like a puzzle cut):
+// everything below the seam leaves with the layer, everything above stays.
+function cutLayer(pixels, layer, width, height) {
+  const { seam, bottoms } = findSeam(pixels, layer.seam);
+  const outlinedColumns = layer.alsoLayer
+    ? raiseSeamToCover(seam, layer.alsoLayer, width, height)
+    : new Set();
+
+  // Columns where the "layer" is thinner than `minThickness` aren't really this
+  // layer (e.g. just an outline line along another part's edge): leave them alone,
+  // so no thin strings come along with the piece.
+  for (let x = 0; x < width; x++) {
+    if (seam[x] !== null && !outlinedColumns.has(x) && bottoms[x] - seam[x] < layer.seam.minThickness) {
+      seam[x] = null;
+    }
+  }
+
+  // Split along the seam. Right on the line the two share pixels smoothly,
+  // so neither edge is jagged.
+  const rest = new ImageData(new Uint8ClampedArray(pixels.data), width, height);
+  const piece = new ImageData(new Uint8ClampedArray(pixels.data), width, height);
+  const blend = layer.seam.edgeBlend;
   for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
       const i = (y * width + x) * 4;
       const below = seam[x] === null ? 0 : clamp01((y - seam[x] + blend / 2) / blend);
-      solePixels.data[i + 3] = pixels.data[i + 3] * below;
-      body.data[i + 3] = pixels.data[i + 3] * (1 - below);
+      piece.data[i + 3] = pixels.data[i + 3] * below;
+      rest.data[i + 3] = pixels.data[i + 3] * (1 - below);
     }
   }
 
-  // Clean-up: just above the cut there can be the foam's dark bottom ink line and
-  // bits of light rubber shine below it. In each column, find the highest dark
-  // pixel in that thin strip and move everything from there down to the sole,
-  // so the foam left behind ends cleanly. `edge` = where the shoe now ends.
-  const { cleanupBand, cleanupDarkerThan } = sole.seam;
+  // Clean-up: just above the cut there can be leftover bits of the layer (its ink
+  // line, shine, foam). In each column, find the highest leftover pixel in a thin
+  // strip and move everything from there down to the layer, so what's left ends
+  // cleanly. `edge` = where what's left now ends.
+  const { band, darkerThan, maxColour } = layer.cleanup;
+  const isLeftover = (i) => {
+    const r = pixels.data[i], g = pixels.data[i + 1], b = pixels.data[i + 2];
+    const brightness = (r + g + b) / 3;
+    const colour = Math.max(r, g, b) - Math.min(r, g, b);
+    return (
+      pixels.data[i + 3] > 0 &&
+      (darkerThan === undefined || brightness < darkerThan) &&
+      (maxColour === undefined || colour <= maxColour)
+    );
+  };
   const edge = seam.slice();
   for (let x = 0; x < width; x++) {
-    // Skip where the cut follows an "always sole" outline: it's already exact there,
-    // and the dark line just above it belongs to the shoe (e.g. the cream toe's outline).
+    // Skip where the cut follows a traced outline: it's already exact there,
+    // and the line just above it belongs to what's left (e.g. the cream toe's outline).
     if (seam[x] === null || outlinedColumns.has(x)) continue;
     const bottom = Math.ceil(seam[x]);
-    const top = Math.max(0, Math.floor(seam[x] - cleanupBand));
-    let highestDark = null;
+    const top = Math.max(0, Math.floor(seam[x] - band));
+    let highest = null;
     for (let y = bottom; y >= top; y--) {
-      const i = (y * width + x) * 4;
-      const brightness = (pixels.data[i] + pixels.data[i + 1] + pixels.data[i + 2]) / 3;
       // The drawing's own outline next to the outside (e.g. back of the heel) isn't a leftover.
-      if (isOuterOutline(pixels, seam, x, y, sole.outline.keepWithin)) continue;
-      if (pixels.data[i + 3] > 0 && brightness < cleanupDarkerThan) highestDark = y;
+      if (isOuterOutline(pixels, seam, x, y, layer.outline.keepWithin)) continue;
+      if (isLeftover((y * width + x) * 4)) highest = y;
     }
-    if (highestDark === null) continue;
-    for (let y = bottom; y >= highestDark; y--) {
+    if (highest === null) continue;
+    for (let y = bottom; y >= highest; y--) {
       const i = (y * width + x) * 4;
-      if (isOuterOutline(pixels, seam, x, y, sole.outline.keepWithin)) continue;
-      solePixels.data[i + 3] = pixels.data[i + 3];
-      body.data[i + 3] = 0;
+      if (isOuterOutline(pixels, seam, x, y, layer.outline.keepWithin)) continue;
+      piece.data[i + 3] = pixels.data[i + 3];
+      rest.data[i + 3] = 0;
     }
-    edge[x] = highestDark;
+    edge[x] = highest;
   }
 
-  // The top edge of the sole in each column = its highest solid pixel (smoothed).
-  // Using the sole's real pixels (not the cut line) means the top surface never
-  // sticks out past the rubber as a thin string — e.g. at the toe tip.
-  const topEdge = smooth(highestSolid(solePixels), 5);
-
-  bodyCanvas.getContext('2d').putImageData(body, 0, 0);
-
-  // Give the shoe's new bottom edge the same thin ink outline as the rest of
-  // the drawing, so it looks sketched that way rather than cut.
-  drawCutOutline(bodyCanvas.getContext('2d'), smooth(edge, 5), sole.outline);
-
-  // The sole piece: its top surface first (behind), then the visible gray side on top.
-  const ctx = soleCanvas.getContext('2d');
-  drawTopFace(ctx, solePixels, sole, topEdge);
-  const sidePixels = makeCanvas(width, height);
-  sidePixels.ctx.putImageData(solePixels, 0, 0);
-  ctx.drawImage(sidePixels.canvas, 0, 0);
+  return { piece, rest, edge };
 }
 
-// Walks up each column from the shoe's bottom edge while the pixels still belong
-// to the sole, and stops at the first solid run of white foam (or coloured upper).
-// Returns one y per column (or null where there's no sole), smoothed into a clean curve.
+// Walks up each column from the bottom edge while the pixels still belong to the
+// layer, and stops at the first solid run of pixels that belong to the part above:
+//   • white foam (if `foamBrightness` is set) — bright and un-coloured
+//   • the coloured upper/cork (`upperMinColour`) — clearly coloured
+// Returns one y per column (or null where there's nothing), smoothed into a clean curve.
 function findSeam({ data, width, height }, settings) {
   const isFoamOrUpper = (i) => {
     const r = data[i], g = data[i + 1], b = data[i + 2];
     const brightness = (r + g + b) / 3;
     const colour = Math.max(r, g, b) - Math.min(r, g, b);
-    const foam = brightness >= settings.foamBrightness && colour <= settings.foamMaxColour;
+    const foam =
+      settings.foamBrightness !== undefined &&
+      brightness >= settings.foamBrightness &&
+      colour <= settings.foamMaxColour;
     const upper = colour >= settings.upperMinColour;
     return data[i + 3] > 200 && (foam || upper);
   };
 
   const raw = new Array(width).fill(null);
+  const bottoms = new Array(width).fill(null); // the bottom edge in each column
+  const throughTop = new Set(); // columns where the layer runs right up out of the shape
   for (let x = 0; x < width; x++) {
     let bottom = height - 1;
     while (bottom >= 0 && data[(bottom * width + x) * 4 + 3] === 0) bottom--;
     if (bottom < 0) continue; // empty column
+    bottoms[x] = bottom;
+
+    // Some layers only exist where their material is really there: e.g. the white
+    // midsole needs white foam near the bottom of the column (the toe cap is cream).
+    if (settings.mustContain && !containsNearBottom(data, width, x, bottom, settings.mustContain)) {
+      continue;
+    }
 
     let run = 0;
     let y = bottom;
@@ -192,11 +239,36 @@ function findSeam({ data, width, height }, settings) {
       run = isFoamOrUpper(i) ? run + 1 : 0;
       if (run >= settings.foamRunToStop) break;
     }
-    // Where the sole ends: just below the foam run, or where the outline ended.
-    raw[x] = leftShape ? y + 1 : y + run;
+    if (leftShape) {
+      // Walked out of the top of the shape: keep going through the faint edge glow
+      // too, so no ghost line is left hanging where the layer was.
+      while (y > 0 && data[(y * width + x) * 4 + 3] > 0) y--;
+      raw[x] = y + 1;
+      throughTop.add(x);
+    } else {
+      raw[x] = y + run; // just below the run that belongs to the part above
+    }
   }
 
-  return smooth(raw, settings.smoothing);
+  // Smooth the line, but keep the exact top where the layer runs out of the shape.
+  const seam = smooth(raw, settings.smoothing);
+  throughTop.forEach((x) => (seam[x] = raw[x]));
+  return { seam, bottoms };
+}
+
+// True if, within the first `within` solid pixels above the bottom of a column,
+// there's a pixel of the given material (bright enough and un-coloured enough).
+function containsNearBottom(data, width, x, bottom, { minBrightness, maxColour, within }) {
+  let solid = 0;
+  for (let y = bottom; y >= 0 && solid < within; y--) {
+    const i = (y * width + x) * 4;
+    if (data[i + 3] < 200) continue;
+    solid++;
+    const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
+    const colour = Math.max(data[i], data[i + 1], data[i + 2]) - Math.min(data[i], data[i + 1], data[i + 2]);
+    if (brightness >= minBrightness && colour <= maxColour) return true;
+  }
+  return false;
 }
 
 // True if a pixel sits within `distance` pixels of the outside of the drawing
@@ -281,25 +353,84 @@ function smooth(values, size) {
   return medianed.map((v, x) => (v == null ? null : pick(medianed, x, mean)));
 }
 
-// The sole's top surface: from the sole's own top edge, rising into a foot shape.
-// It's painted with the colours of the visible gray side, scattered evenly, so it
-// has the same grain and colour without any repeating pattern.
-function drawTopFace(ctx, solePixels, sole, topEdge) {
-  const { width, height } = ctx.canvas;
+// The outline of a layer's top surface: its near edge (the layer's own top edge),
+// then a far edge rising into a foot shape — deepest mid-foot, nothing at toe and heel.
+function topFacePath(topEdge, depth) {
   const columns = topEdge.map((y, x) => (y === null ? null : [x, y])).filter(Boolean);
-  if (columns.length < 2) return;
+  if (columns.length < 2) return null;
   const firstX = columns[0][0];
   const lastX = columns[columns.length - 1][0];
-
-  // Near edge (the sole's top edge), then the far edge back the other way.
   const path = new Path2D();
   columns.forEach(([x, y], i) => (i ? path.lineTo(x, y) : path.moveTo(x, y)));
   for (let i = columns.length - 1; i >= 0; i--) {
     const [x, y] = columns[i];
     const along = (x - firstX) / (lastX - firstX); // 0 at the toe, 1 at the heel
-    path.lineTo(x, y - sole.topFace.depth * Math.sin(Math.PI * along));
+    path.lineTo(x, y - depth * Math.sin(Math.PI * along));
   }
   path.closePath();
+  return { path, columns, firstX, lastX };
+}
+
+// The white midsole's top surface: a smooth matte tray — a slightly raised lip
+// around the edge, a recessed floor inside with soft shading where they meet,
+// and a faint grain. (Like the foam midsole in the reference photo.)
+function drawTrayFace(ctx, layer, topEdge) {
+  const { depth, floorLight, floorDark, lipWidth, lipLight, recessShade, grain } = layer.topFace;
+  const face = topFacePath(topEdge, depth);
+  if (!face) return;
+  const { path, columns } = face;
+  const top = Math.min(...columns.map(([, y]) => y)) - depth;
+  const bottom = Math.max(...columns.map(([, y]) => y));
+
+  ctx.save();
+  ctx.clip(path);
+
+  // Floor: light near you, a touch darker toward the far edge.
+  const floor = ctx.createLinearGradient(0, top, 0, bottom);
+  floor.addColorStop(0, floorDark);
+  floor.addColorStop(1, floorLight);
+  ctx.fillStyle = floor;
+  ctx.fill(path);
+
+  // Recess: a soft shadow just inside the lip, so the floor sits lower.
+  ctx.filter = `blur(${lipWidth * 0.6}px)`;
+  ctx.strokeStyle = `rgb(120 104 82 / ${recessShade})`;
+  ctx.lineWidth = lipWidth * 3.2;
+  ctx.stroke(path);
+
+  // Lip: a bright raised rim along the edge.
+  ctx.filter = 'blur(1.2px)';
+  ctx.strokeStyle = `rgb(255 255 255 / ${lipLight})`;
+  ctx.lineWidth = lipWidth * 2;
+  ctx.stroke(path);
+  ctx.filter = 'none';
+
+  // Faint foam grain.
+  const noise = makeCanvas(64, 64);
+  const dots = noise.ctx.createImageData(64, 64);
+  for (let i = 0; i < dots.data.length; i += 4) {
+    const v = Math.random() * 255;
+    dots.data.set([v, v, v, 255 * grain], i);
+  }
+  noise.ctx.putImageData(dots, 0, 0);
+  ctx.globalCompositeOperation = 'soft-light';
+  ctx.fillStyle = ctx.createPattern(noise.canvas, 'repeat');
+  ctx.fill(path);
+  ctx.restore();
+
+  // A soft sketch outline around it.
+  ctx.strokeStyle = layer.outline.colour;
+  ctx.lineWidth = layer.outline.width;
+  ctx.stroke(path);
+}
+
+// The gray sole's top surface: painted with the colours of the visible gray side,
+// scattered evenly (same grain and colour, no repeating pattern), with molded tread.
+function drawTreadFace(ctx, solePixels, sole, topEdge) {
+  const { width, height } = ctx.canvas;
+  const face = topFacePath(topEdge, sole.topFace.depth);
+  if (!face) return;
+  const { path, columns, firstX, lastX } = face;
 
   // Collect the gray side's colours (skipping its dark ink outline).
   const colours = [];
@@ -316,7 +447,7 @@ function drawTopFace(ctx, solePixels, sole, topEdge) {
   const shape = makeCanvas(width, height);
   shape.ctx.fill(path);
   const inFace = shape.ctx.getImageData(0, 0, width, height).data;
-  const face = new ImageData(width, height);
+  const painting = new ImageData(width, height);
   const tread = treadRelief(columns, firstX, lastX, sole.topFace);
   for (let i = 0; i < inFace.length; i += 4) {
     if (inFace[i + 3] === 0) continue;
@@ -324,10 +455,10 @@ function drawTopFace(ctx, solePixels, sole, topEdge) {
     const y = Math.floor(i / 4 / width);
     const light = tread(x, y);
     const [r, g, b] = colours[Math.floor(Math.random() * colours.length)];
-    face.data.set([r * light, g * light, b * light, inFace[i + 3]], i);
+    painting.data.set([r * light, g * light, b * light, inFace[i + 3]], i);
   }
   const painted = makeCanvas(width, height);
-  painted.ctx.putImageData(face, 0, 0);
+  painted.ctx.putImageData(painting, 0, 0);
   ctx.filter = `blur(${sole.topFace.grainSoftness}px)`; // soften the grain a touch
   ctx.save();
   ctx.clip(path);

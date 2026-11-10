@@ -2,6 +2,22 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-09: white midsole separates
+**What changed**
+- The Sketch shoe now comes apart in **two layers**. The **white foam midsole** (with its clear pods and the heel cup that wraps up the back) separates after the gray sole: it starts midway through the gray sole's move (15% → 45% of the scroll), follows the same Down-left / Down path, and travels half as far, so the gaps are even.
+- **Its top surface** is a smooth matte foam **tray**, with a raised lip, a recessed floor and a faint grain, modeled on your reference photo.
+- **Same techniques as the gray sole:**
+  - one smooth seam cut, at the cork or cream toe
+  - a clean-up strip under the cork
+  - the drawing's own outline is kept, and a soft sketch outline is drawn along the cork's new edge
+  - the top surface starts at the layer's real top
+- **New safeguards against strings:**
+  - a layer only exists where its material really is (no white foam at the toe tip)
+  - anything thinner than 6px is ignored
+  - where a layer runs to the top of the shoe's outline (the heel cup), its faint edge glow leaves with it
+- The component now handles any number of layers (`src/shoes/index.js` → `layers`), ready for the next ones.
+
+
 ## 2026-11-09 (after checkpoint 1): Style lab card
 **What changed**
 - The three switcher pills are now one **frosted-glass card** in the top-right corner, headed **STYLE LAB** with a small accent dot, modeled on your reference.
