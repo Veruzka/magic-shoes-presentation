@@ -110,7 +110,7 @@ function splitDrawing(img, layers, bodyCanvas, layerCanvases) {
     const ctx = layerCanvases[i].getContext('2d');
     const topEdge = smooth(highestSolid(piece), 5);
     if (layer.topFace.style === 'tread') drawTreadFace(ctx, piece, layer, topEdge);
-    else drawTrayFace(ctx, layer, topEdge);
+    else drawTrayFace(ctx, layer, topEdge, piece);
     const sidePixels = makeCanvas(width, height);
     sidePixels.ctx.putImageData(piece, 0, 0);
     ctx.drawImage(sidePixels.canvas, 0, 0);
@@ -375,7 +375,7 @@ function topFacePath(topEdge, depth) {
 // The white midsole's top surface: a smooth matte tray — a slightly raised lip
 // around the edge, a recessed floor inside with soft shading where they meet,
 // and a faint grain. (Like the foam midsole in the reference photo.)
-function drawTrayFace(ctx, layer, topEdge) {
+function drawTrayFace(ctx, layer, topEdge, piece) {
   const { depth, floorLight, floorDark, lipWidth, lipLight, recessShade, grain } = layer.topFace;
   const face = topFacePath(topEdge, depth);
   if (!face) return;
@@ -426,47 +426,59 @@ function drawTrayFace(ctx, layer, topEdge) {
 
   // Anything lying on the tray floor (e.g. the charging sensor).
   const { sensor } = layer.topFace;
-  if (sensor) placeOnFloor(ctx, sensor, face, depth, lipWidth * 3, layer.outline);
+  if (sensor) placeOnFloor(ctx, sensor, face, depth, lipWidth * 3, layer.outline, shoeDirection(piece));
 }
 
-// Places the sensor on the tray floor: it measures the floor along the sensor's
-// whole width, tilts the sensor to follow the floor's slope, and shrinks it if
-// any part of the floor is too narrow — so it always sits inside, clear of the lip.
-function placeOnFloor(ctx, sensor, { columns, firstX, lastX }, depth, margin, outline) {
+// Places the sensor on the tray floor, lying flat on the same ground as the shoe:
+// its long side follows the shoe's toe-to-heel direction (coil toward the toe,
+// board toward the heel), foreshortened like the floor. It shrinks if it wouldn't
+// fit with space around it, so it never touches the lip.
+function placeOnFloor(ctx, sensor, { columns, firstX, lastX }, depth, margin, outline, axis) {
   const nearAt = new Map(columns);
   const length = lastX - firstX;
-  // The floor at any x: its near edge, how deep it is, and the line `across` of the way in.
+  // The floor at any x: the line `across` of the way in, and how deep the floor is.
   const floorAt = (x) => {
     const near = nearAt.get(Math.round(x));
     if (near === undefined) return null;
-    const height = depth * Math.sin(Math.PI * ((x - firstX) / length));
-    return { line: near - height * sensor.across, room: height };
+    const room = depth * Math.sin(Math.PI * ((x - firstX) / length));
+    return { line: near - room * sensor.across, room };
   };
+  const slope = Math.tan(axis);
 
   const centreX = firstX + sensor.along * length;
+  const centre = floorAt(centreX);
+  if (!centre) return;
   let size = sensor.size;
-  let fit = null;
-  for (let attempt = 0; attempt < 6; attempt++) {
-    const halfWidth = (size * SENSOR_WIDTH_PER_SIZE) / 2;
-    const left = floorAt(centreX - halfWidth);
-    const right = floorAt(centreX + halfWidth);
-    const middle = floorAt(centreX);
-    if (!left || !right || !middle) {
-      size *= 0.8;
-      continue;
-    }
-    // Narrowest floor under the sensor vs. how tall the sensor is on screen.
-    const room = Math.min(left.room, right.room, middle.room) - 2 * margin;
-    const tall = size * 1.1 * sensor.flatten;
-    fit = { left, right, middle, halfWidth };
-    if (tall <= room) break;
-    size *= Math.max(0.6, room / tall);
+  for (let attempt = 0; attempt < 8; attempt++) {
+    const halfWidth = (size * SENSOR_WIDTH_PER_SIZE * Math.cos(axis)) / 2;
+    const halfHeight = (size * 1.1 * sensor.flatten) / 2;
+    // At both ends and the middle, the sensor must sit inside the floor with a margin.
+    const fits = [-halfWidth, 0, halfWidth].every((dx) => {
+      const floor = floorAt(centreX + dx);
+      if (!floor) return false;
+      const sensorY = centre.line + dx * slope;
+      return Math.abs(sensorY - floor.line) + halfHeight <= floor.room / 2 - margin;
+    });
+    if (fits) break;
+    size *= 0.85;
   }
-  if (!fit) return;
+  drawSensor(ctx, { x: centreX, y: centre.line, axis }, { ...sensor, size }, outline);
+}
 
-  const angle = Math.atan2(fit.right.line - fit.left.line, 2 * fit.halfWidth) * (sensor.tilt ?? 1);
-  const centreY = (fit.left.line + fit.right.line + fit.middle.line) / 3;
-  drawSensor(ctx, { x: centreX, y: centreY, angle }, { ...sensor, size }, outline);
+// The shoe's toe-to-heel direction, as an angle: the main line the whole layer's
+// shape runs along (its "long axis"), worked out from all of its solid pixels.
+function shoeDirection({ data, width, height }) {
+  let n = 0, sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0;
+  for (let y = 0; y < height; y += 3) {
+    for (let x = 0; x < width; x += 3) {
+      if (data[(y * width + x) * 4 + 3] < 160) continue;
+      n++; sx += x; sy += y; sxx += x * x; syy += y * y; sxy += x * y;
+    }
+  }
+  if (!n) return 0;
+  const mx = sx / n, my = sy / n;
+  const cxx = sxx / n - mx * mx, cyy = syy / n - my * my, cxy = sxy / n - mx * my;
+  return 0.5 * Math.atan2(2 * cxy, cxx - cyy);
 }
 
 // The gray sole's top surface: painted with the colours of the visible gray side,

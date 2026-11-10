@@ -13,7 +13,7 @@ One short entry per work session, newest first.
   - two copper wires
   - a little green circuit board with a silver chip and tiny parts
 - **How it's drawn:** in code, in the sketch style (soft outlines, faint shadow), flattened to match the tray's angle.
-- **How it fits:** it measures the floor under it, tilts gently with the floor's slope, and shrinks if needed, so it always has space around it and never touches the lip.
+- **How it fits:** it's smaller than the first version and **lies along the shoe**: the coil (its head) points toward the toe and the board toward the heel, following the midsole's overall toe-to-heel direction. It's laid flat on the same ground as the shoe, so it no longer looks "thrown" on. It shrinks if needed, so it always has space around it and never touches the lip.
 
 
 ## 2026-11-09: white midsole separates

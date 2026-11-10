@@ -6,10 +6,10 @@
 
 export const sketchSensor = {
   along: 0.42, // where it sits from toe (0) to heel (1) — the middle area, where the floor is widest
-  tilt: 0.6, // how much it follows the floor's slope (1 = fully, 0 = stays level)
+  // It always lies along the shoe: coil (its head) toward the toe, board toward the heel.
   across: 0.58, // where it sits from the tray's near edge (0) to far edge (1) — a touch past the middle, to even out the space
-  size: 170, // the coil's width; the whole sensor (coil + wires + board) is about twice that
-  flatten: 0.38, // how squashed it looks, to match the tray's viewing angle (1 = seen from straight above)
+  size: 115, // the coil's width; the whole sensor (coil + wires + board) is about twice that
+  flatten: 0.38, // how foreshortened it looks, to match the floor's viewing angle (1 = seen from straight above)
 
   coilRings: 7, // how many copper rings
   colours: {

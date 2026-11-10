@@ -7,7 +7,7 @@
 // How wide the whole sensor (coil + wires + board) is, for a coil `size` wide.
 export const SENSOR_WIDTH_PER_SIZE = 1.06 + 0.32 + 0.78;
 
-// centre   where the middle of the sensor goes, and its tilt ({ x, y, angle })
+// centre   where the middle of the sensor goes, and the shoe's direction ({ x, y, axis })
 // sensor   the settings from sketch-sensor.js (size already fitted to the floor)
 // outline  the soft sketch outline style ({ colour, width })
 export function drawSensor(ctx, centre, sensor, outline) {
@@ -19,17 +19,17 @@ export function drawSensor(ctx, centre, sensor, outline) {
   const gap = size * 0.32; // space for the wires between coil and board
   const totalW = size * SENSOR_WIDTH_PER_SIZE;
 
-  // Lay everything out flat (as if seen from straight above), centred on the spot
-  // and tilted with the floor, then squash it vertically to match the viewing angle.
+  // Lay everything out flat (as if seen from straight above), then put it on the
+  // floor: its long side runs along the shoe's toe-to-heel direction, and its
+  // width is foreshortened straight up the screen — the same ground the shoe stands on.
   ctx.save();
   ctx.translate(centre.x, centre.y);
-  ctx.rotate(centre.angle);
+  ctx.transform(Math.cos(centre.axis), Math.sin(centre.axis), 0, flatten, 0, 0);
   ctx.translate(-totalW / 2 + R * 1.06, 0);
-  ctx.scale(1, flatten);
   ctx.lineJoin = 'round';
   const ink = (width = outline.width) => {
     ctx.strokeStyle = outline.colour;
-    ctx.lineWidth = width / flatten; // keep outlines the same thickness after squashing
+    ctx.lineWidth = width / Math.sqrt(flatten); // roughly the same thickness after foreshortening
     ctx.stroke();
   };
   const circle = (r, dx = 0) => {

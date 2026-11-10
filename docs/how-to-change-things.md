@@ -100,7 +100,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
   - `along`: toe (0) to heel (1)
   - `across`: tray's near edge (0) to far edge (1)
   - `size`: the coil's width; it shrinks by itself if it wouldn't fit the tray
-  - `tilt`: how much it follows the tray's slope
+  - it always lies along the shoe (coil toward the toe, board toward the heel), flat on the tray floor
   - `coilRings`, and every color (copper, disc, board…)
 - `outline`: the soft sketch line along the new edge (`colour`, `width`).
 
@@ -113,7 +113,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 
 These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (traced outline areas, like the toe bumper), `mustContain` (the white layer only exists where real white foam is) and `minThickness` (anything thinner is ignored, so no strings).
 
-> **Example:** to make the white midsole start later, change `stage: { start: 0.15, end: 0.45 }` to `{ start: 0.25, end: 0.55 }` in `sketch-midsole.js`. To make the gray sole drop even further, change `y: 160` to `y: 200` in `sole-moves.js`. To make the sensor bigger, change `size: 170` to `size: 200` in `sketch-sensor.js`.
+> **Example:** to make the white midsole start later, change `stage: { start: 0.15, end: 0.45 }` to `{ start: 0.25, end: 0.55 }` in `sketch-midsole.js`. To make the gray sole drop even further, change `y: 160` to `y: 200` in `sole-moves.js`. To make the sensor bigger, change `size: 115` to `size: 140` in `sketch-sensor.js`.
 
 ---
 
