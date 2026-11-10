@@ -74,7 +74,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 **Safe to change:**
 - `--shoe-width`: the shoe area size. It's `min(70vw, 460px)`: 70% of the screen width, never more than 460px.
 - `--shoe-clear-space`: the empty space around the shoe. It's 32px, as you asked.
-- `--fan-scroll-length`: how much scrolling the coming-apart animation takes.
+- `--fan-scroll-length`: how much scrolling the whole sequence takes (parts fan out, then labels fade in). Now 220% of the screen height.
 - The `shoe-float` steps: how high the shoe rises and how much it tilts.
 
 > **Example:** to make the shoe bigger on desktop, change `460px` to `540px` in `--shoe-width`.
@@ -130,7 +130,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 
 These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (traced outline areas, like the toe bumper), `mustContain` (the white layer only exists where real white foam is) and `minThickness` (anything thinner is ignored, so no strings).
 
-> **Labels:** each one in `sketch-labels.js` has `title`, `text`, `part` (which piece it moves with), `at` (where the text sits, in drawing pixels), `align` (`'right'` for labels on the left of the shoe, `'left'` for the right) and `arrow` (`from`, `to` and `bend`; `to: 'sensor'` points at the sensor wherever it lands). Labels fade in during the second half of their part's move and fade out when you scroll back.
+> **Labels:** each one in `sketch-labels.js` has `title`, `text`, `part` (which piece it moves with), `at` (where the text sits, in drawing pixels), `align` (`'right'` for labels on the left of the shoe, `'left'` for the right) and `arrow` (`from`, `to` and `bend`; `to: 'sensor'` points at the sensor wherever it lands). Labels only appear **after every part has finished moving**: keep scrolling and they fade in one after another, while nothing moves. When you scroll back, they fade out first and then the shoe closes. The timing is `labelTiming` at the top of `sketch-labels.js`: `start` (when the first one begins), `each` (the delay between labels) and `fade` (how long each fade takes).
 
 > **Example:** to make the white midsole start later, change `stage: { start: 0.15, end: 0.45 }` to `{ start: 0.25, end: 0.55 }` in `sketch-midsole.js`. To make the gray sole drop even further, change `y: 160` to `y: 200` in `sole-moves.js`. To make the sensor bigger, change `size: 115` to `size: 140` in `sketch-sensor.js`.
 
@@ -185,7 +185,7 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 | `switcherPanel(heading, ...rows)` | `src/components/option-switcher.js` | Makes the frosted Style lab card that holds the rows | heading text + rows → the card | Careful |
 | `infoButton()` | `src/components/info-panel.js` | Makes the "i" button and its panel | nothing → the button | Careful |
 | `createParallax()` | `src/core/parallax.js` | Moves layers at different speeds on scroll (`data-speed`) | nothing → controls (refresh, stop) | Ask me |
-| `watchScrollProgress(element, onProgress)` | `src/core/scroll-progress.js` | Reports scroll through an element as 0–1 | element + what to do with the number → controls | Ask me |
+| `watchScrollProgress(element, onProgress, { smoothing })` | `src/core/scroll-progress.js` | Reports scroll through an element as 0–1, gliding smoothly instead of jumping (smoothing 0.12; lower is floatier, 1 is none) | element + what to do with the number → controls | Careful |
 | `loadChoice(name, options)` / `saveChoice(name, option)` | `src/core/remember-choice.js` | Remembers your last pick in this browser | a name + list → the remembered option | Careful |
 | `cloudStudio.build()` / `flowerMeadow.build()` | `src/backgrounds/…` | Draws a background | nothing → the background | Careful |
 

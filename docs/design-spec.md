@@ -64,11 +64,12 @@ The fonts are loaded from Google Fonts in `index.html`.
 | `--duration-float` | 4s | one up-and-down float of the shoe; the box shadow breathes in time | base.css |
 | `--duration-ui` | 0.25s | panel sliding in, button hover | base.css |
 | `--ease-soft` | ease-in-out | the float and shadow | base.css |
-| `--fan-scroll-length` | 150% of the screen height | how much scrolling the shoe's coming-apart takes | hero.css |
+| `--fan-scroll-length` | 220% of the screen height | how much scrolling the whole sequence takes (parts, then labels) | hero.css |
 | Gray sole stage | 0 → 30% of that scroll | when the gray sole slides away | `stage` in `src/shoes/sketch-sole.js` |
 | White midsole stage | 15% → 45% (starts midway through the gray sole), travels 0.34 of the path (about 54px vs. the gray sole's 160px) | when the white midsole slides away | `stage` and `travel` in `src/shoes/sketch-midsole.js` |
 | Layer paths | Down-left: 120px left, 240px down, 5° tilt; Down: 240px down; both lift the whole shoe 80px | the gray sole's full path; the white midsole moves an 'even' share (equal gaps, ~78px each) | `src/shoes/sole-moves.js` |
-| Label fade | second half of each part's move, soft start and stop; arrow draws out as it fades in | part labels | `src/components/separating-shoe.js` |
+| Scroll smoothing | the motion glides toward the scroll position, covering 12% of the remaining distance each frame (off for reduced motion) | everything driven by scrolling through the hero | `src/core/scroll-progress.js` |
+| Label fade | only after the parts finish (from 55% of the scroll), one after another 10% apart, each fading over 15%; arrows draw out as they fade in | part labels | `labelTiming` in `src/shoes/sketch-labels.js` |
 | Layer easing | soft start and stop (cosine) | every layer's slide | separating-shoe.js |
 | Stagger | 0.08 (each part starts 8% later) | the set-aside 5-part view | `STAGGER` in `src/components/exploding-shoe.js` |
 | Scroll depth | far layers 0.25–0.35, near −0.15 | how fast background layers move | each background's `LAYER_SPEEDS` |

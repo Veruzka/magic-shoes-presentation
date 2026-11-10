@@ -27,7 +27,7 @@ const clamp01 = (n) => Math.min(Math.max(n, 0), 1);
 const between = (value, start, end) => clamp01((value - start) / (end - start));
 const easeInOut = (t) => (1 - Math.cos(Math.PI * t)) / 2; // soft start and stop
 
-export function separatingShoe({ image, alt, layers, labels = [] }, move) {
+export function separatingShoe({ image, alt, layers, labels = [], labelTiming }, move) {
   const element = document.createElement('div');
   element.className = 'separating-shoe';
   element.setAttribute('role', 'img');
@@ -100,10 +100,11 @@ export function separatingShoe({ image, alt, layers, labels = [] }, move) {
     const lift = easeInOut(between(progress, 0, openEnd)) * (currentMove.lift ?? 0) * scale;
     element.style.translate = `0 ${-lift}px`;
 
-    // Labels fade in over the second half of their part's move (and out again when scrolling back).
-    labelControls.forEach(({ label, layer }) => {
-      const { start, end } = layer.stage;
-      label.show(easeInOut(between(progress, start + (end - start) * 0.5, end)));
+    // Labels fade in only after the parts have finished moving, one after another
+    // (and fade out first when scrolling back, before the shoe closes).
+    labelControls.forEach(({ label }, i) => {
+      const start = labelTiming.start + i * labelTiming.each;
+      label.show(easeInOut(between(progress, start, start + labelTiming.fade)));
     });
   }
 

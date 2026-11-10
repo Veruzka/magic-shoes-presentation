@@ -12,7 +12,7 @@ import shoePhoto from '../assets/shoe-photo.png';
 import shoeSketch from '../assets/shoe-sketch.png';
 import { sketchSole } from './sketch-sole.js';
 import { sketchMidsole } from './sketch-midsole.js';
-import { sketchLabels } from './sketch-labels.js';
+import { sketchLabels, labelTiming } from './sketch-labels.js';
 
 // The first one is shown until you pick another with the switcher.
 export const shoes = [
@@ -31,5 +31,6 @@ export const shoes = [
     layers: [sketchSole, sketchMidsole],
     // Labels that fade in beside each part as it separates.
     labels: sketchLabels,
+    labelTiming, // when they appear: only after the parts have finished fanning out
   },
 ];

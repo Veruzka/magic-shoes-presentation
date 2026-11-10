@@ -2,6 +2,15 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: smoother motion, text after the parts
+**What changed**
+- **Smoother fanning:** the parts now glide toward the scroll position over a few frames instead of jumping on every mouse-wheel notch. In a simulated wheel scroll down and back up, all 342 frames ran at a steady 60 per second, with no slow frames.
+- **Motion and text separated:**
+  - first the parts fan out, with no text
+  - once they're fully out, you keep scrolling and the labels fade in one after another (Outsole, Midsole, FSR) while nothing moves
+  - scrolling back fades the text out first, then the shoe closes
+- The pinned scroll is longer (150% → 220% of the screen height) to make room for the text phase.
+
 ## 2026-11-10: "Magic Shoes" title
 **What changed**
 - **A big "Magic Shoes" title,** styled and placed like the reference:

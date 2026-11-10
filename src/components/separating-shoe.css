@@ -4,6 +4,7 @@
   position: relative;
   width: calc(var(--shoe-width) * 0.9);
   aspect-ratio: 1356 / 846; /* the drawing's shape */
+  will-change: translate; /* it rises while opening: let the browser prepare for that */
 }
 
 /* The shadow goes on the pictures only, not on the labels. */
