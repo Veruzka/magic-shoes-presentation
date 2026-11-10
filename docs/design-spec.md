@@ -62,7 +62,8 @@ The fonts are loaded from Google Fonts in `index.html`.
 | `--ease-soft` | ease-in-out | the float and shadow | base.css |
 | `--fan-scroll-length` | 150% of the screen height | how much scrolling the shoe's coming-apart takes | hero.css |
 | Gray sole stage | 0 → 30% of that scroll | when the gray sole slides away | `stage` in `src/shoes/sketch-sole.js` |
-| White midsole stage | 15% → 45% (starts midway through the gray sole), travels half as far | when the white midsole slides away | `stage` and `travel` in `src/shoes/sketch-midsole.js` |
+| White midsole stage | 15% → 45% (starts midway through the gray sole), travels 0.34 of the path (about 54px vs. the gray sole's 160px) | when the white midsole slides away | `stage` and `travel` in `src/shoes/sketch-midsole.js` |
+| Layer paths | Down-left: 96px left, 160px down, 5° tilt; Down: 160px down | the gray sole's full path; other layers move a share of it | `src/shoes/sole-moves.js` |
 | Layer easing | soft start and stop (cosine) | every layer's slide | separating-shoe.js |
 | Stagger | 0.08 (each part starts 8% later) | the set-aside 5-part view | `STAGGER` in `src/components/exploding-shoe.js` |
 | Scroll depth | far layers 0.25–0.35, near −0.15 | how fast background layers move | each background's `LAYER_SPEEDS` |

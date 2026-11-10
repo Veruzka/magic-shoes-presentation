@@ -79,11 +79,13 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 ## Layers coming apart (Sketch shoe)
 **What:** as you scroll, the Sketch shoe comes apart from the bottom up, like puzzle pieces. Each piece leaves a clean gap and a soft sketch outline on what's left.
 1. **Gray rubber sole:** moves during 0–30% of the scroll. Its top surface has the molded tread.
-2. **White foam midsole** (with the clear pods): starts midway (15%) and finishes at 45%. It travels half as far, so the gaps are even. Its top surface is a smooth matte tray with a raised lip.
+2. **White foam midsole** (with the clear pods): starts midway (15%) and finishes at 45%. It travels about a third as far as the gray sole, so there's more space below it than above it. Its top surface is a smooth matte tray with a raised lip, with a small **wireless-charging sensor** lying in the middle: a copper coil on a black disc, two copper wires, and a green circuit board.
 
 **Files:**
 - `src/shoes/sketch-sole.js`: the gray sole layer.
 - `src/shoes/sketch-midsole.js`: the white midsole layer.
+- `src/shoes/sketch-sensor.js`: the sensor on the white midsole (position, size, colors).
+- `src/components/sensor-drawing.js`: how the sensor is drawn (careful).
 - `src/shoes/sole-moves.js`: the path all layers follow (Down-left / Down).
 - `src/shoes/index.js`: the order of the layers (`layers: [sketchSole, sketchMidsole]`).
 - `src/components/separating-shoe.js`: how the cutting and motion work (ask me).
@@ -94,6 +96,12 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 - `topFace`:
   - gray sole: `tread` sets the ridges
   - white midsole: `floorLight`, `floorDark`, `lipWidth`, `lipLight`, `recessShade` and `grain` set the tray
+- **Sensor** (`sketch-sensor.js`):
+  - `along`: toe (0) to heel (1)
+  - `across`: tray's near edge (0) to far edge (1)
+  - `size`: the coil's width; it shrinks by itself if it wouldn't fit the tray
+  - `tilt`: how much it follows the tray's slope
+  - `coilRings`, and every color (copper, disc, board…)
 - `outline`: the soft sketch line along the new edge (`colour`, `width`).
 
 **How each cut works:** the cut follows one smooth **seam** where a layer meets the part above it, never pixel by pixel.
@@ -105,7 +113,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 
 These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (traced outline areas, like the toe bumper), `mustContain` (the white layer only exists where real white foam is) and `minThickness` (anything thinner is ignored, so no strings).
 
-> **Example:** to make the white midsole start later, change `stage: { start: 0.15, end: 0.45 }` to `{ start: 0.25, end: 0.55 }` in `sketch-midsole.js`. To make the gray sole drop further, change `y: 100` to `y: 150` in `sole-moves.js`.
+> **Example:** to make the white midsole start later, change `stage: { start: 0.15, end: 0.45 }` to `{ start: 0.25, end: 0.55 }` in `sketch-midsole.js`. To make the gray sole drop even further, change `y: 160` to `y: 200` in `sole-moves.js`. To make the sensor bigger, change `size: 170` to `size: 200` in `sketch-sensor.js`.
 
 ---
 
@@ -150,6 +158,7 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 | `setSoleMove(section, move)` | `src/sections/hero.js` | Switches the sole's path | hero + a move → nothing | Careful |
 | `separatingShoe(shoe, move)` | `src/components/separating-shoe.js` | Splits the Sketch drawing into layers and moves each one on scroll | shoe (with `layers`) + path → the shoe and its controls | Ask me |
 | `splitDrawing(...)` / `cutLayer(...)` | `src/components/separating-shoe.js` | Cuts each layer out, bottom up, and draws the outlines | drawing + layer settings → one picture per layer + the body | Ask me |
+| `drawSensor(ctx, centre, sensor, outline)` | `src/components/sensor-drawing.js` | Draws the charging sensor (coil, wires, board) flat on the tray | where + settings → the drawing | Ask me |
 | `drawTreadFace(...)` / `drawTrayFace(...)` | `src/components/separating-shoe.js` | Paints a layer's top surface (gray tread / white foam tray) | layer settings → painted surface | Ask me |
 | `optionSwitcher({ title, options, current, onPick })` | `src/components/option-switcher.js` | Makes one row of the Style lab card (name + segmented pill) | title, list, current pick, what to do on click → the row | Careful |
 | `switcherPanel(heading, ...rows)` | `src/components/option-switcher.js` | Makes the frosted Style lab card that holds the rows | heading text + rows → the card | Careful |

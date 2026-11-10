@@ -16,6 +16,7 @@
 //                             src/shoes/sketch-midsole.js  (white foam midsole)
 // The paths they travel:      src/shoes/sole-moves.js
 import './separating-shoe.css';
+import { drawSensor, SENSOR_WIDTH_PER_SIZE } from './sensor-drawing.js';
 
 // The shoe's width on a desktop screen; sole-moves.js distances are measured on this.
 const DESKTOP_SHOE_WIDTH = 414;
@@ -378,7 +379,7 @@ function drawTrayFace(ctx, layer, topEdge) {
   const { depth, floorLight, floorDark, lipWidth, lipLight, recessShade, grain } = layer.topFace;
   const face = topFacePath(topEdge, depth);
   if (!face) return;
-  const { path, columns } = face;
+  const { path, columns, firstX, lastX } = face;
   const top = Math.min(...columns.map(([, y]) => y)) - depth;
   const bottom = Math.max(...columns.map(([, y]) => y));
 
@@ -422,6 +423,50 @@ function drawTrayFace(ctx, layer, topEdge) {
   ctx.strokeStyle = layer.outline.colour;
   ctx.lineWidth = layer.outline.width;
   ctx.stroke(path);
+
+  // Anything lying on the tray floor (e.g. the charging sensor).
+  const { sensor } = layer.topFace;
+  if (sensor) placeOnFloor(ctx, sensor, face, depth, lipWidth * 3, layer.outline);
+}
+
+// Places the sensor on the tray floor: it measures the floor along the sensor's
+// whole width, tilts the sensor to follow the floor's slope, and shrinks it if
+// any part of the floor is too narrow — so it always sits inside, clear of the lip.
+function placeOnFloor(ctx, sensor, { columns, firstX, lastX }, depth, margin, outline) {
+  const nearAt = new Map(columns);
+  const length = lastX - firstX;
+  // The floor at any x: its near edge, how deep it is, and the line `across` of the way in.
+  const floorAt = (x) => {
+    const near = nearAt.get(Math.round(x));
+    if (near === undefined) return null;
+    const height = depth * Math.sin(Math.PI * ((x - firstX) / length));
+    return { line: near - height * sensor.across, room: height };
+  };
+
+  const centreX = firstX + sensor.along * length;
+  let size = sensor.size;
+  let fit = null;
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const halfWidth = (size * SENSOR_WIDTH_PER_SIZE) / 2;
+    const left = floorAt(centreX - halfWidth);
+    const right = floorAt(centreX + halfWidth);
+    const middle = floorAt(centreX);
+    if (!left || !right || !middle) {
+      size *= 0.8;
+      continue;
+    }
+    // Narrowest floor under the sensor vs. how tall the sensor is on screen.
+    const room = Math.min(left.room, right.room, middle.room) - 2 * margin;
+    const tall = size * 1.1 * sensor.flatten;
+    fit = { left, right, middle, halfWidth };
+    if (tall <= room) break;
+    size *= Math.max(0.6, room / tall);
+  }
+  if (!fit) return;
+
+  const angle = Math.atan2(fit.right.line - fit.left.line, 2 * fit.halfWidth) * (sensor.tilt ?? 1);
+  const centreY = (fit.left.line + fit.right.line + fit.middle.line) / 3;
+  drawSensor(ctx, { x: centreX, y: centreY, angle }, { ...sensor, size }, outline);
 }
 
 // The gray sole's top surface: painted with the colours of the visible gray side,

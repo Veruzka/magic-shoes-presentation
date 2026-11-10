@@ -5,6 +5,6 @@
 //         (scales down with the shoe on smaller screens)
 //   turn  how much it tilts by the end, in degrees
 export const soleMoves = [
-  { id: 'down-left', label: 'Down-left', x: -60, y: 100, turn: 4 },
-  { id: 'down', label: 'Down', x: 0, y: 100, turn: 0 },
+  { id: 'down-left', label: 'Down-left', x: -96, y: 160, turn: 5 },
+  { id: 'down', label: 'Down', x: 0, y: 160, turn: 0 },
 ];

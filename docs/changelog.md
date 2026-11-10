@@ -2,6 +2,20 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: more space + charging sensor
+**What changed**
+- **More space between the gray sole and the white midsole:**
+  - the gray sole now drops 160px instead of 100px (Down-left also shifts 96px toward the toe, with a 5° tilt)
+  - the white midsole moves about a third of that (~54px)
+  - so the gap below the white midsole roughly doubled
+- **A small wireless-charging sensor on the white midsole's tray,** from your photo, with only the sensor itself:
+  - a copper coil on a black disc, with a small hub
+  - two copper wires
+  - a little green circuit board with a silver chip and tiny parts
+- **How it's drawn:** in code, in the sketch style (soft outlines, faint shadow), flattened to match the tray's angle.
+- **How it fits:** it measures the floor under it, tilts gently with the floor's slope, and shrinks if needed, so it always has space around it and never touches the lip.
+
+
 ## 2026-11-09: white midsole separates
 **What changed**
 - The Sketch shoe now comes apart in **two layers**. The **white foam midsole** (with its clear pods and the heel cup that wraps up the back) separates after the gray sole: it starts midway through the gray sole's move (15% → 45% of the scroll), follows the same Down-left / Down path, and travels half as far, so the gaps are even.

@@ -7,7 +7,7 @@ flowchart TD
   hero["Hero section<br/>the first screen"]
   bg["Backgrounds<br/>Clouds or Meadow"]
   shoe["Shoes<br/>Photo or Sketch<br/>(comes apart in layers)"]
-  data["Settings and images<br/>data files, assets"]
+  data["Settings and images<br/>layers, sensor, assets"]
   helpers["Helpers<br/>scroll depth,<br/>scroll progress,<br/>remember picks"]
   styles["Shared look<br/>base.css"]
   tools["Prototype tools<br/>Style lab card, i panel"]
@@ -46,7 +46,7 @@ Interchangeable looks behind the shoe, listed in `src/backgrounds/index.js`. **C
 Interchangeable shoe styles, listed in `src/shoes/index.js`. **Photo** is a realistic beige low-top that just floats. **Sketch** is a marker drawing of a chunky runner that comes apart in layers as you scroll.
 
 ### Layers coming apart
-`src/components/separating-shoe.js` splits the Sketch drawing in the browser, layer by layer from the bottom up: first the **gray sole**, then the **white foam midsole**. Each cut follows one smooth seam, like a puzzle piece. Each layer has its own settings file (`src/shoes/sketch-sole.js`, `src/shoes/sketch-midsole.js`), its own timing, and a painted top surface (gray tread, white foam tray).
+`src/components/separating-shoe.js` splits the Sketch drawing in the browser, layer by layer from the bottom up: first the **gray sole**, then the **white foam midsole**. Each cut follows one smooth seam, like a puzzle piece. Each layer has its own settings file (`src/shoes/sketch-sole.js`, `src/shoes/sketch-midsole.js`), its own timing, and a painted top surface (gray tread, white foam tray). A small wireless-charging sensor, drawn in code (`src/components/sensor-drawing.js`, settings in `src/shoes/sketch-sensor.js`), lies on the white tray.
 
 ### Settings and images
 Plain lists you can edit: where each cloud and flower sits (`src/data/`), where the gray sole is in the drawing, and which paths it can take (`src/shoes/`). The shoe images live in `src/assets/`.

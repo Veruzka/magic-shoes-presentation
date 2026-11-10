@@ -4,13 +4,16 @@
 //
 // All position numbers are pixels in src/assets/shoe-sketch.png (1356 × 846).
 
+import { sketchSensor } from './sketch-sensor.js';
+
 export const sketchMidsole = {
   name: 'white-midsole',
 
   // Starts midway through the gray sole's move (0 → 0.3), and finishes a little later.
   stage: { start: 0.15, end: 0.45 },
-  // Travels half as far as the gray sole, so the two gaps end up about equal.
-  travel: 0.5,
+  // Travels about a third as far as the gray sole (~54px), so there's a bigger
+  // gap below it (to the gray sole, ~106px) than above it (to the shoe).
+  travel: 0.34,
 
   // How to find the seam — the line where the white foam meets the cork (or the
   // cream toe cap). Each column is read from the foam's bottom edge upward; the
@@ -48,5 +51,6 @@ export const sketchMidsole = {
     lipLight: 0.9, // how bright the lip is (0–1)
     recessShade: 0.22, // shadow where the floor dips below the lip (0–1)
     grain: 0.18, // faint foam grain (0 = perfectly smooth)
+    sensor: sketchSensor, // the small charging sensor lying in the middle of the tray
   },
 };
