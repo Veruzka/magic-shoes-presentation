@@ -22,3 +22,4 @@ The living docs are in `docs/` (start with `docs/README.md`). Write them in plai
 - Keep docs short and current. Edit existing entries instead of piling up duplicates.
 - Never write secret keys or passwords in any doc. Only name which keys exist and where they are set.
 - When I ask for a checkpoint, commit everything, add a git tag `checkpoint-NN-short-name`, and list it in `docs/checkpoints.md`. Don't push unless I ask. Before going back to a checkpoint, save the current work first.
+- When a scroll or motion effect misbehaves, follow `docs/debugging-motion.md` (logic check with real wheel notches → frame check in a visible Chrome → switch off suspects one at a time → fix the cause → prove it → write it down). Run `npm run debug:stalls` after adding any new moving piece.

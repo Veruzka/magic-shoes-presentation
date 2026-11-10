@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "debug:walk": "node --experimental-websocket tools/motion-debug/wheel-walk.mjs",
+    "debug:stalls": "node --experimental-websocket tools/motion-debug/frame-stalls.mjs"
   },
   "devDependencies": {
     "vite": "^8.3.7"

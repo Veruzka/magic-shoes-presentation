@@ -182,6 +182,16 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 
 ---
 
+## Motion debugging tools
+**What:** two scripts for checking scroll effects. See the playbook, [debugging-motion.md](debugging-motion.md).
+**Files:** `tools/motion-debug/`.
+- `npm run debug:walk`: scrolls notch by notch in a hidden Chrome and prints what the page shows at each step (checks the logic).
+- `npm run debug:stalls`: measures slow frames in a visible Chrome window. Add `-- --suspects` to switch off one visual at a time.
+
+**Safe to change:** the `SUSPECTS` list in `frame-stalls.mjs` (add new visuals as they're built).
+
+---
+
 ## Set aside: the 5-part exploded view
 **Files:** `src/components/exploding-shoe.js`, `src/shoes/sketch-parts.js`, `src/assets/sketch-parts/`. It isn't shown right now. Leave it alone unless we bring it back.
 

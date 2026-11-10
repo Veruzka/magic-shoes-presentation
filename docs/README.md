@@ -42,3 +42,4 @@ We never publish with the Vercel command-line tool. Pushing to GitHub is the onl
 | [design-improvements.md](design-improvements.md) | see the list of design ideas and issues |
 | [changelog.md](changelog.md) | see what changed in each work session |
 | [checkpoints.md](checkpoints.md) | see the saved points we can go back to, and how |
+| [debugging-motion.md](debugging-motion.md) | track down a scroll or motion problem, step by step (our playbook) |
