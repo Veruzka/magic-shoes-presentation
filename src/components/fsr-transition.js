@@ -13,7 +13,8 @@ const mix = (a, b, t) => a + (b - a) * t;
 // stage     the pinned screen it flies across (positions are measured against it)
 // shoe      the shoe's controls (fsrPose, setFsrHidden, setLabelsVisible)
 // settings  src/shoes/fsr-transition.js
-export function flyingFsr(stage, shoe, settings) {
+// image     the FSR render, loaded and decoded right away so chapter 2 never waits for it
+export function flyingFsr(stage, shoe, settings, image) {
   const element = document.createElement('div');
   element.className = 'fsr-flight';
   element.setAttribute('aria-hidden', 'true');
@@ -22,6 +23,10 @@ export function flyingFsr(stage, shoe, settings) {
   const img = document.createElement('img');
   img.className = 'fsr-flight__image';
   img.alt = '';
+  if (image) {
+    img.src = image;
+    img.decode().catch(() => {});
+  }
   inner.append(img);
   element.append(inner);
 
@@ -39,7 +44,7 @@ export function flyingFsr(stage, shoe, settings) {
 
     // How the image sits around the pad, in flat units (same as in the pocket).
     const { layout } = pose;
-    if (img.src !== new URL(layout.image, location.href).href) img.src = layout.image;
+    if (!img.src) img.src = layout.image;
     Object.assign(img.style, {
       left: `${-layout.width / 2 - layout.padX}px`,
       top: `${-layout.height / 2 - layout.padY}px`,

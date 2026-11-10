@@ -24,10 +24,13 @@ const parallax = createParallax();
 // parts), chapter 2 flies the FSR to the centre as the scene scrolls away.
 const heroSection = app.querySelector('.hero');
 const shoeOpening = watchScrollProgress(heroSection, (progress) => {
+  heroSection.dataset.progress = progress.toFixed(3); // handy when debugging the motion
   const chapter = chapterProgress(progress, hasExitChapter(heroSection));
   setShoeOpening(heroSection, chapter.fan);
   setTransition(heroSection, chapter.exit);
 });
+// When a shoe finishes preparing (it takes a moment), re-measure the scroll right away.
+heroSection.addEventListener('shoe-ready', () => shoeOpening.refresh());
 
 // Prototype tool: the "Style lab" glass card (top-right) to flip between options.
 const styleLab = switcherPanel(

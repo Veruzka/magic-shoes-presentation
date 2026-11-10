@@ -19,19 +19,23 @@
   );
 }
 
-/* Hidden: only holds the cloud texture filter. */
-.clouds__definitions {
-  position: absolute;
-  width: 0;
-  height: 0;
-}
-
 /* ---------- Clouds ---------- */
 .clouds__layer {
   position: absolute;
   inset: 0;
   will-change: transform;
-  filter: url(#cloud-texture);
+}
+
+/* Each layer is one ready-made picture (drawn once in cloud-studio.js, with the
+   wispy texture baked in), a bit taller than the screen so its edges never show. */
+.clouds__picture {
+  position: absolute;
+  left: 0;
+  top: -25%; /* EXTRA_ABOVE in cloud-studio.js */
+  width: 100%;
+  height: 175%; /* 1 + EXTRA_ABOVE + EXTRA_BELOW */
+  pointer-events: none;
+  user-select: none;
 }
 
 /* Back clouds are a little fainter, so they feel further away. */
@@ -39,45 +43,9 @@
   opacity: 0.85;
 }
 
-.cloud {
-  position: absolute;
-  left: var(--x);
-  top: var(--y);
-  width: calc(var(--size) * var(--cloud-scale, 1));
-  aspect-ratio: 2 / 1;
-  transform: translate(-50%, -50%);
-}
-
-.cloud--flipped {
-  transform: translate(-50%, -50%) scaleX(-1);
-}
-
-/* One soft puff: bright white in the middle, fading to nothing at the edge,
-   so neighbouring puffs blend into one cloud. */
-.cloud__puff {
-  position: absolute;
-  left: var(--px);
-  top: var(--py);
-  width: calc(var(--pr) * 1.7);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 50% 42%,
-    rgb(255 255 255 / 1) 0%,
-    rgb(255 255 255 / 0.9) 35%,
-    rgb(252 248 242 / 0.5) 55%,
-    rgb(250 245 238 / 0) 70%
-  );
-}
-
-/* On narrow screens, make clouds bigger so they still read as clouds. */
+/* On narrow screens (clouds are drawn bigger there, see cloud-studio.js) */
 @media (max-width: 700px) {
-  .clouds {
-    --cloud-scale: 2;
-  }
-
-  /* …and sit the back clouds a bit lower so they stay out of the shoe's clear space. */
+  /* sit the back clouds a bit lower so they stay out of the shoe's clear space. */
   .clouds__layer--back {
     translate: 0 8vh;
   }

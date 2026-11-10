@@ -47,8 +47,3 @@
   pointer-events: none;
 }
 
-/* Labels can be faded out as a group during the FSR transition. */
-.separating-shoe .part-note {
-  filter: opacity(var(--labels-visible, 1));
-}
-

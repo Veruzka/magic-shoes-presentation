@@ -31,9 +31,10 @@ See [design-spec.md](design-spec.md) for the full list.
 
 **Safe to change:**
 - **Colors** at the top of `cloud-studio.css`: `--cream-top`, `--cream-middle`, `--cream-bottom` (the sky) and `--box-top`, `--box-left`, `--box-right` (the box).
-- **Wispiness**, in `cloud-studio.js`, inside the `cloud-texture` filter:
+- **Wispiness**, in `cloud-studio.js`, in `TEXTURE`:
   - `baseFrequency`: a smaller number makes bigger, lazier wisps.
   - `scale`: a bigger number makes raggeder edges.
+  - Each cloud layer is drawn **once** into a picture with this texture baked in, then just slides for the parallax. (Running the texture live made every frame stutter.)
 - **Cloud positions:** each line in `clouds.js` has `x`, `y` (percent of the screen), `size` (percent of the screen width), `layer` (`'back'` or `'front'`) and `flip`.
 - **Scroll speeds:** `LAYER_SPEEDS` in `cloud-studio.js`. Positive means slower than the page (feels far); negative means faster (feels close).
 
@@ -208,7 +209,7 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 | `switcherPanel(heading, ...rows)` | `src/components/option-switcher.js` | Makes the frosted Style lab card that holds the rows | heading text + rows → the card | Careful |
 | `infoButton()` | `src/components/info-panel.js` | Makes the "i" button and its panel | nothing → the button | Careful |
 | `createParallax()` | `src/core/parallax.js` | Moves layers at different speeds on scroll (`data-speed`) | nothing → controls (refresh, stop) | Ask me |
-| `watchScrollProgress(element, onProgress, { smoothing })` | `src/core/scroll-progress.js` | Reports scroll through an element as 0–1, gliding smoothly instead of jumping (smoothing 0.12; lower is floatier, 1 is none) | element + what to do with the number → controls | Careful |
+| `watchScrollProgress(element, onProgress, { settle, maxLag })` | `src/core/scroll-progress.js` | Reports scroll through an element as 0–1, gliding smoothly in time (`settle` 0.1s; it never trails by more than `maxLag` 0.15) | element + what to do with the number → controls | Careful |
 | `loadChoice(name, options)` / `saveChoice(name, option)` | `src/core/remember-choice.js` | Remembers your last pick in this browser | a name + list → the remembered option | Careful |
 | `cloudStudio.build()` / `flowerMeadow.build()` | `src/backgrounds/…` | Draws a background | nothing → the background | Careful |
 

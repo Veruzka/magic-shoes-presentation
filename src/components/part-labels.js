@@ -52,11 +52,22 @@ export function partLabel(note, points) {
   element.append(text);
 
   // 0 = hidden, 1 = fully shown (arrow drawn out, text faded in).
+  // `group` fades all labels out together on top of that (used in chapter 2).
+  let shown = 0;
+  let group = 1;
+  function apply() {
+    element.style.opacity = shown * group;
+    element.style.setProperty('--drawn', shown);
+  }
   function show(amount) {
-    element.style.opacity = amount;
-    element.style.setProperty('--drawn', amount);
+    shown = amount;
+    apply();
+  }
+  function setGroup(amount) {
+    group = amount;
+    apply();
   }
   show(0);
 
-  return { element, show };
+  return { element, show, setGroup };
 }

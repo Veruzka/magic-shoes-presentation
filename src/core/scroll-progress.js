@@ -4,16 +4,20 @@
 // Scrolling back up runs the numbers backwards, so anything driven by it reverses.
 //
 // Smoothing: instead of jumping straight to the scroll position (which shows every
-// mouse-wheel notch as a jolt), the number glides toward it over a few frames.
-//   smoothing  how much of the remaining distance to cover each frame
-//              (0.12 = soft and floaty, 1 = no smoothing). Visitors who prefer
-//              reduced motion always get 1, so nothing lags behind their scroll.
+// mouse-wheel notch as a jolt), the number glides toward it.
+//   settle  how quickly it catches up, in seconds (about 3× this to arrive fully).
+//           It's measured in time, not screen refreshes, so a slow moment (e.g. the
+//           browser preparing something heavy the first time) can't make it fall
+//           behind and then race ahead.
+//   maxLag  it never trails the real scroll by more than this share of the scroll.
+// Visitors who prefer reduced motion get no smoothing, so nothing lags their scroll.
 
-export function watchScrollProgress(element, onProgress, { smoothing = 0.12 } = {}) {
+export function watchScrollProgress(element, onProgress, { settle = 0.1, maxLag = 0.15 } = {}) {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let target = 0; // where the scroll actually is
   let current = 0; // what we've shown so far
   let frame = null;
+  let lastTime = null;
 
   function measure() {
     const rect = element.getBoundingClientRect();
@@ -21,15 +25,21 @@ export function watchScrollProgress(element, onProgress, { smoothing = 0.12 } = 
     return distance > 0 ? Math.min(Math.max(-rect.top / distance, 0), 1) : 0;
   }
 
-  // One animation frame: move part of the way toward the target, and keep
-  // going until we've (almost) arrived.
-  function step() {
+  // One animation frame: move toward the target by an amount based on how much
+  // time has passed, and keep going until we've (almost) arrived.
+  function step(time) {
     frame = null;
-    const ease = reduceMotion.matches ? 1 : smoothing;
-    current += (target - current) * ease;
+    const seconds = lastTime === null ? 1 / 60 : Math.min((time - lastTime) / 1000, 0.25);
+    lastTime = time;
+    if (reduceMotion.matches) current = target;
+    else current += (target - current) * (1 - Math.exp(-seconds / settle));
+    // Never trail too far behind.
+    if (target - current > maxLag) current = target - maxLag;
+    if (current - target > maxLag) current = target + maxLag;
     if (Math.abs(target - current) < 0.0005) current = target;
     onProgress(current);
     if (current !== target) frame = requestAnimationFrame(step);
+    else lastTime = null;
   }
 
   function requestUpdate() {

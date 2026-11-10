@@ -2,6 +2,19 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: fixed the first-scroll stall
+**The bug:** on the first scroll down, after the first label, nothing seemed to happen for a while, then the page jumped to the big FSR.
+
+**What testing found:**
+- **Real mouse-wheel scrolling, notch by notch, in a fresh browser:** the page's logic was right every time, with every stage in order.
+- **A visible Chrome window using the graphics card, like yours:** the page drew only about 4 frames per second during the labels and while the scene slid away. The cause was the clouds' wispy texture filter, which was being recalculated across the whole screen on every frame (about 250ms each). The old smoothing then fell behind and raced ahead, which looked like a jump.
+
+**The fix:**
+- Each cloud layer is now drawn **once** into a picture, with the texture baked in, and just slides for the parallax. The look is unchanged. In the same visible-Chrome test, the longest frame is now 9ms (smooth 60+ fps) on every pass.
+- The smoothing now works in time, not per frame, and never trails the scroll by more than 15%.
+- Label fades no longer repaint the shoe under them.
+- The flying FSR's image loads ahead of time.
+
 ## 2026-11-10: chapter 2, the FSR transition
 **What changed**
 - **A second scroll chapter.** After the labels, scrolling on:

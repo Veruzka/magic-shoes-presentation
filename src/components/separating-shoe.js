@@ -86,6 +86,8 @@ export function separatingShoe({ image, alt, layers, labels = [], labelTiming },
     });
     element.classList.add('is-split');
     setProgress(currentProgress);
+    // Let the page know the shoe is ready (so scroll progress can be re-measured).
+    element.dispatchEvent(new CustomEvent('shoe-ready', { bubbles: true }));
   });
 
   // How far a layer travels along the chosen path (1 = all of it).
@@ -174,7 +176,7 @@ export function separatingShoe({ image, alt, layers, labels = [], labelTiming },
 
   // Fade all the part labels out (1 = as normal, 0 = gone), on top of their own fade-in.
   function setLabelsVisible(amount) {
-    element.style.setProperty('--labels-visible', amount);
+    labelControls.forEach(({ label }) => label.setGroup(amount));
   }
 
   return { element, setProgress, setMove, fsrPose, setFsrHidden, setLabelsVisible };

@@ -5,6 +5,7 @@
   inset: 0;
   pointer-events: none;
   color: var(--color-note);
+  will-change: opacity; /* its own layer: fading it never repaints the shoe underneath */
 }
 
 .part-note__text {
