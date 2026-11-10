@@ -2,6 +2,16 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: FSR as a high-end 3D render
+- **A new FSR render** in the style of your references (studio product renders, exploded electronics):
+  - a **thick, bevelled glossy black pad** with crisp, high-definition silver electrode lines and a fine texture
+  - a **clear, glass-like tail** with real thickness, light refraction and silver traces inside
+  - a white tab with **chrome pins**
+- **Used everywhere:** in the shoe's pocket, while lifting out, and big in the center of the next scene.
+- The previous render is kept as `src/assets/fsr-render-v1.png`.
+- **AI image:** Figma AI (gpt-image-2.5-flare, Graft team, 1 credit, 1536×864). Prompt: "Ultra high-end 3D product render, Octane/KeyShot quality, of a single round force-sensing resistor (FSR) lying flat… thick circular sensor pad (about 3mm) with a softly bevelled glossy black edge… crisp, high-definition interdigitated electrode lines in polished silver on matte black, with a fine tactile micro-texture… long flexible tail of thick, polished, crystal-clear transparent film with a faint mint tint, real thickness and clean light refractions… two brushed-and-polished silver conductive traces… small matte white connector tab with two shiny chrome pins… pale light-gray seamless studio background, soft diffused overhead lighting… camera about 20° above, pad on the LEFT, tail to the RIGHT… no text, no logo." Cut out with Apple's subject lift.
+- The stall check (`npm run debug:stalls`) still shows no slow frames.
+
 ## 2026-11-10: fixed the first-scroll stall
 **The bug:** on the first scroll down, after the first label, nothing seemed to happen for a while, then the page jumped to the big FSR.
 

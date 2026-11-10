@@ -95,7 +95,8 @@ AI was used **once, while building**, to create the shoe images:
 | Photo shoe (`shoe-photo.png`) | Figma AI image tool (model: gpt-image-2.5-flare), in the Figma file "Magic Shoes – assets", Graft team | [changelog.md](changelog.md), 2026-11-09 entry | 1 Figma AI credit, one time |
 | Sketch shoe (`shoe-sketch.png`) | same | same | 1 credit, one time |
 | 5-part exploded drawing (`sketch-parts/`, set aside) | same | same | 1 credit, one time |
-| FSR render (`fsr-render.png`) | same | [changelog.md](changelog.md), 2026-11-10 entry | 1 credit, one time |
+| FSR render, first version (`fsr-render-v1.png`, not used) | same | [changelog.md](changelog.md), 2026-11-10 "FSR as a 3D render" | 1 credit, one time |
+| FSR high-end 3D render (`fsr-render.png`) | same | [changelog.md](changelog.md), 2026-11-10 "FSR as a high-end 3D render" | 1 credit, one time |
 
 Backgrounds were removed from the images with Apple's built-in "lift subject" feature on the Mac (free, no internet).
 

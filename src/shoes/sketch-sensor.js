@@ -12,12 +12,12 @@ export const sketchSensor = {
 
   // About the render image, measured from it (only change these for a new image):
   render: {
-    image: fsrRender,
-    padWidth: 0.336, // the round pad's width, as a share of the image's width
-    padCentre: [0.17, 0.5], // where the pad's centre is in the image (share of width, height)
-    viewFlatten: 0.67, // how squashed the round pad looks in the image (1 = seen from straight above)
-    slope: 3.9, // degrees the tail runs downhill to the right in the image
-    tailWidth: 0.24, // the tail's width for the pocket channel, as a share of the pad's width
+    image: fsrRender, // the high-end 3D render (the earlier one is src/assets/fsr-render-v1.png)
+    padWidth: 0.32, // the round pad's width, as a share of the image's width
+    padCentre: [0.161, 0.47], // where the pad's centre is in the image (share of width, height)
+    viewFlatten: 0.66, // how squashed the round pad looks in the image (1 = seen from straight above)
+    slope: 4.9, // degrees the tail runs downhill to the right in the image
+    tailWidth: 0.3, // the tail's width (it's thicker now) for the pocket channel, as a share of the pad's width
   },
 
   along: 0.5, // where it sits from toe (0) to heel (1) — the middle of the sole

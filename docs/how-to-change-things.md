@@ -117,7 +117,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 - `src/shoes/sketch-sole.js`: the gray sole layer.
 - `src/shoes/sketch-midsole.js`: the white midsole layer.
 - `src/shoes/sketch-sensor.js`: the FSR on the white midsole (look, position, size, pocket).
-- `src/assets/fsr-render.png`: the 3D render of the FSR (made with Figma AI, then cut out).
+- `src/assets/fsr-render.png`: the high-end 3D render of the FSR (made with Figma AI, then cut out), used in the shoe and in chapter 2. The earlier render is `fsr-render-v1.png`. To switch back, import it in `sketch-sensor.js` and restore its measurements (in git history).
 - `src/shoes/sketch-labels.js`: the **part labels**: title, description, where the text sits and where the arrow points. Edit the wording here.
 - `src/components/part-labels.js` and `.css`: how the labels and arrows are drawn (fonts, sizes, arrow style).
 - `src/components/sensor-drawing.js`: how the sensor is drawn (careful).
