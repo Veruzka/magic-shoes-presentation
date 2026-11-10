@@ -2,6 +2,18 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: the big FSR is now high-definition
+**Why it looked blurry:**
+- **The browser was stretching a small snapshot.** The flying FSR was marked "will move" (`will-change`), so the browser photographed it once while it was small and enlarged that photo as it grew.
+- **Not enough pixels.** The render is an angled view. To face you, its squashed pad had to be stretched about 1.5× taller, beyond the pixels the image has.
+
+**The fix:**
+- **No more snapshot.** The flying FSR is redrawn sharply at every size. Its shadow moved to a still wrapper, so the image itself isn't filtered.
+- **A second, straight-on render** (`src/assets/fsr-render-front.png`, 532×1458, upright, pad on top). As the FSR finishes turning to face you, the angled render cross-fades into it, while it's still small. The big view then shows real pixels with no stretching. The angled render is still used in the shoe's pocket and while lifting out.
+- **Checked:** at 2× (Mac) sharpness in a visible Chrome, the electrode lines and the glass edges are crisp. The longest frame is 9ms, with no stalls.
+- **AI image:** Figma AI (gpt-image-2.5-flare, Graft team, 2 credits). The first try had the lines running the wrong way and was discarded. Prompt: "Photorealistic ultra high-end 3D product render, macro studio product photography, of a single round force-sensing resistor (FSR) lying flat, seen from directly above (straight-on top view), standing vertically in a tall portrait frame: perfectly circular pad at the top, the long straight tail running straight down… thick disc with a glossy black bevelled rim… matte black… precise, perfectly symmetric serpentine electrode pattern: about 14 thin, evenly spaced, perfectly straight polished-silver lines running VERTICALLY (parallel to the tail)… inside a thin silver ring… thick polished crystal-clear acrylic film with bevelled edges glowing faintly mint-green, with two parallel polished silver traces… small white plastic connector tab with two chrome pins pointing straight down. Razor-sharp focus… plain pale light-gray seamless background… No text, no logo." Cut out with Apple's subject lift.
+- **Known flaw:** a couple of faint white specks inside the leftmost silver line, which come from the AI image.
+
 ## 2026-11-10: FSR as a high-end 3D render
 - **A new FSR render** in the style of your references (studio product renders, exploded electronics):
   - a **thick, bevelled glossy black pad** with crisp, high-definition silver electrode lines and a fine texture

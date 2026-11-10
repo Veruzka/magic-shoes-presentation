@@ -60,7 +60,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 ## Chapter 2: FSR transition to the next section
 **What:** after the labels appear, scrolling on makes the FSR lift out of the white midsole, turn upright to face you, and grow to the center, while the shoe scene scrolls away and the next section's background rises in. It stops with the FSR big and centered.
 **Files:**
-- `src/shoes/fsr-transition.js`: all the timings and sizes (safe to change).
+- `src/shoes/fsr-transition.js`: all the timings and sizes (safe to change). `swap` is when the angled render cross-fades into the straight-on one. Keep it near the end of `turn`, while the FSR is still small.
 - `src/sections/hero-timeline.js`: how long each chapter lasts, in screen-heights (safe to change).
 - `src/components/fsr-transition.js`: the motion (ask me).
 
@@ -117,7 +117,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 - `src/shoes/sketch-sole.js`: the gray sole layer.
 - `src/shoes/sketch-midsole.js`: the white midsole layer.
 - `src/shoes/sketch-sensor.js`: the FSR on the white midsole (look, position, size, pocket).
-- `src/assets/fsr-render.png`: the high-end 3D render of the FSR (made with Figma AI, then cut out), used in the shoe and in chapter 2. The earlier render is `fsr-render-v1.png`. To switch back, import it in `sketch-sensor.js` and restore its measurements (in git history).
+- `src/assets/fsr-render.png`: the high-end 3D render of the FSR (made with Figma AI, then cut out), used in the shoe and while it lifts out. `src/assets/fsr-render-front.png` is the same FSR seen straight on, used for the big view in chapter 2 (its measurements are `front` in `sketch-sensor.js`). The earlier render is `fsr-render-v1.png`. To switch back, import it in `sketch-sensor.js` and restore its measurements (in git history).
 - `src/shoes/sketch-labels.js`: the **part labels**: title, description, where the text sits and where the arrow points. Edit the wording here.
 - `src/components/part-labels.js` and `.css`: how the labels and arrows are drawn (fonts, sizes, arrow style).
 - `src/components/sensor-drawing.js`: how the sensor is drawn (careful).
@@ -209,7 +209,7 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 | `setSoleMove(section, move)` | `src/sections/hero.js` | Switches the sole's path | hero + a move → nothing | Careful |
 | `separatingShoe(shoe, move)` | `src/components/separating-shoe.js` | Splits the Sketch drawing into layers and moves each one on scroll | shoe (with `layers`) + path → the shoe and its controls | Ask me |
 | `splitDrawing(...)` / `cutLayer(...)` | `src/components/separating-shoe.js` | Cuts each layer out, bottom up, and draws the outlines | drawing + layer settings → one picture per layer + the body | Ask me |
-| `flyingFsr(stage, shoe, settings)` | `src/components/fsr-transition.js` | The FSR that flies out of the shoe to the center in chapter 2 | the screen + the shoe's controls + timings → the FSR and its setProgress(0–1) | Ask me |
+| `flyingFsr(stage, shoe, settings, sensor)` | `src/components/fsr-transition.js` | The FSR that flies out of the shoe to the center in chapter 2 | the screen + the shoe's controls + timings + the FSR's renders → the FSR and its setProgress(0–1) | Ask me |
 | `chapterProgress(overall, hasExit)` | `src/sections/hero-timeline.js` | Splits the hero's scroll into chapter 1 and chapter 2 | overall 0–1 → each chapter's 0–1 | Careful |
 | `heroTitle(text)` | `src/components/hero-title.js` | Makes the big title behind the shoe | the words → the title | Safe |
 | `partLabel(note, points)` | `src/components/part-labels.js` | Makes one part label (title, description, arrow) that fades in with its part | a label entry + spots like the sensor → the label and its show(0–1) | Careful |

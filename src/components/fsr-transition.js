@@ -13,22 +13,30 @@ const mix = (a, b, t) => a + (b - a) * t;
 // stage     the pinned screen it flies across (positions are measured against it)
 // shoe      the shoe's controls (fsrPose, setFsrHidden, setLabelsVisible)
 // settings  src/shoes/fsr-transition.js
-// image     the FSR render, loaded and decoded right away so chapter 2 never waits for it
-export function flyingFsr(stage, shoe, settings, image) {
-  const element = document.createElement('div');
+// sensor    the FSR's settings (src/shoes/sketch-sensor.js): its angled render, plus
+//           the sharp straight-on render it switches to as it faces you
+//
+// Both images are loaded and decoded right away so chapter 2 never waits for them.
+// Sharpness: the moving piece is NOT marked "will-change", so the browser redraws
+// it crisply at every size instead of stretching a small snapshot. Its shadow is
+// on the outer wrapper (which doesn't move), so the images themselves aren't filtered.
+export function flyingFsr(stage, shoe, settings, sensor = {}) {
+  const element = document.createElement('div'); // still wrapper: carries the shadow
   element.className = 'fsr-flight';
   element.setAttribute('aria-hidden', 'true');
+  const mover = document.createElement('div'); // moved by one transform
+  mover.className = 'fsr-flight__mover';
   const inner = document.createElement('div');
   inner.className = 'fsr-flight__inner';
-  const img = document.createElement('img');
-  img.className = 'fsr-flight__image';
-  img.alt = '';
-  if (image) {
-    img.src = image;
-    img.decode().catch(() => {});
-  }
+  const img = picture(sensor.render?.image);
   inner.append(img);
-  element.append(inner);
+  // The straight-on render, turned so its tail runs along the FSR's length (pad on the left).
+  const frontTurn = document.createElement('div');
+  frontTurn.className = 'fsr-flight__front';
+  const front = picture(sensor.front?.image);
+  frontTurn.append(front);
+  mover.append(inner, frontTurn);
+  element.append(mover);
 
   function setProgress(t) {
     shoe.setLabelsVisible?.(1 - ease(between(t, settings.labelsOut)));
@@ -44,7 +52,6 @@ export function flyingFsr(stage, shoe, settings, image) {
 
     // How the image sits around the pad, in flat units (same as in the pocket).
     const { layout } = pose;
-    if (!img.src) img.src = layout.image;
     Object.assign(img.style, {
       left: `${-layout.width / 2 - layout.padX}px`,
       top: `${-layout.height / 2 - layout.padY}px`,
@@ -52,6 +59,26 @@ export function flyingFsr(stage, shoe, settings, image) {
       height: `${layout.height}px`,
     });
     inner.style.transform = `rotate(${layout.level}rad)`;
+
+    // The straight-on render, sized so its pad matches the angled one's pad exactly.
+    // Its tail is a little shorter, so after the swap the centring and final size
+    // follow its own length.
+    const hasFront = Boolean(sensor.front && front.naturalWidth);
+    const swap = hasFront ? ease(between(t, settings.swap)) : 0;
+    let frontLength = 0;
+    if (hasFront) {
+      const width = layout.size / sensor.front.padWidth;
+      const height = (width * front.naturalHeight) / front.naturalWidth;
+      frontLength = layout.size / 2 + (1 - sensor.front.padCentre[1]) * height; // pad's edge → pins
+      Object.assign(front.style, {
+        left: `${-sensor.front.padCentre[0] * width}px`,
+        top: `${-sensor.front.padCentre[1] * height}px`,
+        width: `${width}px`,
+        height: `${height}px`,
+        opacity: swap,
+      });
+      img.style.opacity = 1 - swap;
+    }
 
     // Where the FSR lies now: turn its on-screen axes into angle, size, tilt.
     const box = stage.getBoundingClientRect();
@@ -65,13 +92,14 @@ export function flyingFsr(stage, shoe, settings, image) {
     const squash0 = (v.x * sin + v.y * cos) / size0; // how foreshortened it is
 
     // The middle of the FSR (pad's left edge → tail end), relative to the pad, in flat units.
-    const middle = (-layout.size / 2 + (layout.width / 2 - layout.padX)) / 2;
+    const angledLength = layout.width / 2 - layout.padX + layout.size / 2; // whole FSR, in flat units
+    const length = frontLength ? mix(angledLength, frontLength, swap) : angledLength;
+    const middle = length / 2 - layout.size / 2;
     const start = {
       x: pose.origin.x - box.left + u.x * middle,
       y: pose.origin.y - box.top + u.y * middle,
     };
     const centre = { x: box.width / 2, y: box.height / 2 };
-    const length = layout.width / 2 - layout.padX + layout.size / 2; // whole FSR, in flat units
     const finalSize = (box.height * settings.grow.finalHeight) / length;
 
     // The three movements, each with a soft start and stop.
@@ -97,9 +125,20 @@ export function flyingFsr(stage, shoe, settings, image) {
     // Place it so the FSR's middle lands on (x, y).
     const e = x - a * middle;
     const f = y - b * middle;
-    element.style.transform = `matrix(${a}, ${b}, ${c}, ${d}, ${e}, ${f})`;
+    mover.style.transform = `matrix(${a}, ${b}, ${c}, ${d}, ${e}, ${f})`;
   }
 
   setProgress(0);
   return { element, setProgress };
+}
+
+function picture(src) {
+  const img = document.createElement('img');
+  img.className = 'fsr-flight__image';
+  img.alt = '';
+  if (src) {
+    img.src = src;
+    img.decode().catch(() => {});
+  }
+  return img;
 }

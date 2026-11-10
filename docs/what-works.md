@@ -17,6 +17,7 @@ Notes on how we collaborate best, so good results can be repeated and bad ones a
 | Date | What happened | Lesson |
 |---|---|---|
 | 2026-11-09 | First clouds were drawn as clean round bubbles: *"too cartoonish"*. | Avoid hard-edged, cartoon-style shapes; aim for photographic softness. |
+| 2026-11-10 | The big FSR looked blurry (*"why doesn't it look high definition?"*): a small, angled render was enlarged and stretched to face you, and the browser was stretching a snapshot of it. | Give big views their **own high-resolution image** made for that angle. Don't mark things that grow a lot as `will-change`. |
 | 2026-11-09 | The 5-part exploded view used parts from a **different drawing** than the whole shoe: there was a jump at the start, and the separated upper didn't match. | Every moving part must come from **the same image** the visitor sees whole. |
 | 2026-11-09 | My fix (building the closed shoe out of the parts) changed how the closed shoe looked: *"that didn't work, revert"*. | Don't change the look of something you've approved in order to fix a motion problem. Fix the motion and keep the approved look. |
 | 2026-11-09 | Glass card: a textured "dimpled lens" glass from a single close-up photo: *"that doesn't look good"*. | A close-up texture photo doesn't translate well to UI glass. Ask for, or use, **UI samples** (whole cards on backgrounds), like the glassmorphism samples that followed. |

@@ -4,6 +4,7 @@
 //
 // Sizes are in drawing pixels (src/assets/shoe-sketch.png is 1356 × 846).
 import fsrRender from '../assets/fsr-render.png';
+import fsrRenderFront from '../assets/fsr-render-front.png';
 
 export const sketchSensor = {
   // 'render' = the 3D render of the real FSR (src/assets/fsr-render.png)
@@ -18,6 +19,15 @@ export const sketchSensor = {
     viewFlatten: 0.66, // how squashed the round pad looks in the image (1 = seen from straight above)
     slope: 4.9, // degrees the tail runs downhill to the right in the image
     tailWidth: 0.3, // the tail's width (it's thicker now) for the pocket channel, as a share of the pad's width
+  },
+
+  // The same FSR seen straight on, standing upright (pad on top), in high resolution.
+  // The big view in chapter 2 switches to it as the FSR turns to face you, so it
+  // never has to stretch the small angled render. Measured from the image:
+  front: {
+    image: fsrRenderFront, // src/assets/fsr-render-front.png (532 × 1458)
+    padWidth: 0.996, // the round pad's width, as a share of the image's width
+    padCentre: [0.498, 0.181], // where the pad's centre is in the image (share of width, height)
   },
 
   along: 0.5, // where it sits from toe (0) to heel (1) — the middle of the sole

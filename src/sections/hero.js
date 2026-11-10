@@ -86,8 +86,8 @@ export function showShoe(section, shoe) {
   section.querySelector('.fsr-flight')?.remove();
   transitions.delete(section);
   if (controls && shoe.transition) {
-    const fsrImage = shoe.layers?.find((layer) => layer.topFace?.sensor)?.topFace.sensor.render?.image;
-    const flight = flyingFsr(section.querySelector('.hero__stage'), controls, shoe.transition, fsrImage);
+    const sensor = shoe.layers?.find((layer) => layer.topFace?.sensor)?.topFace.sensor;
+    const flight = flyingFsr(section.querySelector('.hero__stage'), controls, shoe.transition, sensor);
     section.querySelector('.hero__stage').append(flight.element);
     section.querySelector('.hero__next').style.background = shoe.transition.nextBackground;
     transitions.set(section, { flight, settings: shoe.transition });

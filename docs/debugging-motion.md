@@ -84,7 +84,8 @@ The labels and shadows only *triggered* the work. The real cost was the clouds' 
 ## Rules of thumb for new motion features
 - **Expensive effects should run once, not every frame.** That means texture filters (like the clouds), big blurs, and shadows on large moving pictures. Bake them into pictures where you can.
 - **Move things with "transform" and "opacity" only.** Browsers can do those cheaply. Changing sizes, shadows or filters during motion is costly.
-- **Give fading or moving pieces their own layer** (`will-change`), so they don't force big neighbors to repaint.
+- **Give fading or moving pieces their own layer** (`will-change`), so they don't force big neighbors to repaint. **But not pieces that grow a lot:** the browser snapshots them at their starting size and stretches the snapshot, which turns blurry (the big FSR did this).
+- **Big views need their own big image.** Don't enlarge a small or angled picture far past its pixels.
 - **Keep motion and text in separate phases.** It reads better and is lighter to draw.
 - **Load images before they're needed**, not at the moment they first appear.
 - **Run `npm run debug:stalls` after adding any new moving piece.** If the longest frame stays under about 20ms, it's smooth.

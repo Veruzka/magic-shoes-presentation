@@ -1,25 +1,42 @@
-/* The flying FSR: sits above the shoe scene, positioned by one transform. */
+/* The flying FSR: sits above the shoe scene.
+   .fsr-flight         a still wrapper that adds the soft shadow (in screen space)
+   .fsr-flight__mover  positioned by one transform. No "will-change" on purpose:
+                       it keeps the FSR sharp as it grows (see what-works.md). */
 .fsr-flight {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 10px rgb(60 48 34 / 0.25));
+}
+
+.fsr-flight__mover {
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 5;
   width: 0;
   height: 0;
   transform-origin: 0 0;
-  pointer-events: none;
-  will-change: transform;
 }
 
-.fsr-flight__inner {
+.fsr-flight__inner,
+.fsr-flight__front {
   position: absolute;
   left: 0;
   top: 0;
   transform-origin: 0 0;
+}
+
+/* The straight-on render stands upright; turn it so its tail runs along the length. */
+.fsr-flight__front {
+  transform: rotate(-90deg);
 }
 
 .fsr-flight__image {
   position: absolute;
   max-width: none;
-  filter: drop-shadow(0 6px 10px rgb(60 48 34 / 0.25));
+}
+
+.fsr-flight__front .fsr-flight__image {
+  opacity: 0;
 }

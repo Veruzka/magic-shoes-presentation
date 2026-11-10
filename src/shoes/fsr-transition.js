@@ -15,6 +15,10 @@ export const fsrTransition = {
   // and glides to the centre.
   turn: { start: 0.2, end: 0.6 },
 
+  // Near the end of the turn, the angled render cross-fades into the sharp
+  // straight-on render (sketch-sensor.js → front), which then does the growing.
+  swap: { start: 0.42, end: 0.56 },
+
   // Grows until it's this share of the screen's height, centred.
   grow: { start: 0.5, end: 1, finalHeight: 0.75 },
 

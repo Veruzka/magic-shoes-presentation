@@ -52,7 +52,7 @@ Interchangeable shoe styles, listed in `src/shoes/index.js`. **Photo** is a real
 
 ### Chapter 2: the FSR transition
 After the shoe has fanned out and the labels are shown, scrolling on starts **chapter 2**. The FSR lifts out of its pocket, turns upright to face you, and grows to the center of the screen, while the shoe scene scrolls up and away and the next section's background rises in. The page ends with the FSR big and centered (for now).
-- **The flying FSR:** `src/components/fsr-transition.js`. It starts exactly where the real FSR lies, using three invisible markers on the FSR's own layer.
+- **The flying FSR:** `src/components/fsr-transition.js`. It starts exactly where the real FSR lies, using three invisible markers on the FSR's own layer. While it turns to face you, it cross-fades from the angled render to a sharp straight-on render (`fsr-render-front.png`), which does the growing.
 - **Its timings:** `src/shoes/fsr-transition.js`.
 - **The length of each chapter:** `src/sections/hero-timeline.js` (chapter 1: 1.6 screen-heights, chapter 2: 1.8).
 
@@ -97,6 +97,7 @@ AI was used **once, while building**, to create the shoe images:
 | 5-part exploded drawing (`sketch-parts/`, set aside) | same | same | 1 credit, one time |
 | FSR render, first version (`fsr-render-v1.png`, not used) | same | [changelog.md](changelog.md), 2026-11-10 "FSR as a 3D render" | 1 credit, one time |
 | FSR high-end 3D render (`fsr-render.png`) | same | [changelog.md](changelog.md), 2026-11-10 "FSR as a high-end 3D render" | 1 credit, one time |
+| FSR straight-on render for the big view (`fsr-render-front.png`) | same | [changelog.md](changelog.md), 2026-11-10 "the big FSR is now high-definition" | 2 credits, one time |
 
 Backgrounds were removed from the images with Apple's built-in "lift subject" feature on the Mac (free, no internet).
 

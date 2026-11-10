@@ -54,6 +54,7 @@ export async function openChrome({ visible = false, width = 1440, height = 900 }
 
   return {
     wait,
+    send, // raw Chrome command, e.g. send("Page.captureScreenshot")
     // Go to a page and give it a moment to settle.
     async open(url) {
       await send('Page.navigate', { url });
