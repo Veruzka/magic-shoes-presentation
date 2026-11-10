@@ -5,7 +5,7 @@ One short entry per work session, newest first.
 ## 2026-11-09 (latest): sole styling
 **Saved as checkpoint 1** (`checkpoint-01-gray-sole`) and **pushed to GitHub** (private repo Veruzka/magic-shoes); see [checkpoints.md](checkpoints.md).
 
-**Open question:** Vercel doesn't seem to be connected to the repo yet, since GitHub shows no deployment after the push. Connect it in Vercel (Import Project → GitHub → magic-shoes) to publish automatically on every push.
+**Published:** Vercel is connected to the repo, and the site is live at https://magic-shoes.vercel.app/. It was checked after deploy: the switchers, the sole effect and the "i" panel all work.
 
 **What changed**
 - **Tread texture:** the separated sole's top surface now has molded, flowing ridges in its own gray, inspired by your reference photo (without the brand logo). There are swirls at the toe and heel and long waves through the middle, with a slight wobble so they look sculpted.

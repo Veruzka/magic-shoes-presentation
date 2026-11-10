@@ -74,7 +74,7 @@ The earlier 5-part exploded view (`src/components/exploding-shoe.js`, `src/shoes
 
 ### Outside services
 - **GitHub** stores the code.
-- **Vercel** publishes the site whenever new code is pushed to GitHub.
+- **Vercel** publishes the site whenever new code is pushed to GitHub. The live address is https://magic-shoes.vercel.app/.
 - **Google Fonts** provides the Inter and Caveat typefaces.
 
 ## AI features

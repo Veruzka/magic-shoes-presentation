@@ -28,7 +28,8 @@ Changes you save in the code show up in the browser right away.
 
 We never publish with the Vercel command-line tool. Pushing to GitHub is the only way.
 
-**Code lives at:** github.com/Veruzka/magic-shoes (private). *Note:* Vercel still needs to be connected to this repo once (in Vercel: Add New → Project → import `magic-shoes` from GitHub).
+**Live site:** https://magic-shoes.vercel.app/
+**Code:** github.com/Veruzka/magic-shoes (private). Vercel is connected, so every push to `main` publishes a new version within a minute or two.
 
 ## The other docs
 | Doc | Read it when you want to… |
