@@ -101,6 +101,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
   - `across`: tray's near edge (0) to far edge (1)
   - `size`: the coil's width; it shrinks by itself if it wouldn't fit the tray
   - it always lies along the shoe (coil toward the toe, board toward the heel), flat on the tray floor
+  - `turn`: fine-tunes its angle in degrees; positive turns the head (coil) to the left, negative to the right
   - `coilRings`, and every color (copper, disc, board…)
 - `outline`: the soft sketch line along the new edge (`colour`, `width`).
 

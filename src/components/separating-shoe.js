@@ -443,6 +443,9 @@ function placeOnFloor(ctx, sensor, { columns, firstX, lastX }, depth, margin, ou
     const room = depth * Math.sin(Math.PI * ((x - firstX) / length));
     return { line: near - room * sensor.across, room };
   };
+  // Fine-tune by eye: `turn` degrees to the left (counterclockwise on screen) is a
+  // negative rotation in canvas terms, where y points down.
+  axis -= ((sensor.turn ?? 0) * Math.PI) / 180;
   const slope = Math.tan(axis);
 
   const centreX = firstX + sensor.along * length;
