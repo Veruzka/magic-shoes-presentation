@@ -22,5 +22,5 @@
 
 .hero {
   --title-size: clamp(3.4rem, 14.5vw, 15rem); /* how big the title is */
-  --title-top: 27vh; /* how far down it starts — low enough for the shoe to overlap its lower part */
+  --title-top: calc(27vh - 80px); /* how far down it starts (lower = the shoe overlaps more of it) */
 }

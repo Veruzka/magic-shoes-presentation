@@ -64,7 +64,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 - the font: `--font-title` in `base.css` (Bricolage Grotesque, extra bold)
 - the color: `inkColors.title` in each background file (sand on Clouds, see-through cream on Meadow)
 
-> **Example:** to have the shoe cover more of the title, change `--title-top: 27vh` to `32vh`.
+> **Example:** to have the shoe cover more of the title, change `--title-top: calc(27vh - 80px)` to `calc(27vh - 40px)`.
 
 ---
 
