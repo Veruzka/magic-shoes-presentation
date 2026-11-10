@@ -2,6 +2,14 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-09 (after checkpoint 1): Style lab card
+**What changed**
+- The three switcher pills are now one **frosted-glass card** in the top-right corner, headed **STYLE LAB** with a small accent dot, modeled on your reference.
+- It has one row per setting, hairlines between rows, and **segmented pills** where the chosen option sits on a soft white thumb.
+- The glass is see-through, so the cream background (or the Meadow flowers) shows through blurred.
+- New shared glass variables are in `base.css`.
+
+
 ## 2026-11-09 (latest): sole styling
 **Saved as checkpoint 1** (`checkpoint-01-gray-sole`) and **pushed to GitHub** (private repo Veruzka/magic-shoes); see [checkpoints.md](checkpoints.md).
 

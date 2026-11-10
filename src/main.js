@@ -25,9 +25,10 @@ const shoeOpening = watchScrollProgress(heroSection, (progress) =>
   setShoeOpening(heroSection, progress),
 );
 
-// Prototype tools: flip between backgrounds and shoe styles (top-right corner).
+// Prototype tool: the "Style lab" glass card (top-right) to flip between options.
 document.body.append(
   switcherPanel(
+    'Style lab',
     optionSwitcher({
       title: 'Background',
       options: backgrounds,

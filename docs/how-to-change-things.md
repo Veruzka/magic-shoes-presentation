@@ -108,10 +108,14 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 
 ---
 
-## Switcher pills (prototype tool)
-**What:** the frosted pills in the top-right corner for comparing options.
-**Files:** `src/components/option-switcher.js` and `.css`. They're added in `src/main.js`.
-**Safe to change:** the `title` text in `main.js`, and the look in the CSS.
+## Style lab card (prototype tool)
+**What:** the frosted-glass card in the top-right corner, headed "STYLE LAB". It has one row per setting (Background, Shoe, Sole). Each row has a segmented pill, and the chosen option sits on a soft white "thumb".
+**Files:** `src/components/option-switcher.js` and `.css`. The card's heading and rows are set in `src/main.js`.
+**Safe to change:**
+- the heading text (`'Style lab'` in `main.js`) and each row's `title`
+- the glass look: `--glass-card-*`, `--glass-divider`, `--glass-track` and `--glass-thumb` in `base.css`
+
+> **Example:** to make the glass more see-through, lower the first number in `--glass-card-bg` (now `0.28`) to `0.18` in `base.css`.
 
 ---
 
@@ -139,7 +143,8 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 | `setSoleMove(section, move)` | `src/sections/hero.js` | Switches the sole's path | hero + a move → nothing | Careful |
 | `separatingShoe(shoe, move)` | `src/components/separating-shoe.js` | Splits the Sketch drawing into body + sole and moves the sole | shoe + move → the shoe and its controls | Ask me |
 | `splitDrawing(...)` / `drawTopFace(...)` | `src/components/separating-shoe.js` | Cuts out the gray sole and paints its top surface | drawing + sole settings → two pictures | Ask me |
-| `optionSwitcher({ title, options, current, onPick })` | `src/components/option-switcher.js` | Makes one switcher pill | title, list, current pick, what to do on click → the pill | Careful |
+| `optionSwitcher({ title, options, current, onPick })` | `src/components/option-switcher.js` | Makes one row of the Style lab card (name + segmented pill) | title, list, current pick, what to do on click → the row | Careful |
+| `switcherPanel(heading, ...rows)` | `src/components/option-switcher.js` | Makes the frosted Style lab card that holds the rows | heading text + rows → the card | Careful |
 | `infoButton()` | `src/components/info-panel.js` | Makes the "i" button and its panel | nothing → the button | Careful |
 | `createParallax()` | `src/core/parallax.js` | Moves layers at different speeds on scroll (`data-speed`) | nothing → controls (refresh, stop) | Ask me |
 | `watchScrollProgress(element, onProgress)` | `src/core/scroll-progress.js` | Reports scroll through an element as 0–1 | element + what to do with the number → controls | Ask me |

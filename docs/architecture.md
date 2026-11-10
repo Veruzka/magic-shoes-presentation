@@ -10,7 +10,7 @@ flowchart TD
   data["Settings and images<br/>data files, assets"]
   helpers["Helpers<br/>scroll depth,<br/>scroll progress,<br/>remember picks"]
   styles["Shared look<br/>base.css"]
-  tools["Prototype tools<br/>switchers, i panel"]
+  tools["Prototype tools<br/>Style lab card, i panel"]
   docs["docs/ folder"]
   github["GitHub"]
   vercel["Vercel"]
@@ -60,8 +60,8 @@ Plain lists you can edit: where each cloud and flower sits (`src/data/`), where 
 ### Remembers your picks
 `src/core/remember-choice.js` stores your last Background, Shoe and Sole picks in your browser, so a reload shows the same thing.
 
-### Switcher pills
-The frosted pills in the top-right corner (`src/components/option-switcher.js`) let you flip between options to compare them. They're a prototype tool, to be removed once we've decided.
+### Style lab card
+The frosted-glass "STYLE LAB" card in the top-right corner (`src/components/option-switcher.js`). It lets you flip between options to compare them (Background, Shoe, Sole), with one segmented pill per row. It's a prototype tool, to be removed once we've decided.
 
 ### Info button + panel
 The small "i" in the bottom-right corner (`src/components/info-panel.js`). It opens a panel that shows this page and the design-improvements list, read straight from the `docs/` folder, so they never disagree.

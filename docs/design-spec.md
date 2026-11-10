@@ -12,7 +12,9 @@ The visual rules we're using. **Shared** values live in one place, `src/styles/b
 | `--color-text` | `#3b3023` warm dark brown | main text, selected switcher option | base.css |
 | `--color-muted` | `#8c7b64` soft brown | secondary text | base.css |
 | `--color-accent` | `#c9ae84` sand | highlights | base.css |
-| `--glass-bg` / `--glass-border` | white at 60% / 80% | frosted pills, info button and panel | base.css |
+| `--glass-bg` / `--glass-border` | white at 60% / 80% | info button and panel | base.css |
+| `--glass-card-bg`, `--glass-card-border`, `--glass-card-blur`, `--glass-card-highlight` | see-through white (28% → 6%), 22px blur, light rim, bright top edge | the Style lab glass card | base.css |
+| `--glass-divider` / `--glass-track` / `--glass-thumb` | brown at 14% / brown at 8% / white at 90% | the card's hairlines, pill track and chosen option | base.css |
 | Cloud sky | `--cream-top`, `--cream-middle`, `--cream-bottom` | Clouds background | `src/backgrounds/cloud-studio.css` |
 | Box | `--box-top`, `--box-left`, `--box-right` | the box under the shoe | cloud-studio.css |
 | Meadow | `--meadow-*`, `--flower-*`, `--tint` | Meadow background | `src/backgrounds/flower-meadow.css` |
@@ -40,7 +42,8 @@ The fonts are loaded from Google Fonts in `index.html`.
 ## Corner radius
 | Name | Value | Used for |
 |---|---|---|
-| `--radius-pill` | 999px (fully round) | switcher pills, info button |
+| `--radius-pill` | 999px (fully round) | segmented pills, info button |
+| `--radius-card` | 22px | the Style lab glass card |
 | `--radius-panel` | 20px | info panel |
 
 ## Shadows
