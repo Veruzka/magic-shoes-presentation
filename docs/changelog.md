@@ -2,6 +2,12 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: FSR as a 3D render
+- **New look for the sensor on the white midsole:** a high-end 3D render of the real **FSR** (force-sensing resistor), based on your photos and in the style of your third reference. It has a round black pad with silver interlocking lines, a slim mint-teal see-through tail with silver tracks, and a white tab with two pins, lit like a studio product shot.
+- It lies in a **keyhole-shaped pocket** that follows its outline: round for the pad, a channel for the tail. The pad points toward the toe.
+- The earlier coil drawing is still there (`look: 'drawn'` in `sketch-sensor.js`).
+- **AI image:** Figma AI (gpt-image-2.5-flare, Graft team, 1 credit). Prompt: "Photorealistic high-end 3D product render, KeyShot/Octane style, of a single round force-sensing resistor (FSR) lying flat… circular black sensing pad with fine silver interdigitated electrode lines… long thin translucent mint-teal tail with two brushed-silver traces… small matte white tab with two thin metal pins… viewed from about 20° above, pad on the left, tail to the right… soft studio lighting… plain light gray background, no text, no logo." Cut out with Apple's subject lift.
+
 ## 2026-11-10: page stays put; labels one by one
 - **The page no longer moves on.** I removed the temporary empty block below the hero, so the shoe section is the whole page. Scrolling only fans out the parts and then shows the text, and at the end everything stays in place.
 - **Labels one by one, with no overlap:** Outsole (52→66% of the scroll), then Midsole exactly when Outsole is fully shown (66→80%), then FSR (80→94%), all finishing before the end.

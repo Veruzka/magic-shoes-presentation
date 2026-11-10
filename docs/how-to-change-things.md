@@ -91,12 +91,13 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 ## Layers coming apart (Sketch shoe)
 **What:** as you scroll, the Sketch shoe comes apart from the bottom up, like puzzle pieces. Each piece leaves a clean gap and a soft sketch outline on what's left.
 1. **Gray rubber sole:** moves during 0–41% of the scroll. Its top surface has the molded tread.
-2. **White foam midsole** (with the clear pods): starts just after the gray sole (7%) and finishes at 48%, so the two separate together. It travels about a third as far as the gray sole, so there's more space below it than above it. Its top surface is a smooth matte tray with a raised lip, with a small **wireless-charging sensor** lying in the middle: a copper coil on a black disc, two copper wires, and a green circuit board.
+2. **White foam midsole** (with the clear pods): starts just after the gray sole (7%) and finishes at 48%, so the two separate together. It travels about a third as far as the gray sole, so there's more space below it than above it. Its top surface is a smooth matte tray with a raised lip, with the **FSR** (force-sensing resistor) lying in a keyhole-shaped pocket in the middle. The FSR is a 3D render of the real part: a round black pad with silver lines, a mint-teal tail and a white tab with two pins.
 
 **Files:**
 - `src/shoes/sketch-sole.js`: the gray sole layer.
 - `src/shoes/sketch-midsole.js`: the white midsole layer.
-- `src/shoes/sketch-sensor.js`: the sensor on the white midsole (position, size, colors).
+- `src/shoes/sketch-sensor.js`: the FSR on the white midsole (look, position, size, pocket).
+- `src/assets/fsr-render.png`: the 3D render of the FSR (made with Figma AI, then cut out).
 - `src/shoes/sketch-labels.js`: the **part labels**: title, description, where the text sits and where the arrow points. Edit the wording here.
 - `src/components/part-labels.js` and `.css`: how the labels and arrows are drawn (fonts, sizes, arrow style).
 - `src/components/sensor-drawing.js`: how the sensor is drawn (careful).
@@ -112,12 +113,13 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
   - gray sole: `tread` sets the ridges
   - white midsole: `floorLight`, `floorDark`, `lipWidth`, `lipLight`, `recessShade` and `grain` set the tray
 - **Sensor** (`sketch-sensor.js`):
+  - `look`: `'render'` (the 3D render of the real FSR) or `'drawn'` (the earlier copper coil and green board, drawn in code)
   - `along`: toe (0) to heel (1)
   - `across`: tray's near edge (0) to far edge (1)
-  - `size`: the coil's width; it shrinks by itself if it wouldn't fit the tray
+  - `size`: the round pad's width; it shrinks by itself if it wouldn't fit the tray with space around it
   - it always lies along the shoe (coil toward the toe, board toward the heel), flat on the tray floor
   - `turn`: fine-tunes its angle in degrees; positive turns the head (coil) to the left, negative to the right
-  - `pocket`: the shallow pocket pressed into the foam that the sensor sits in. `padding` sets the space around the sensor, `rim` the raised edge's width, `floorColour` and `rimColour` the colors, `wallShade` the shadow along the far wall, and `texture` the faint wavy pattern on its floor.
+  - `pocket`: the shallow pocket pressed into the foam that the sensor sits in (keyhole-shaped for the render). `padding` sets the space around the sensor, `rim` the raised edge's width, `floorColour` and `rimColour` the colors, `wallShade` the shadow along the far wall, and `texture` the faint wavy pattern on its floor.
   - `coilRings`, and every color (copper, disc, board…)
 - `outline`: the soft sketch line along the new edge (`colour`, `width`).
 
@@ -132,7 +134,7 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 
 > **Labels:** each one in `sketch-labels.js` has `title`, `text`, `part` (which piece it moves with), `at` (where the text sits, in drawing pixels), `align` (`'right'` for labels on the left of the shoe, `'left'` for the right) and `arrow` (`from`, `to` and `bend`; `to: 'sensor'` points at the sensor wherever it lands). Labels only appear **after every part has finished moving**: keep scrolling and they fade in **one by one**: Outsole, then Midsole exactly when Outsole is fully shown, then FSR, in even steps, while nothing moves. The page ends with the hero, so scrolling never moves you past it. When you scroll back, they fade out first and then the shoe closes. The timing is `labelTiming` at the top of `sketch-labels.js`: `start` (when the first one begins), `fade` (how long each fade takes) and `each` (the step between labels; equal to `fade` means each starts right as the previous finishes).
 
-> **Example:** to make the white midsole start later, change `stage: { start: 0.07, end: 0.48 }` to `{ start: 0.15, end: 0.5 }` in `sketch-midsole.js`. To make the gray sole drop even further, change `y: 160` to `y: 200` in `sole-moves.js`. To make the sensor bigger, change `size: 115` to `size: 140` in `sketch-sensor.js`.
+> **Example:** to make the white midsole start later, change `stage: { start: 0.07, end: 0.48 }` to `{ start: 0.15, end: 0.5 }` in `sketch-midsole.js`. To make the gray sole drop even further, change `y: 160` to `y: 200` in `sole-moves.js`. To let the FSR come out bigger, lower `pocket.padding` (the space it keeps around itself) in `sketch-sensor.js`. It's limited by how deep the tray floor is.
 
 ---
 

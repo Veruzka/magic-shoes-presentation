@@ -16,7 +16,7 @@
 //                             src/shoes/sketch-midsole.js  (white foam midsole)
 // The paths they travel:      src/shoes/sole-moves.js
 import './separating-shoe.css';
-import { drawSensor, sensorFootprint } from './sensor-drawing.js';
+import { drawSensor, sensorFootprint, loadSensorImage } from './sensor-drawing.js';
 import { partLabel } from './part-labels.js';
 
 // The shoe's width on a desktop screen; sole-moves.js distances are measured on this.
@@ -62,7 +62,9 @@ export function separatingShoe({ image, alt, layers, labels = [], labelTiming },
   let measured = null; // filled in once the drawing is split (gap sizes, sensor spot)
   let labelControls = [];
 
-  original.decode().then(() => {
+  // Wait for the drawing and any sensor render before splitting and painting.
+  const sensors = layers.map((layer) => layer.topFace?.sensor).filter(Boolean);
+  Promise.all([original.decode(), ...sensors.map(loadSensorImage)]).then(() => {
     measured = splitDrawing(original, layers, bodyCanvas, layerCanvases);
     // Labels go into their part, so they ride along with its motion.
     labelControls = labels.map((note) => {
