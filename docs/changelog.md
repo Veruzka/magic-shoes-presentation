@@ -2,6 +2,21 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: part labels + equal spacing
+**What changed**
+- **Labels for Outsole, Midsole and FSR,** styled like your references:
+  - a signature-script title (Mrs Saint Delafield)
+  - an airy, letter-spaced description (Poppins)
+  - a thin hand-drawn arrow pointing at the part (the FSR arrow points at the sensor in its pocket)
+- **In sync with the parts:** each label moves with its part and fades in during the second half of that part's move, with its arrow drawing out. They fade back out as you scroll up and the shoe closes. The starter wording is in `src/shoes/sketch-labels.js`.
+- **Equal spacing:** the white midsole's travel is now worked out automatically (`travel: 'even'`), so the gap above it and the gap below it match (measured about 78px each).
+- **More room overall:** the gray sole travels 240px, and the whole shoe rises 80px while opening so the stack stays centered.
+
+**Known issues and open questions**
+- "FSR" in all capitals is hard to read in a signature script. Consider a word title, or FSR in the description font.
+- Phones are tight: labels show titles only, and on Down-left the gray sole drifts past the left edge.
+
+
 ## 2026-11-10: more space + charging sensor
 **What changed**
 - **More space between the gray sole and the white midsole:**

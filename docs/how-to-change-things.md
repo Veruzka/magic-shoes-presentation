@@ -85,6 +85,8 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 - `src/shoes/sketch-sole.js`: the gray sole layer.
 - `src/shoes/sketch-midsole.js`: the white midsole layer.
 - `src/shoes/sketch-sensor.js`: the sensor on the white midsole (position, size, colors).
+- `src/shoes/sketch-labels.js`: the **part labels**: title, description, where the text sits and where the arrow points. Edit the wording here.
+- `src/components/part-labels.js` and `.css`: how the labels and arrows are drawn (fonts, sizes, arrow style).
 - `src/components/sensor-drawing.js`: how the sensor is drawn (careful).
 - `src/shoes/sole-moves.js`: the path all layers follow (Down-left / Down).
 - `src/shoes/index.js`: the order of the layers (`layers: [sketchSole, sketchMidsole]`).
@@ -92,7 +94,8 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 
 **Safe to change, in each layer file:**
 - `stage`: when it moves, as fractions of the scroll. For example `start: 0.15, end: 0.45`.
-- `travel`: how far it goes, as a share of the chosen path (`1` is all of it, `0.5` is half).
+- `travel`: how far it goes, as a share of the chosen path (`1` is all of it, `0.5` is half). The white midsole uses `'even'`: it's worked out automatically so the gap above it and the gap below it are the same.
+- In `sole-moves.js`, `lift` sets how far the whole shoe rises while it opens, so the taller stack stays centered.
 - `topFace`:
   - gray sole: `tread` sets the ridges
   - white midsole: `floorLight`, `floorDark`, `lipWidth`, `lipLight`, `recessShade` and `grain` set the tray
@@ -114,6 +117,8 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 - **The drawing's own outer outline** is always kept.
 
 These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (traced outline areas, like the toe bumper), `mustContain` (the white layer only exists where real white foam is) and `minThickness` (anything thinner is ignored, so no strings).
+
+> **Labels:** each one in `sketch-labels.js` has `title`, `text`, `part` (which piece it moves with), `at` (where the text sits, in drawing pixels), `align` (`'right'` for labels on the left of the shoe, `'left'` for the right) and `arrow` (`from`, `to` and `bend`; `to: 'sensor'` points at the sensor wherever it lands). Labels fade in during the second half of their part's move and fade out when you scroll back.
 
 > **Example:** to make the white midsole start later, change `stage: { start: 0.15, end: 0.45 }` to `{ start: 0.25, end: 0.55 }` in `sketch-midsole.js`. To make the gray sole drop even further, change `y: 160` to `y: 200` in `sole-moves.js`. To make the sensor bigger, change `size: 115` to `size: 140` in `sketch-sensor.js`.
 
@@ -160,6 +165,7 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 | `setSoleMove(section, move)` | `src/sections/hero.js` | Switches the sole's path | hero + a move → nothing | Careful |
 | `separatingShoe(shoe, move)` | `src/components/separating-shoe.js` | Splits the Sketch drawing into layers and moves each one on scroll | shoe (with `layers`) + path → the shoe and its controls | Ask me |
 | `splitDrawing(...)` / `cutLayer(...)` | `src/components/separating-shoe.js` | Cuts each layer out, bottom up, and draws the outlines | drawing + layer settings → one picture per layer + the body | Ask me |
+| `partLabel(note, points)` | `src/components/part-labels.js` | Makes one part label (title, description, arrow) that fades in with its part | a label entry + spots like the sensor → the label and its show(0–1) | Careful |
 | `drawSensor(ctx, centre, sensor, outline)` | `src/components/sensor-drawing.js` | Draws the charging sensor (coil, wires, board) flat on the tray | where + settings → the drawing | Ask me |
 | `drawTreadFace(...)` / `drawTrayFace(...)` | `src/components/separating-shoe.js` | Paints a layer's top surface (gray tread / white foam tray) | layer settings → painted surface | Ask me |
 | `optionSwitcher({ title, options, current, onPick })` | `src/components/option-switcher.js` | Makes one row of the Style lab card (name + segmented pill) | title, list, current pick, what to do on click → the row | Careful |

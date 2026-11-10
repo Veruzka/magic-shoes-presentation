@@ -17,6 +17,7 @@
 // The paths they travel:      src/shoes/sole-moves.js
 import './separating-shoe.css';
 import { drawSensor, sensorFootprint } from './sensor-drawing.js';
+import { partLabel } from './part-labels.js';
 
 // The shoe's width on a desktop screen; sole-moves.js distances are measured on this.
 const DESKTOP_SHOE_WIDTH = 414;
@@ -26,7 +27,7 @@ const clamp01 = (n) => Math.min(Math.max(n, 0), 1);
 const between = (value, start, end) => clamp01((value - start) / (end - start));
 const easeInOut = (t) => (1 - Math.cos(Math.PI * t)) / 2; // soft start and stop
 
-export function separatingShoe({ image, alt, layers }, move) {
+export function separatingShoe({ image, alt, layers, labels = [] }, move) {
   const element = document.createElement('div');
   element.className = 'separating-shoe';
   element.setAttribute('role', 'img');
@@ -38,36 +39,71 @@ export function separatingShoe({ image, alt, layers }, move) {
   original.src = image;
   original.alt = '';
 
-  // One canvas per layer (bottom layer drawn first, so it sits behind), then the body.
+  // One "part" per layer (bottom layer first, so it sits behind), then the body.
+  // A part holds the layer's picture and its labels, so they always move together.
   const layerCanvases = layers.map((layer) => {
     const canvas = document.createElement('canvas');
-    canvas.className = `separating-shoe__layer separating-shoe__layer--${layer.name}`;
+    canvas.className = 'separating-shoe__picture';
     return canvas;
   });
+  const parts = layers.map((layer, i) => {
+    const part = document.createElement('div');
+    part.className = `separating-shoe__layer separating-shoe__layer--${layer.name}`;
+    part.append(layerCanvases[i]);
+    return part;
+  });
   const bodyCanvas = document.createElement('canvas');
-  bodyCanvas.className = 'separating-shoe__body';
+  bodyCanvas.className = 'separating-shoe__body separating-shoe__picture';
 
-  element.append(original, ...layerCanvases, bodyCanvas);
+  element.append(original, ...parts, bodyCanvas);
 
   let currentMove = move;
   let currentProgress = 0;
+  let measured = null; // filled in once the drawing is split (gap sizes, sensor spot)
+  let labelControls = [];
 
   original.decode().then(() => {
-    splitDrawing(original, layers, bodyCanvas, layerCanvases);
+    measured = splitDrawing(original, layers, bodyCanvas, layerCanvases);
+    // Labels go into their part, so they ride along with its motion.
+    labelControls = labels.map((note) => {
+      const i = layers.findIndex((layer) => layer.name === note.part);
+      const label = partLabel(note, measured.points);
+      parts[i].append(label.element);
+      return { label, layer: layers[i] };
+    });
     element.classList.add('is-split');
     setProgress(currentProgress);
   });
 
-  // Poses every layer for a scroll amount between 0 and 1.
+  // How far a layer travels along the chosen path (1 = all of it).
+  // 'even' = worked out so the visible gaps above and below it come out equal.
+  function travelFor(layer) {
+    if (layer.travel !== 'even') return layer.travel;
+    if (!measured) return 0.5;
+    const pathY = currentMove.y * (measured.width / DESKTOP_SHOE_WIDTH); // in drawing pixels
+    return Math.min(Math.max((measured.evenGap + pathY) / (2 * pathY), 0.1), 0.9);
+  }
+
+  // Poses every layer (and its labels) for a scroll amount between 0 and 1.
   function setProgress(progress) {
     currentProgress = progress;
     const scale = element.clientWidth / DESKTOP_SHOE_WIDTH;
     layers.forEach((layer, i) => {
-      const amount = easeInOut(between(progress, layer.stage.start, layer.stage.end)) * layer.travel;
+      const amount = easeInOut(between(progress, layer.stage.start, layer.stage.end)) * travelFor(layer);
       const x = currentMove.x * amount * scale;
       const y = currentMove.y * amount * scale;
       const turn = currentMove.turn * amount;
-      layerCanvases[i].style.transform = `translate(${x}px, ${y}px) rotate(${turn}deg)`;
+      parts[i].style.transform = `translate(${x}px, ${y}px) rotate(${turn}deg)`;
+    });
+    // The whole shoe rises a little while it opens, so the taller stack stays centred.
+    const openEnd = Math.max(...layers.map((layer) => layer.stage.end));
+    const lift = easeInOut(between(progress, 0, openEnd)) * (currentMove.lift ?? 0) * scale;
+    element.style.translate = `0 ${-lift}px`;
+
+    // Labels fade in over the second half of their part's move (and out again when scrolling back).
+    labelControls.forEach(({ label, layer }) => {
+      const { start, end } = layer.stage;
+      label.show(easeInOut(between(progress, start + (end - start) * 0.5, end)));
     });
   }
 
@@ -94,6 +130,7 @@ function splitDrawing(img, layers, bodyCanvas, layerCanvases) {
   const source = makeCanvas(width, height);
   source.ctx.drawImage(img, 0, 0);
   let remaining = source.ctx.getImageData(0, 0, width, height);
+  const points = {}; // spots worth pointing at with labels (e.g. where the sensor landed)
 
   layers.forEach((layer, i) => {
     const { piece, rest, edge } = cutLayer(remaining, layer, width, height);
@@ -110,13 +147,52 @@ function splitDrawing(img, layers, bodyCanvas, layerCanvases) {
     const ctx = layerCanvases[i].getContext('2d');
     const topEdge = smooth(highestSolid(piece), 5);
     if (layer.topFace.style === 'tread') drawTreadFace(ctx, piece, layer, topEdge);
-    else drawTrayFace(ctx, layer, topEdge, piece);
+    else {
+      const sensorAt = drawTrayFace(ctx, layer, topEdge, piece);
+      if (sensorAt) points.sensor = sensorAt;
+    }
     const sidePixels = makeCanvas(width, height);
     sidePixels.ctx.putImageData(piece, 0, 0);
     ctx.drawImage(sidePixels.canvas, 0, 0);
   });
 
   bodyCanvas.getContext('2d').putImageData(remaining, 0, 0);
+
+  return { width, points, evenGap: measureEvenGap(remaining, layerCanvases, width, height) };
+}
+
+// For a layer with travel 'even' (the white midsole), the visible gap above it
+// (to the shoe) should equal the gap below it (to the gray sole). This measures,
+// across the middle of the shoe, the numbers needed to work that travel out:
+//   gap above = (midsole top + its move) − shoe bottom
+//   gap below = (gray top + gray move) − (midsole bottom + its move)
+// Setting them equal gives:  midsole move = (evenGap + gray move) / 2
+// "Top" includes each piece's top surface (tray, tread), since it shows in the gap.
+function measureEvenGap(bodyPixels, layerCanvases, width, height) {
+  const [grayCanvas, whiteCanvas] = layerCanvases;
+  if (!whiteCanvas) return 0;
+  const read = (canvas) => canvas.getContext('2d').getImageData(0, 0, width, height).data;
+  const body = bodyPixels.data;
+  const white = read(whiteCanvas);
+  const gray = read(grayCanvas);
+  const extent = (data, x) => {
+    let top = null, bottom = null;
+    for (let y = 0; y < height; y++) {
+      if (data[(y * width + x) * 4 + 3] > 128) {
+        if (top === null) top = y;
+        bottom = y;
+      }
+    }
+    return { top, bottom };
+  };
+  let total = 0, count = 0;
+  for (let x = Math.round(width * 0.35); x <= width * 0.65; x += 10) {
+    const b = extent(body, x), w = extent(white, x), g = extent(gray, x);
+    if (b.bottom === null || w.top === null || g.top === null) continue;
+    total += g.top - w.bottom + b.bottom - w.top;
+    count++;
+  }
+  return count ? total / count : 0;
 }
 
 // Cuts one layer out of an image along a smooth seam (like a puzzle cut):
@@ -426,7 +502,8 @@ function drawTrayFace(ctx, layer, topEdge, piece) {
 
   // Anything lying on the tray floor (e.g. the charging sensor).
   const { sensor } = layer.topFace;
-  if (sensor) placeOnFloor(ctx, sensor, face, depth, lipWidth * 3, layer.outline, shoeDirection(piece));
+  if (sensor) return placeOnFloor(ctx, sensor, face, depth, lipWidth * 3, layer.outline, shoeDirection(piece));
+  return null;
 }
 
 // Places the sensor on the tray floor, lying flat on the same ground as the shoe:
@@ -467,6 +544,7 @@ function placeOnFloor(ctx, sensor, { columns, firstX, lastX }, depth, margin, ou
     size *= 0.85;
   }
   drawSensor(ctx, { x: centreX, y: centre.line, axis }, { ...sensor, size }, outline);
+  return { x: centreX, y: centre.line };
 }
 
 // The shoe's toe-to-heel direction, as an angle: the main line the whole layer's

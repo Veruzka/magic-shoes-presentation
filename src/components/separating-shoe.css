@@ -4,7 +4,19 @@
   position: relative;
   width: calc(var(--shoe-width) * 0.9);
   aspect-ratio: 1356 / 846; /* the drawing's shape */
+}
+
+/* The shadow goes on the pictures only, not on the labels. */
+.separating-shoe__picture,
+.separating-shoe__original {
   filter: drop-shadow(var(--shadow-shoe));
+}
+
+.separating-shoe__layer > .separating-shoe__picture {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .separating-shoe > * {
@@ -19,8 +31,8 @@
   visibility: hidden;
 }
 
-/* The layers sit behind the body (bottom layer furthest back), so their top surfaces stay hidden until they pull away.
-   It tilts around its toe. */
+/* Each layer (its picture + labels) sits behind the body (bottom layer furthest back),
+   so its top surface stays hidden until it pulls away. It tilts around its toe. */
 .separating-shoe__layer {
   transform-origin: 0% 80%;
   will-change: transform;

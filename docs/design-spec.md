@@ -12,6 +12,7 @@ The visual rules we're using. **Shared** values live in one place, `src/styles/b
 | `--color-text` | `#3b3023` warm dark brown | main text, selected switcher option | base.css |
 | `--color-muted` | `#8c7b64` soft brown | secondary text | base.css |
 | `--color-accent` | `#c9ae84` sand | highlights | base.css |
+| `--color-note` | `#2f2a25` warm near-black | part label text and arrows | base.css |
 | `--glass-bg` / `--glass-border` | white at 60% / 80% | info button and panel | base.css |
 | `--glass-card-bg`, `--glass-card-border`, `--glass-card-blur`, `--glass-card-grain`, `--glass-card-shadow` | glassmorphism: milky white tint (24% → 8%), thin white border (55%), 40px blur, fine grain (22%), soft wide shadow | the Style lab glass card | base.css |
 | `--glass-divider` / `--glass-track` / `--glass-thumb` | white at 45% / lighter glass (white at 28%, border 50%) / white at 92% | the card's hairlines, glass pills and chosen option | base.css |
@@ -24,7 +25,9 @@ The visual rules we're using. **Shared** values live in one place, `src/styles/b
 | Name | Value | Used for |
 |---|---|---|
 | `--font-body` / `--font-display` | Inter | everything |
-| `--font-script` | Caveat (handwritten) | the handwritten accent word in labels |
+| `--font-script` | Caveat (handwritten) | the handwritten accent word in the old (set-aside) labels |
+| `--font-signature` | Mrs Saint Delafield (signature script) | part label titles (Outsole, Midsole, FSR) |
+| `--font-note` | Poppins, 0.68rem, letter-spaced 0.06em | part label descriptions |
 | `--text-xs` | 0.72rem (about 11.5px) | small descriptions |
 | `--text-sm` | 0.8rem (about 13px) | switchers, small UI |
 | `--text-md` | 1.05rem (about 17px) | label titles |
@@ -63,7 +66,8 @@ The fonts are loaded from Google Fonts in `index.html`.
 | `--fan-scroll-length` | 150% of the screen height | how much scrolling the shoe's coming-apart takes | hero.css |
 | Gray sole stage | 0 → 30% of that scroll | when the gray sole slides away | `stage` in `src/shoes/sketch-sole.js` |
 | White midsole stage | 15% → 45% (starts midway through the gray sole), travels 0.34 of the path (about 54px vs. the gray sole's 160px) | when the white midsole slides away | `stage` and `travel` in `src/shoes/sketch-midsole.js` |
-| Layer paths | Down-left: 96px left, 160px down, 5° tilt; Down: 160px down | the gray sole's full path; other layers move a share of it | `src/shoes/sole-moves.js` |
+| Layer paths | Down-left: 120px left, 240px down, 5° tilt; Down: 240px down; both lift the whole shoe 80px | the gray sole's full path; the white midsole moves an 'even' share (equal gaps, ~78px each) | `src/shoes/sole-moves.js` |
+| Label fade | second half of each part's move, soft start and stop; arrow draws out as it fades in | part labels | `src/components/separating-shoe.js` |
 | Layer easing | soft start and stop (cosine) | every layer's slide | separating-shoe.js |
 | Stagger | 0.08 (each part starts 8% later) | the set-aside 5-part view | `STAGGER` in `src/components/exploding-shoe.js` |
 | Scroll depth | far layers 0.25–0.35, near −0.15 | how fast background layers move | each background's `LAYER_SPEEDS` |

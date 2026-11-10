@@ -1,0 +1,87 @@
+/* Part labels: signature-style title, airy description, hand-drawn arrow.
+   Fonts and colour are shared variables in src/styles/base.css. */
+.part-note {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: var(--color-note);
+}
+
+.part-note__text {
+  position: absolute;
+  width: max-content;
+  max-width: 190px;
+  rotate: -6deg; /* undo the floating shoe's tilt so the text reads level */
+}
+
+.part-note__text--right {
+  text-align: right;
+  transform-origin: right top;
+}
+
+.part-note__text--left {
+  text-align: left;
+  transform-origin: left top;
+}
+
+.part-note__title {
+  margin: 0;
+  font-family: var(--font-signature);
+  font-size: 2.1rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.part-note__description {
+  margin: 2px 0 0;
+  font-family: var(--font-note);
+  font-size: 0.68rem;
+  line-height: 1.45;
+  letter-spacing: 0.06em;
+}
+
+/* The arrow: thin, round-ended, drawn out as the label appears. */
+.part-note__arrow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.part-note__arrow path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4px;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.part-note__arrow path:first-child {
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--drawn, 0));
+}
+
+.part-note__head {
+  opacity: var(--drawn, 0);
+}
+
+/* Phones: titles only, a little smaller, so they fit beside the shoe. */
+@media (max-width: 700px) {
+  .part-note__description {
+    display: none;
+  }
+
+  .part-note__title {
+    font-size: 1.5rem;
+  }
+
+  /* Left-side labels would run off the screen: start them at the part's edge instead. */
+  .part-note__text--right {
+    right: auto !important;
+    left: 14%;
+    text-align: left;
+    transform-origin: left top;
+  }
+}

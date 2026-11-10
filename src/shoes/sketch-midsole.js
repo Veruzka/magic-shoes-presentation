@@ -11,9 +11,10 @@ export const sketchMidsole = {
 
   // Starts midway through the gray sole's move (0 → 0.3), and finishes a little later.
   stage: { start: 0.15, end: 0.45 },
-  // Travels about a third as far as the gray sole (~54px), so there's a bigger
-  // gap below it (to the gray sole, ~106px) than above it (to the shoe).
-  travel: 0.34,
+  // 'even' = travels just far enough that the gap above it (to the shoe) and the
+  // gap below it (to the gray sole) come out the same. Worked out automatically
+  // from the pieces' real shapes. (A number like 0.5 = half the gray sole's path.)
+  travel: 'even',
 
   // How to find the seam — the line where the white foam meets the cork (or the
   // cream toe cap). Each column is read from the foam's bottom edge upward; the
