@@ -102,6 +102,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
   - `size`: the coil's width; it shrinks by itself if it wouldn't fit the tray
   - it always lies along the shoe (coil toward the toe, board toward the heel), flat on the tray floor
   - `turn`: fine-tunes its angle in degrees; positive turns the head (coil) to the left, negative to the right
+  - `pocket`: the shallow pocket pressed into the foam that the sensor sits in. `padding` sets the space around the sensor, `rim` the raised edge's width, `floorColour` and `rimColour` the colors, `wallShade` the shadow along the far wall, and `texture` the faint wavy pattern on its floor.
   - `coilRings`, and every color (copper, disc, board…)
 - `outline`: the soft sketch line along the new edge (`colour`, `width`).
 

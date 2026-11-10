@@ -7,6 +7,13 @@
 // How wide the whole sensor (coil + wires + board) is, for a coil `size` wide.
 export const SENSOR_WIDTH_PER_SIZE = 1.06 + 0.32 + 0.78;
 
+// The space the sensor takes on the floor, including its pocket and rim
+// (before foreshortening), for a coil `size` wide.
+export function sensorFootprint(size, sensor) {
+  const extra = sensor.pocket ? 2 * size * (sensor.pocket.padding + sensor.pocket.rim) : 0;
+  return { width: size * SENSOR_WIDTH_PER_SIZE + extra, height: size * 1.06 + extra };
+}
+
 // centre   where the middle of the sensor goes, and the shoe's direction ({ x, y, axis })
 // sensor   the settings from sketch-sensor.js (size already fitted to the floor)
 // outline  the soft sketch outline style ({ colour, width })
@@ -37,10 +44,17 @@ export function drawSensor(ctx, centre, sensor, outline) {
     ctx.arc(dx, 0, r, 0, Math.PI * 2);
   };
 
+  // The pressed-in pocket the sensor sits in (drawn first, underneath).
+  if (sensor.pocket) {
+    const pad = size * sensor.pocket.padding;
+    const half = R * 1.06; // the disc is the tallest part
+    drawPocket(ctx, { x: -half - pad, y: -half - pad, w: totalW + 2 * pad, h: 2 * half + 2 * pad }, size, sensor.pocket, ink);
+  }
+
   // Faint shadow on the foam underneath everything.
   ctx.save();
-  ctx.filter = `blur(${size * 0.05}px)`;
-  ctx.fillStyle = 'rgb(110 92 70 / 0.28)';
+  ctx.filter = `blur(${size * (sensor.pocket ? 0.025 : 0.05)}px)`;
+  ctx.fillStyle = `rgb(110 92 70 / ${sensor.pocket ? 0.35 : 0.28})`;
   ctx.beginPath();
   ctx.ellipse(totalW / 2 - R * 1.06 + size * 0.04, size * 0.1, totalW / 2, R * 1.1, 0, 0, Math.PI * 2);
   ctx.fill();
@@ -153,3 +167,68 @@ export function drawSensor(ctx, centre, sensor, outline) {
 
   ctx.restore();
 }
+
+// A shallow pocket pressed into the foam, shaped around the sensor:
+// a small raised rim all round, a slightly darker recessed floor with a soft
+// shadow along its far wall, and a faint wavy molded texture — like the inset
+// panel on a shoe sole. Drawn in the sensor's flat layout (before foreshortening).
+function drawPocket(ctx, box, size, pocket, ink) {
+  const radius = Math.min(box.h / 2, size * pocket.roundness);
+  const rimW = size * pocket.rim;
+  const shape = (grow) => {
+    ctx.beginPath();
+    ctx.roundRect(box.x - grow, box.y - grow, box.w + 2 * grow, box.h + 2 * grow, radius + grow);
+  };
+
+  // Raised rim: a light band around the pocket, a touch brighter on the near side.
+  ctx.save();
+  shape(rimW);
+  const rimLight = ctx.createLinearGradient(0, box.y - rimW, 0, box.y + box.h + rimW);
+  rimLight.addColorStop(0, pocket.rimColour);
+  rimLight.addColorStop(1, '#ffffff');
+  ctx.fillStyle = rimLight;
+  ctx.fill();
+  ink();
+  ctx.restore();
+
+  // Recessed floor.
+  ctx.save();
+  shape(0);
+  ctx.fillStyle = pocket.floorColour;
+  ctx.fill();
+  ctx.clip();
+
+  // Faint wavy molded texture on the floor (light and dark pairs).
+  if (pocket.texture > 0) {
+    const step = size * 0.09;
+    for (let y = box.y; y < box.y + box.h + step; y += step) {
+      ctx.beginPath();
+      for (let x = box.x; x <= box.x + box.w; x += size * 0.03) {
+        const wave = Math.sin((x / size) * Math.PI * 6) * step * 0.3;
+        if (x === box.x) ctx.moveTo(x, y + wave);
+        else ctx.lineTo(x, y + wave);
+      }
+      ctx.strokeStyle = `rgb(120 104 82 / ${pocket.texture})`;
+      ctx.lineWidth = step * 0.22;
+      ctx.stroke();
+      ctx.translate(0, step * 0.18);
+      ctx.strokeStyle = `rgb(255 255 255 / ${pocket.texture * 1.4})`;
+      ctx.stroke();
+      ctx.translate(0, -step * 0.18);
+    }
+  }
+
+  // Soft shadow along the far wall, where the floor dips below the rim.
+  ctx.filter = `blur(${size * 0.04}px)`;
+  shape(size * 0.06);
+  ctx.translate(0, size * 0.07);
+  ctx.strokeStyle = `rgb(110 92 70 / ${pocket.wallShade})`;
+  ctx.lineWidth = size * 0.14;
+  ctx.stroke();
+  ctx.restore();
+
+  // The inner edge of the rim.
+  shape(0);
+  ink();
+}
+

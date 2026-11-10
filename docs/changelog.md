@@ -14,6 +14,7 @@ One short entry per work session, newest first.
   - a little green circuit board with a silver chip and tiny parts
 - **How it's drawn:** in code, in the sketch style (soft outlines, faint shadow), flattened to match the tray's angle.
 - **How it fits:** it's smaller than the first version and **lies along the shoe**: the coil (its head) points toward the toe and the board toward the heel, following the midsole's overall toe-to-heel direction. It's laid flat on the same ground as the shoe, so it no longer looks "thrown" on. It shrinks if needed, so it always has space around it and never touches the lip.
+- **Sensor in a pocket:** the sensor now sits in a shallow pocket pressed into the foam, like the inset panel in your photo. It has a darker recessed floor, a soft shadow along its far wall, a small raised white rim with fine sketch outlines, and a faint wavy molded texture. The sensor is back in the middle of the sole, both lengthwise and across.
 - **Sensor angle fine-tuning:** a new `turn` setting in `sketch-sensor.js`. It's set to 10° (the head turns left); we're adjusting it by eye.
 
 

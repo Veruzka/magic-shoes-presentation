@@ -5,12 +5,24 @@
 // Sizes are in drawing pixels (src/assets/shoe-sketch.png is 1356 × 846).
 
 export const sketchSensor = {
-  along: 0.42, // where it sits from toe (0) to heel (1) — the middle area, where the floor is widest
+  along: 0.5, // where it sits from toe (0) to heel (1) — the middle of the sole
   // It always lies along the shoe: coil (its head) toward the toe, board toward the heel.
   turn: 10, // degrees: turns the sensor's head (the coil) to the left (+) or right (−) — fine-tune by eye
-  across: 0.58, // where it sits from the tray's near edge (0) to far edge (1) — a touch past the middle, to even out the space
+  across: 0.5, // where it sits from the tray's near edge (0) to far edge (1) — the middle
   size: 115, // the coil's width; the whole sensor (coil + wires + board) is about twice that
   flatten: 0.38, // how foreshortened it looks, to match the floor's viewing angle (1 = seen from straight above)
+
+  // The shallow pocket pressed into the foam that the sensor sits in, with a
+  // small raised rim around it (like the inset panel on a shoe sole).
+  pocket: {
+    padding: 0.14, // space between the sensor and the pocket's edge (share of the coil size)
+    rim: 0.09, // width of the raised rim (share of the coil size)
+    roundness: 0.45, // how rounded the pocket's corners are
+    floorColour: '#ddd5c7', // the pocket floor — a little darker than the tray
+    rimColour: '#efe9df', // the rim's far side (its near side is white)
+    wallShade: 0.5, // shadow along the far wall where it dips down (0–1)
+    texture: 0.2, // faint wavy molded texture on the floor (0 = none)
+  },
 
   coilRings: 7, // how many copper rings
   colours: {

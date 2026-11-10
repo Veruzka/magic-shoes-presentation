@@ -16,7 +16,7 @@
 //                             src/shoes/sketch-midsole.js  (white foam midsole)
 // The paths they travel:      src/shoes/sole-moves.js
 import './separating-shoe.css';
-import { drawSensor, SENSOR_WIDTH_PER_SIZE } from './sensor-drawing.js';
+import { drawSensor, sensorFootprint } from './sensor-drawing.js';
 
 // The shoe's width on a desktop screen; sole-moves.js distances are measured on this.
 const DESKTOP_SHOE_WIDTH = 414;
@@ -453,8 +453,9 @@ function placeOnFloor(ctx, sensor, { columns, firstX, lastX }, depth, margin, ou
   if (!centre) return;
   let size = sensor.size;
   for (let attempt = 0; attempt < 8; attempt++) {
-    const halfWidth = (size * SENSOR_WIDTH_PER_SIZE * Math.cos(axis)) / 2;
-    const halfHeight = (size * 1.1 * sensor.flatten) / 2;
+    const footprint = sensorFootprint(size, sensor); // sensor + its pocket and rim
+    const halfWidth = (footprint.width * Math.cos(axis)) / 2;
+    const halfHeight = (footprint.height * sensor.flatten) / 2;
     // At both ends and the middle, the sensor must sit inside the floor with a margin.
     const fits = [-halfWidth, 0, halfWidth].every((dx) => {
       const floor = floorAt(centreX + dx);
