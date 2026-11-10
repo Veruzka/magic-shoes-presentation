@@ -64,7 +64,8 @@ The fonts are loaded from Google Fonts in `index.html`.
 | `--duration-float` | 4s | one up-and-down float of the shoe; the box shadow breathes in time | base.css |
 | `--duration-ui` | 0.25s | panel sliding in, button hover | base.css |
 | `--ease-soft` | ease-in-out | the float and shadow | base.css |
-| `--fan-scroll-length` | 160% of the screen height | how much scrolling the whole sequence takes (parts, then labels); the page ends here | hero.css |
+| Chapter lengths | chapter 1 (parts + labels): 1.6 screen-heights; chapter 2 (FSR transition): 1.8 | how long the pinned hero lasts | `src/sections/hero-timeline.js` |
+| FSR transition | labels out 0→6%; lift 0→25% (rises 60px, ×1.2); turn upright + glide to center 20→60%; grow 50→100% to 75% of screen height; scene scrolls away 15→80% (all of chapter 2) | chapter 2 | `src/shoes/fsr-transition.js` |
 | Gray sole stage | 0 → 41% of that scroll | when the gray sole slides away | `stage` in `src/shoes/sketch-sole.js` |
 | White midsole stage | 7% → 48% (starts just after the gray sole, so they separate together), travels 0.34 of the path (about 54px vs. the gray sole's 160px) | when the white midsole slides away | `stage` and `travel` in `src/shoes/sketch-midsole.js` |
 | Layer paths | Down-left: 120px left, 240px down, 5° tilt; Down: 240px down; both lift the whole shoe 80px | the gray sole's full path; the white midsole moves an 'even' share (equal gaps, ~78px each) | `src/shoes/sole-moves.js` |

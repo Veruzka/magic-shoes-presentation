@@ -38,3 +38,17 @@
   transform-origin: 0% 80%;
   will-change: transform;
 }
+
+/* Invisible markers that ride along with the FSR (used to find it on screen). */
+.separating-shoe__marker {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Labels can be faded out as a group during the FSR transition. */
+.separating-shoe .part-note {
+  filter: opacity(var(--labels-visible, 1));
+}
+

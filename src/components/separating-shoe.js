@@ -55,6 +55,16 @@ export function separatingShoe({ image, alt, layers, labels = [], labelTiming },
   const bodyCanvas = document.createElement('canvas');
   bodyCanvas.className = 'separating-shoe__body separating-shoe__picture';
 
+  // The FSR gets its own layer inside the part it lies on, so it moves with that
+  // part — and can be hidden when a copy of it flies out (see fsr-transition.js).
+  const sensorLayer = layers.findIndex((layer) => layer.topFace?.sensor?.look === 'render');
+  let fsrCanvas = null;
+  if (sensorLayer >= 0) {
+    fsrCanvas = document.createElement('canvas');
+    fsrCanvas.className = 'separating-shoe__picture separating-shoe__fsr';
+    parts[sensorLayer].append(fsrCanvas);
+  }
+
   element.append(original, ...parts, bodyCanvas);
 
   let currentMove = move;
@@ -65,7 +75,8 @@ export function separatingShoe({ image, alt, layers, labels = [], labelTiming },
   // Wait for the drawing and any sensor render before splitting and painting.
   const sensors = layers.map((layer) => layer.topFace?.sensor).filter(Boolean);
   Promise.all([original.decode(), ...sensors.map(loadSensorImage)]).then(() => {
-    measured = splitDrawing(original, layers, bodyCanvas, layerCanvases);
+    measured = splitDrawing(original, layers, bodyCanvas, layerCanvases, fsrCanvas);
+    if (measured.points.sensor?.frame) addFsrMarkers(parts[sensorLayer], measured.points.sensor.frame);
     // Labels go into their part, so they ride along with its motion.
     labelControls = labels.map((note) => {
       const i = layers.findIndex((layer) => layer.name === note.part);
@@ -116,15 +127,65 @@ export function separatingShoe({ image, alt, layers, labels = [], labelTiming },
     setProgress(currentProgress);
   }
 
-  return { element, setProgress, setMove };
+  // ---------- for the FSR transition (src/components/fsr-transition.js) ----------
+
+  // Three invisible markers ride along with the FSR: its pad centre, one unit
+  // along it and one unit across it. Reading where they are on screen gives the
+  // FSR's exact on-screen position, direction, size and tilt.
+  const MARKER_UNIT = 100;
+  let markers = null;
+  function addFsrMarkers(part, frame) {
+    const { origin, xAxis, yAxis } = frame;
+    const spots = [
+      origin,
+      { x: origin.x + xAxis.x * MARKER_UNIT, y: origin.y + xAxis.y * MARKER_UNIT },
+      { x: origin.x + yAxis.x * MARKER_UNIT, y: origin.y + yAxis.y * MARKER_UNIT },
+    ];
+    markers = spots.map(({ x, y }) => {
+      const dot = document.createElement('i');
+      dot.className = 'separating-shoe__marker';
+      dot.style.left = `${(x / measured.width) * 100}%`;
+      dot.style.top = `${(y / measured.height) * 100}%`;
+      part.append(dot);
+      return dot;
+    });
+  }
+
+  // Where the FSR is on screen right now: its pad centre, and the on-screen
+  // direction + length of one flat unit along it and across it.
+  function fsrPose() {
+    if (!markers) return null;
+    const [o, x, y] = markers.map((dot) => {
+      const r = dot.getBoundingClientRect();
+      return { x: r.left, y: r.top };
+    });
+    return {
+      origin: o,
+      xAxis: { x: (x.x - o.x) / MARKER_UNIT, y: (x.y - o.y) / MARKER_UNIT },
+      yAxis: { x: (y.x - o.x) / MARKER_UNIT, y: (y.y - o.y) / MARKER_UNIT },
+      layout: measured.points.sensor.frame.layout,
+    };
+  }
+
+  // Hide the FSR lying in its pocket (while its flying copy is out).
+  function setFsrHidden(hidden) {
+    if (fsrCanvas) fsrCanvas.style.visibility = hidden ? 'hidden' : '';
+  }
+
+  // Fade all the part labels out (1 = as normal, 0 = gone), on top of their own fade-in.
+  function setLabelsVisible(amount) {
+    element.style.setProperty('--labels-visible', amount);
+  }
+
+  return { element, setProgress, setMove, fsrPose, setFsrHidden, setLabelsVisible };
 }
 
 // ---------- splitting the drawing into layers ----------
 
-function splitDrawing(img, layers, bodyCanvas, layerCanvases) {
+function splitDrawing(img, layers, bodyCanvas, layerCanvases, fsrCanvas) {
   const width = img.naturalWidth;
   const height = img.naturalHeight;
-  for (const canvas of [bodyCanvas, ...layerCanvases]) {
+  for (const canvas of [bodyCanvas, ...layerCanvases, fsrCanvas].filter(Boolean)) {
     canvas.width = width;
     canvas.height = height;
   }
@@ -151,7 +212,7 @@ function splitDrawing(img, layers, bodyCanvas, layerCanvases) {
     const topEdge = smooth(highestSolid(piece), 5);
     if (layer.topFace.style === 'tread') drawTreadFace(ctx, piece, layer, topEdge);
     else {
-      const sensorAt = drawTrayFace(ctx, layer, topEdge, piece);
+      const sensorAt = drawTrayFace(ctx, layer, topEdge, piece, fsrCanvas?.getContext('2d'));
       if (sensorAt) points.sensor = sensorAt;
     }
     const sidePixels = makeCanvas(width, height);
@@ -161,7 +222,7 @@ function splitDrawing(img, layers, bodyCanvas, layerCanvases) {
 
   bodyCanvas.getContext('2d').putImageData(remaining, 0, 0);
 
-  return { width, points, evenGap: measureEvenGap(remaining, layerCanvases, width, height) };
+  return { width, height, points, evenGap: measureEvenGap(remaining, layerCanvases, width, height) };
 }
 
 // For a layer with travel 'even' (the white midsole), the visible gap above it
@@ -454,7 +515,7 @@ function topFacePath(topEdge, depth) {
 // The white midsole's top surface: a smooth matte tray — a slightly raised lip
 // around the edge, a recessed floor inside with soft shading where they meet,
 // and a faint grain. (Like the foam midsole in the reference photo.)
-function drawTrayFace(ctx, layer, topEdge, piece) {
+function drawTrayFace(ctx, layer, topEdge, piece, fsrCtx) {
   const { depth, floorLight, floorDark, lipWidth, lipLight, recessShade, grain } = layer.topFace;
   const face = topFacePath(topEdge, depth);
   if (!face) return;
@@ -505,7 +566,7 @@ function drawTrayFace(ctx, layer, topEdge, piece) {
 
   // Anything lying on the tray floor (e.g. the charging sensor).
   const { sensor } = layer.topFace;
-  if (sensor) return placeOnFloor(ctx, sensor, face, depth, lipWidth * 3, layer.outline, shoeDirection(piece));
+  if (sensor) return placeOnFloor(ctx, sensor, face, depth, lipWidth * 3, layer.outline, shoeDirection(piece), fsrCtx);
   return null;
 }
 
@@ -513,7 +574,7 @@ function drawTrayFace(ctx, layer, topEdge, piece) {
 // its long side follows the shoe's toe-to-heel direction (coil toward the toe,
 // board toward the heel), foreshortened like the floor. It shrinks if it wouldn't
 // fit with space around it, so it never touches the lip.
-function placeOnFloor(ctx, sensor, { columns, firstX, lastX }, depth, margin, outline, axis) {
+function placeOnFloor(ctx, sensor, { columns, firstX, lastX }, depth, margin, outline, axis, fsrCtx) {
   const nearAt = new Map(columns);
   const length = lastX - firstX;
   // The floor at any x: the line `across` of the way in, and how deep the floor is.
@@ -546,8 +607,8 @@ function placeOnFloor(ctx, sensor, { columns, firstX, lastX }, depth, margin, ou
     if (fits) break;
     size *= 0.85;
   }
-  drawSensor(ctx, { x: centreX, y: centre.line, axis }, { ...sensor, size }, outline);
-  return { x: centreX, y: centre.line };
+  const frame = drawSensor(ctx, { x: centreX, y: centre.line, axis }, { ...sensor, size }, outline, fsrCtx);
+  return { x: centreX, y: centre.line, frame };
 }
 
 // The shoe's toe-to-heel direction, as an angle: the main line the whole layer's

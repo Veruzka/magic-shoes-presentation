@@ -13,6 +13,7 @@ import shoeSketch from '../assets/shoe-sketch.png';
 import { sketchSole } from './sketch-sole.js';
 import { sketchMidsole } from './sketch-midsole.js';
 import { sketchLabels, labelTiming } from './sketch-labels.js';
+import { fsrTransition } from './fsr-transition.js';
 
 // The first one is shown until you pick another with the switcher.
 export const shoes = [
@@ -32,5 +33,7 @@ export const shoes = [
     // Labels that fade in beside each part as it separates.
     labels: sketchLabels,
     labelTiming, // when they appear: only after the parts have finished fanning out
+    // Chapter 2: the FSR lifts out and grows to the centre as the scene scrolls away.
+    transition: fsrTransition,
   },
 ];

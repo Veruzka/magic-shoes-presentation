@@ -12,23 +12,33 @@ import { loadChoice } from '../core/remember-choice.js';
 import { explodingShoe } from '../components/exploding-shoe.js';
 import { separatingShoe } from '../components/separating-shoe.js';
 import { heroTitle } from '../components/hero-title.js';
+import { flyingFsr } from '../components/fsr-transition.js';
+import { pinLength } from './hero-timeline.js';
 
-// For each hero: the shoe's controls (setProgress, setMove), if it comes apart.
+// For each hero: the shoe's controls (setProgress, setMove…), if it comes apart,
+// and the flying FSR + its settings, if the shoe has a chapter-2 transition.
 const shoeControls = new WeakMap();
+const transitions = new WeakMap();
 
 export function hero() {
   const section = document.createElement('section');
   section.className = 'hero';
   section.innerHTML = `
     <div class="hero__stage">
-      <div class="hero__background" aria-hidden="true"></div>
-      <div class="hero__title-slot"></div>
+      <!-- The shoe scene: slides up and away during chapter 2. -->
+      <div class="hero__scene">
+        <div class="hero__background" aria-hidden="true"></div>
+        <div class="hero__title-slot"></div>
 
-      <div class="hero__clear-zone">
-        <div class="hero__shoe-area">
-          <div class="hero__floater"></div>
+        <div class="hero__clear-zone">
+          <div class="hero__shoe-area">
+            <div class="hero__floater"></div>
+          </div>
         </div>
       </div>
+
+      <!-- The next section's background: rises in behind the scene in chapter 2. -->
+      <div class="hero__next" aria-hidden="true"></div>
     </div>
   `;
   // The big title behind the shoe.
@@ -72,8 +82,37 @@ export function showShoe(section, shoe) {
     shoeControls.delete(section);
   }
 
-  // Only shoes that come apart need the extra scrolling room.
+  // Shoes with a chapter-2 transition get the flying FSR.
+  section.querySelector('.fsr-flight')?.remove();
+  transitions.delete(section);
+  if (controls && shoe.transition) {
+    const flight = flyingFsr(section.querySelector('.hero__stage'), controls, shoe.transition);
+    section.querySelector('.hero__stage').append(flight.element);
+    section.querySelector('.hero__next').style.background = shoe.transition.nextBackground;
+    transitions.set(section, { flight, settings: shoe.transition });
+  }
+
+  // Only shoes that come apart need the extra scrolling room (more with a chapter 2).
   section.classList.toggle('hero--pinned', Boolean(controls));
+  section.style.setProperty('--pin-length', pinLength(Boolean(controls && shoe.transition)));
+}
+
+// Whether the current shoe has a chapter 2 (the FSR transition).
+export function hasExitChapter(section) {
+  return transitions.has(section);
+}
+
+// Chapter 2: 0 = the shoe scene as it is, 1 = the FSR big in the centre of the next section.
+export function setTransition(section, progress) {
+  const transition = transitions.get(section);
+  if (!transition) return;
+  const { start, end } = transition.settings.sceneAway;
+  const t = Math.min(Math.max((progress - start) / (end - start), 0), 1);
+  const away = (1 - Math.cos(Math.PI * t)) / 2; // soft start and stop
+  // The scene scrolls up and out; the next background follows right behind it.
+  section.querySelector('.hero__scene').style.translate = `0 ${-away * 100}%`;
+  section.querySelector('.hero__next').style.translate = `0 ${(1 - away) * 100}%`;
+  transition.flight.setProgress(progress);
 }
 
 // How far the shoe has come apart: 0 = whole, 1 = fully separated.

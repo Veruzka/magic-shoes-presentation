@@ -4,7 +4,8 @@ import './styles/base.css';
 import { createParallax } from './core/parallax.js';
 import { loadChoice, saveChoice } from './core/remember-choice.js';
 import { watchScrollProgress } from './core/scroll-progress.js';
-import { hero, showBackground, showShoe, setShoeOpening, setSoleMove } from './sections/hero.js';
+import { hero, showBackground, showShoe, setShoeOpening, setSoleMove, setTransition, hasExitChapter } from './sections/hero.js';
+import { chapterProgress } from './sections/hero-timeline.js';
 import { backgrounds } from './backgrounds/index.js';
 import { shoes } from './shoes/index.js';
 import { soleMoves } from './shoes/sole-moves.js';
@@ -19,11 +20,14 @@ sections.forEach((section) => app.append(section()));
 
 const parallax = createParallax();
 
-// Scrolling through the hero fans the shoe open (for shoes that have parts).
+// Scrolling through the hero: chapter 1 fans the shoe open (for shoes that have
+// parts), chapter 2 flies the FSR to the centre as the scene scrolls away.
 const heroSection = app.querySelector('.hero');
-const shoeOpening = watchScrollProgress(heroSection, (progress) =>
-  setShoeOpening(heroSection, progress),
-);
+const shoeOpening = watchScrollProgress(heroSection, (progress) => {
+  const chapter = chapterProgress(progress, hasExitChapter(heroSection));
+  setShoeOpening(heroSection, chapter.fan);
+  setTransition(heroSection, chapter.exit);
+});
 
 // Prototype tool: the "Style lab" glass card (top-right) to flip between options.
 const styleLab = switcherPanel(

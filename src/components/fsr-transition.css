@@ -1,0 +1,25 @@
+/* The flying FSR: sits above the shoe scene, positioned by one transform. */
+.fsr-flight {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.fsr-flight__inner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+}
+
+.fsr-flight__image {
+  position: absolute;
+  max-width: none;
+  filter: drop-shadow(0 6px 10px rgb(60 48 34 / 0.25));
+}

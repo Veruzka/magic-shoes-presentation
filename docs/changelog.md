@@ -2,6 +2,24 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: chapter 2, the FSR transition
+**What changed**
+- **A second scroll chapter.** After the labels, scrolling on:
+  - makes the FSR **lift out** of its pocket, leaving the pocket empty
+  - **turns it upright to face you**, with the pad on top and the tail down
+  - **grows it** to the center of the screen (75% of the screen height)
+  - while the **shoe scene scrolls up and away** and the next section's background (plain cream for now) rises in
+- It stops with the FSR big and centered, and that's the end of the page for now. Scrolling back reverses everything, and the FSR settles back into its pocket.
+- **How it starts without a jump:** the FSR now lives on its own layer in the white midsole, and three invisible markers tell the flying copy exactly where it lies, at what angle and how foreshortened.
+- **New settings:**
+  - `src/shoes/fsr-transition.js`: timings and sizes
+  - `src/sections/hero-timeline.js`: the length of each chapter
+- **Smoothness:** a full scroll down and back ran at a steady 60 frames per second, with no slow frames.
+
+**Known issues and open questions**
+- When big, the FSR is the angled render "opened up" to face you, so it's a little soft. A dedicated straight-on render would be crisper (1 Figma credit), which we can do in the styling step.
+- On phones, the Style lab card overlaps the top of the big FSR.
+
 ## 2026-11-10: checkpoint 2
 **Saved as checkpoint 2** (`checkpoint-02-layers-labels-fsr`) and pushed to GitHub; see [checkpoints.md](checkpoints.md).
 

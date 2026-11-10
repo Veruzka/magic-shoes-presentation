@@ -37,8 +37,10 @@ export function sensorFootprint(size, sensor) {
 // centre   where the middle of the sensor goes, and the shoe's direction ({ x, y, axis })
 // sensor   the settings from sketch-sensor.js (size already fitted to the floor)
 // outline  the soft sketch outline style ({ colour, width })
-export function drawSensor(ctx, centre, sensor, outline) {
-  if (sensor.look === 'render') return drawRender(ctx, centre, sensor, outline);
+// fsrCtx   (render look) a separate canvas for the FSR itself, so it can later
+//          lift out of its pocket on its own. Returns the FSR's "frame" (see drawRender).
+export function drawSensor(ctx, centre, sensor, outline, fsrCtx = ctx) {
+  if (sensor.look === 'render') return drawRender(ctx, centre, sensor, outline, fsrCtx);
   const { flatten, coilRings, colours, size } = sensor;
 
   const R = size / 2; // coil radius
@@ -258,13 +260,13 @@ function drawPocket(ctx, box, size, pocket, ink) {
 // Lays the render flat on the tray: round pad toward the toe, tail toward the
 // heel, in a keyhole-shaped pocket. Everything is laid out flat first (as if
 // seen from straight above), then foreshortened at the render's own view angle.
-function drawRender(ctx, centre, sensor, outline) {
+function drawRender(ctx, centre, sensor, outline, fsrCtx) {
   const { size, render, pocket } = sensor;
   // Keep the render's own view angle (squashing it further would crush its 3D
   // shading); the pocket is foreshortened the same way, so they match.
   const flatten = render.viewFlatten;
   const img = loadedImages.get(render.image);
-  if (!img) return;
+  if (!img) return null;
 
   // The image laid out flat: the pad is `size` wide, centred image at (0, 0).
   const width = size / render.padWidth;
@@ -273,18 +275,18 @@ function drawRender(ctx, centre, sensor, outline) {
   const padY = (render.padCentre[1] - 0.5) * height;
   // The tail runs a little downhill in the image: level it out, turning around the pad.
   const level = -Math.atan(Math.tan((render.slope * Math.PI) / 180) / render.viewFlatten);
+  // The flat layout → the drawing: turned along the shoe, foreshortened like the floor.
+  const toFloor = [Math.cos(centre.axis), Math.sin(centre.axis), 0, flatten, centre.x, centre.y];
 
+  // Keyhole pocket (stays on the midsole — it's left empty when the FSR lifts out).
   ctx.save();
-  ctx.translate(centre.x, centre.y);
-  ctx.transform(Math.cos(centre.axis), Math.sin(centre.axis), 0, flatten, 0, 0);
+  ctx.transform(...toFloor);
   ctx.lineJoin = 'round';
   const ink = (lineWidth = outline.width) => {
     ctx.strokeStyle = outline.colour;
     ctx.lineWidth = lineWidth / Math.sqrt(flatten);
     ctx.stroke();
   };
-
-  // Keyhole pocket: round for the pad, a channel for the tail.
   if (pocket) {
     const pad = size * pocket.padding;
     drawKeyhole(ctx, {
@@ -295,22 +297,37 @@ function drawRender(ctx, centre, sensor, outline) {
       tailHalf: (size * render.tailWidth) / 2 + pad,
     }, size, pocket, ink);
   }
-
-  // Soft contact shadow under the FSR, then the render itself.
-  ctx.save();
-  ctx.filter = `blur(${size * 0.04}px)`;
-  ctx.fillStyle = 'rgb(90 74 55 / 0.35)';
-  ctx.beginPath();
-  ctx.arc(padX, padY + size * 0.05, size * 0.5, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillRect(padX, padY - size * 0.06, width / 2 - padX, size * 0.16);
   ctx.restore();
 
-  ctx.translate(padX, padY);
-  ctx.rotate(level);
-  ctx.translate(-padX, -padY);
-  ctx.drawImage(img, -width / 2, -height / 2, width, height);
-  ctx.restore();
+  // The FSR itself (its own canvas): soft contact shadow, then the render.
+  fsrCtx.save();
+  fsrCtx.transform(...toFloor);
+  fsrCtx.save();
+  fsrCtx.filter = `blur(${size * 0.04}px)`;
+  fsrCtx.fillStyle = 'rgb(90 74 55 / 0.35)';
+  fsrCtx.beginPath();
+  fsrCtx.arc(padX, padY + size * 0.05, size * 0.5, 0, Math.PI * 2);
+  fsrCtx.fill();
+  fsrCtx.fillRect(padX, padY - size * 0.06, width / 2 - padX, size * 0.16);
+  fsrCtx.restore();
+  fsrCtx.translate(padX, padY);
+  fsrCtx.rotate(level);
+  fsrCtx.translate(-padX, -padY);
+  fsrCtx.drawImage(img, -width / 2, -height / 2, width, height);
+  fsrCtx.restore();
+
+  // The FSR's "frame", so a copy can start exactly where this one lies:
+  //   origin  the pad's centre, in drawing pixels
+  //   xAxis   one flat unit along the FSR (pad → tail), in drawing pixels
+  //   yAxis   one flat unit across it (toward the viewer), in drawing pixels
+  //   layout  how the image sits around the pad in flat units
+  const [a, b, c, d, e, f] = toFloor;
+  return {
+    origin: { x: a * padX + c * padY + e, y: b * padX + d * padY + f },
+    xAxis: { x: a, y: b },
+    yAxis: { x: c, y: d },
+    layout: { image: render.image, width, height, padX, padY, level, size },
+  };
 }
 
 // A keyhole-shaped pocket pressed into the foam (same look as the rounded one):

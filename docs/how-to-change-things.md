@@ -56,6 +56,25 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 
 ---
 
+## Chapter 2: FSR transition to the next section
+**What:** after the labels appear, scrolling on makes the FSR lift out of the white midsole, turn upright to face you, and grow to the center, while the shoe scene scrolls away and the next section's background rises in. It stops with the FSR big and centered.
+**Files:**
+- `src/shoes/fsr-transition.js`: all the timings and sizes (safe to change).
+- `src/sections/hero-timeline.js`: how long each chapter lasts, in screen-heights (safe to change).
+- `src/components/fsr-transition.js`: the motion (ask me).
+
+**Safe to change** (each stage is a stretch of chapter 2, from 0 to 1):
+- `labelsOut`: when the labels fade away.
+- `lift`: lifting out of the pocket. `rise` is how many pixels up it moves, `grow` how much bigger it gets.
+- `turn`: turning upright and gliding to the center.
+- `grow`: growing; `finalHeight` is its final size as a share of the screen height.
+- `sceneAway`: when the shoe scene scrolls away.
+- `nextBackground`: the next section's color.
+
+> **Example:** to make the FSR end bigger, change `finalHeight: 0.75` to `0.85`. To give chapter 2 more scrolling, change `exit: 1.8` to `2.4` in `hero-timeline.js`.
+
+---
+
 ## Big title ("Magic Shoes")
 **What:** the huge title behind the shoe, with the shoe floating in front of its lower part.
 **Files:** `src/components/hero-title.js` and `.css`. The text is set in `src/sections/hero.js` (`heroTitle('Magic Shoes')`).
@@ -74,7 +93,7 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 **Safe to change:**
 - `--shoe-width`: the shoe area size. It's `min(70vw, 460px)`: 70% of the screen width, never more than 460px.
 - `--shoe-clear-space`: the empty space around the shoe. It's 32px, as you asked.
-- `--fan-scroll-length`: how much scrolling the whole sequence takes (parts fan out, then labels fade in). Now 160% of the screen height. The page ends there.
+- How much scrolling the pinned hero takes is set in `src/sections/hero-timeline.js` (chapter 1 `fan: 1.6`, chapter 2 `exit: 1.8`, in screen-heights).
 - The `shoe-float` steps: how high the shoe rises and how much it tilts.
 
 > **Example:** to make the shoe bigger on desktop, change `460px` to `540px` in `--shoe-width`.
@@ -179,6 +198,8 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 | `setSoleMove(section, move)` | `src/sections/hero.js` | Switches the sole's path | hero + a move → nothing | Careful |
 | `separatingShoe(shoe, move)` | `src/components/separating-shoe.js` | Splits the Sketch drawing into layers and moves each one on scroll | shoe (with `layers`) + path → the shoe and its controls | Ask me |
 | `splitDrawing(...)` / `cutLayer(...)` | `src/components/separating-shoe.js` | Cuts each layer out, bottom up, and draws the outlines | drawing + layer settings → one picture per layer + the body | Ask me |
+| `flyingFsr(stage, shoe, settings)` | `src/components/fsr-transition.js` | The FSR that flies out of the shoe to the center in chapter 2 | the screen + the shoe's controls + timings → the FSR and its setProgress(0–1) | Ask me |
+| `chapterProgress(overall, hasExit)` | `src/sections/hero-timeline.js` | Splits the hero's scroll into chapter 1 and chapter 2 | overall 0–1 → each chapter's 0–1 | Careful |
 | `heroTitle(text)` | `src/components/hero-title.js` | Makes the big title behind the shoe | the words → the title | Safe |
 | `partLabel(note, points)` | `src/components/part-labels.js` | Makes one part label (title, description, arrow) that fades in with its part | a label entry + spots like the sensor → the label and its show(0–1) | Careful |
 | `drawSensor(ctx, centre, sensor, outline)` | `src/components/sensor-drawing.js` | Draws the charging sensor (coil, wires, board) flat on the tray | where + settings → the drawing | Ask me |
