@@ -43,3 +43,16 @@ We never publish with the Vercel command-line tool. Pushing to GitHub is the onl
 | [changelog.md](changelog.md) | see what changed in each work session |
 | [checkpoints.md](checkpoints.md) | see the saved points we can go back to, and how |
 | [debugging-motion.md](debugging-motion.md) | track down a scroll or motion problem, step by step (our playbook) |
+| [electronics-style-guide.md](electronics-style-guide.md) | show a sensor or electronic part: render look, sketch look, callouts, motion and sharpness rules (the FSR is the example) |
+
+## How we document things
+Each kind of information has one home, so nothing is written twice:
+- **"How do I change X?"** → [how-to-change-things.md](how-to-change-things.md): the file and setting, with an example.
+- **"How does it fit together?"** → [architecture.md](architecture.md): the diagram, each part, and every AI image with its cost.
+- **"What are the visual rules?"** → [design-spec.md](design-spec.md) for the page (colors, fonts, spacing, motion numbers); [electronics-style-guide.md](electronics-style-guide.md) for sensors and electronics (render look, sketch look, callouts, motion sequence, sharpness).
+- **"What happened, and why?"** → [changelog.md](changelog.md): one entry per session, including the exact AI prompts.
+- **"What did we learn?"** → [what-works.md](what-works.md): what you liked (with your words) and what failed, each with a lesson.
+- **"What did you ask me to always do?"** → [my-instructions.md](my-instructions.md).
+- **"How do we fix motion bugs?"** → [debugging-motion.md](debugging-motion.md).
+
+When a style or technique becomes reusable (like the FSR's look), it gets its own **recipe doc** (like the electronics style guide), and the other docs link to it rather than repeating it.

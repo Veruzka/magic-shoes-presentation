@@ -1,13 +1,30 @@
 /* The flying FSR: sits above the shoe scene.
-   .fsr-flight         a still wrapper that adds the soft shadow (in screen space)
-   .fsr-flight__mover  positioned by one transform. No "will-change" on purpose:
-                       it keeps the FSR sharp as it grows (see what-works.md). */
+   .fsr-flight          the whole screen; holds the two stacks (+ paper and callouts in chapter 3)
+   .fsr-flight__photo   the render stack; its soft shadow is added here, in screen space
+   .fsr-flight__drawing the sketch stack (chapter 3), no shadow
+   .fsr-flight__door    the chapter-3 turn (3D), around the screen's centre
+   .fsr-flight__mover   positioned by one transform. No "will-change" on purpose:
+                        it keeps the FSR sharp as it grows (see what-works.md). */
 .fsr-flight {
   position: absolute;
   inset: 0;
   z-index: 5;
   pointer-events: none;
+}
+
+.fsr-flight__photo,
+.fsr-flight__drawing,
+.fsr-flight__door {
+  position: absolute;
+  inset: 0;
+}
+
+.fsr-flight__photo {
   filter: drop-shadow(0 6px 10px rgb(60 48 34 / 0.25));
+}
+
+.fsr-flight__door {
+  transform-origin: 50% 50%;
 }
 
 .fsr-flight__mover {
@@ -32,11 +49,47 @@
   transform: rotate(-90deg);
 }
 
-.fsr-flight__image {
+.fsr-flight__image,
+.fsr-flight__depth-holder,
+.fsr-flight__sketch {
   position: absolute;
   max-width: none;
 }
 
 .fsr-flight__front .fsr-flight__image {
   opacity: 0;
+}
+
+/* Chapter 3: real 3D, so the thickness copies sit behind the render. */
+.fsr-flight--reveal .fsr-flight__door,
+.fsr-flight--reveal .fsr-flight__mover,
+.fsr-flight--reveal .fsr-flight__front,
+.fsr-flight--reveal .fsr-flight__depth-holder {
+  transform-style: preserve-3d;
+}
+
+.fsr-flight .fsr-flight__depth {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.fsr-flight__sketch {
+  visibility: hidden;
+}
+
+.fsr-flight__sketch svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* The cream paper behind the sweep line. */
+.fsr-paper {
+  position: absolute;
+  inset: 0;
+  background-size: 240px 240px;
 }

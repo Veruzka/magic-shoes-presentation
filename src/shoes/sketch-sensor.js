@@ -28,6 +28,22 @@ export const sketchSensor = {
     image: fsrRenderFront, // src/assets/fsr-render-front.png (532 × 1458)
     padWidth: 0.996, // the round pad's width, as a share of the image's width
     padCentre: [0.498, 0.181], // where the pad's centre is in the image (share of width, height)
+
+    // Its parts, measured in the image's pixels, so the sketch half (chapter 3)
+    // lines up exactly with the render. Only change these for a new image.
+    shape: {
+      pad: { cx: 265.5, cy: 258, rx: 265, ry: 259 }, // the black disc's outer edge
+      ring: { cx: 265.5, cy: 261, r: 229.5, width: 9 }, // the silver ring around the lines
+      loops: [[91, 113.5], [135, 156.5], [176.5, 196], [215, 234], [253, 272.5], [291.5, 311], [329.5, 348.5], [367, 386], [405, 424]], // each slender silver loop: its two legs' x
+      singles: [445.5], // lone straight lines
+      reach: { cy: 264, a: 232, b: 193 }, // how far the lines run up and down (an oval)
+      tail: { left: 209, right: 320, neck: 506, glass: 7 }, // the clear tail; glass = its edge thickness
+      traces: [[238, 254], [276, 292]], // the two silver traces (left and right edge x)
+      collar: { left: 201, right: 326, top: 1262, bottom: 1322 }, // the tab's wider top
+      block: { left: 209, right: 320, top: 1322, bottom: 1362 }, // the tab's lower block
+      pins: [[230, 245], [284, 301]], // each pin's left and right x
+      pinEnd: 1456,
+    },
   },
 
   along: 0.5, // where it sits from toe (0) to heel (1) — the middle of the sole

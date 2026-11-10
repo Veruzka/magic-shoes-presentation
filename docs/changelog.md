@@ -2,6 +2,17 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: chapter 3, the FSR turns and becomes half sketch
+- **New scroll chapter** (1.6 screen-heights) after the FSR is big:
+  1. **It turns like a door** (28°, real 3D). The pad's thickness shows as a dark glossy edge.
+  2. **A line sweeps in** from the right, crosses the FSR and stops at its middle. Behind it the FSR becomes a **technical sketch** (fine warm ink, double lines for thickness, light hatching, the pad's ring in **red**) on **cream paper** with a fine grain, like the camera reference.
+  3. **Callouts** fade in one by one: ACTIVE AREA, ELECTRODES, CONDUCTIVE TRACES, CONNECTOR (thin leaders, small condensed uppercase).
+- **The sketch is drawn in code** from measurements of the straight-on render, so it lines up exactly and stays sharp. It cost no credits.
+- **New font:** Barlow Semi Condensed (callouts).
+- **New doc:** [electronics-style-guide.md](electronics-style-guide.md), the full look-and-motion recipe for this and future parts.
+- **Checked:** sharp at 2× in a visible Chrome. Longest frame 9ms (one run had a one-off 150ms hiccup; two re-runs were clean). The scroll stages run in order. The debug scripts now scroll far enough to reach chapter 3, and list the paper, sketch, callouts and 3D turn as suspects.
+- **Known limit:** on narrow phone screens, the callout column can run off the right edge.
+
 ## 2026-11-10: the big FSR is now high-definition
 **Why it looked blurry:**
 - **The browser was stretching a small snapshot.** The flying FSR was marked "will move" (`will-change`), so the browser photographed it once while it was small and enlarged that photo as it grew.

@@ -8,6 +8,8 @@ flowchart TD
   bg["Backgrounds<br/>Clouds or Meadow"]
   shoe["Shoes<br/>Photo or Sketch<br/>(comes apart in layers)"]
   flight["Flying FSR<br/>chapter 2: lifts out,<br/>grows to the centre"]
+  reveal["FSR reveal<br/>chapter 3: door turn,<br/>half sketch on paper"]
+  sketch["Sketch drawing<br/>+ callout labels"]
   data["Settings and images<br/>layers, sensor, assets"]
   helpers["Helpers<br/>scroll depth,<br/>scroll progress,<br/>remember picks"]
   styles["Shared look<br/>base.css"]
@@ -22,6 +24,7 @@ flowchart TD
   hero --> bg
   hero --> shoe
   shoe --> flight
+  flight --> reveal --> sketch
   bg --> data
   shoe --> data
   helpers --> hero
@@ -54,6 +57,14 @@ Interchangeable shoe styles, listed in `src/shoes/index.js`. **Photo** is a real
 After the shoe has fanned out and the labels are shown, scrolling on starts **chapter 2**. The FSR lifts out of its pocket, turns upright to face you, and grows to the center of the screen, while the shoe scene scrolls up and away and the next section's background rises in. The page ends with the FSR big and centered (for now).
 - **The flying FSR:** `src/components/fsr-transition.js`. It starts exactly where the real FSR lies, using three invisible markers on the FSR's own layer. While it turns to face you, it cross-fades from the angled render to a sharp straight-on render (`fsr-render-front.png`), which does the growing.
 - **Its timings:** `src/shoes/fsr-transition.js`.
+
+### Chapter 3: the FSR reveal
+Scrolling on after the FSR is big: it **turns like a door** (real 3D, with the pad's thickness showing), then a line **sweeps in from the right**. Behind the line, the FSR becomes a **technical sketch on cream paper**, and **callout labels** fade in one by one.
+- **The motion:** `src/components/fsr-reveal.js`. It works on the same flying FSR, which has two identical stacks: the render (with its shadow) and the sketch.
+- **The sketch:** `src/components/fsr-sketch.js`, vector lines drawn from the straight-on render's measurements (`front.shape` in `src/shoes/sketch-sensor.js`).
+- **The callouts:** `src/components/callouts.js`, reusable for any part.
+- **Its settings:** `src/shoes/fsr-reveal.js`.
+- **The whole style, as a recipe for other parts:** [electronics-style-guide.md](electronics-style-guide.md).
 - **The length of each chapter:** `src/sections/hero-timeline.js` (chapter 1: 1.6 screen-heights, chapter 2: 1.8).
 
 ### Settings and images

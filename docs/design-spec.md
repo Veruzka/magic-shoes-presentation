@@ -13,6 +13,8 @@ The visual rules we're using. **Shared** values live in one place, `src/styles/b
 | `--color-muted` | `#8c7b64` soft brown | secondary text | base.css |
 | `--color-accent` | `#c9ae84` sand | highlights | base.css |
 | `--color-note` | `#2f2a25` warm near-black | part label text and arrows | base.css |
+| `--color-ink` | `#3a332b` warm dark brown-gray | sketch ink and callouts (chapter 3) | base.css; sketch ink also in `src/shoes/fsr-reveal.js` |
+| Paper / red accent | `#f2ecdf` with fine grain / `#b5473b` | the sketch half's paper and its one red part | `src/shoes/fsr-reveal.js` |
 | `--glass-bg` / `--glass-border` | white at 60% / 80% | info button and panel | base.css |
 | `--glass-card-bg`, `--glass-card-border`, `--glass-card-blur`, `--glass-card-grain`, `--glass-card-shadow` | glassmorphism: milky white tint (24% → 8%), thin white border (55%), 40px blur, fine grain (22%), soft wide shadow | the Style lab glass card | base.css |
 | `--glass-divider` / `--glass-track` / `--glass-thumb` | white at 45% / lighter glass (white at 28%, border 50%) / white at 92% | the card's hairlines, glass pills and chosen option | base.css |
@@ -29,6 +31,7 @@ The visual rules we're using. **Shared** values live in one place, `src/styles/b
 | `--font-title` | Bricolage Grotesque, extra bold (800), 88% width, about 14.5vw | the big "Magic Shoes" title |
 | `--font-signature` | Mrs Saint Delafield (signature script) | part label titles (Outsole, Midsole, FSR) |
 | `--font-note` | Poppins, 0.68rem, letter-spaced 0.06em | part label descriptions |
+| `--font-callout` / `--text-callout` | Barlow Semi Condensed 500, uppercase, 0.8rem, letter-spaced 0.04em | callout labels on the sketch (chapter 3) |
 | `--text-xs` | 0.72rem (about 11.5px) | small descriptions |
 | `--text-sm` | 0.8rem (about 13px) | switchers, small UI |
 | `--text-md` | 1.05rem (about 17px) | label titles |
@@ -64,8 +67,9 @@ The fonts are loaded from Google Fonts in `index.html`.
 | `--duration-float` | 4s | one up-and-down float of the shoe; the box shadow breathes in time | base.css |
 | `--duration-ui` | 0.25s | panel sliding in, button hover | base.css |
 | `--ease-soft` | ease-in-out | the float and shadow | base.css |
-| Chapter lengths | chapter 1 (parts + labels): 1.6 screen-heights; chapter 2 (FSR transition): 1.8 | how long the pinned hero lasts | `src/sections/hero-timeline.js` |
-| FSR transition | labels out 0→6%; lift 0→25% (rises 60px, ×1.2); turn upright + glide to center 20→60%; grow 50→100% to 75% of screen height; scene scrolls away 15→80% (all of chapter 2) | chapter 2 | `src/shoes/fsr-transition.js` |
+| Chapter lengths | chapter 1 (parts + labels): 1.6 screen-heights; chapter 2 (FSR transition): 1.8; chapter 3 (FSR reveal): 1.6 | how long the pinned hero lasts | `src/sections/hero-timeline.js` |
+| FSR transition | labels out 0→6%; lift 0→25% (rises 60px, ×1.2); turn upright + glide to center 20→60%; swap to the straight-on render 42→56%; grow 50→100% to 75% of screen height; scene scrolls away 15→80% (all of chapter 2) | chapter 2 | `src/shoes/fsr-transition.js` |
+| FSR reveal | door turn 0→35% (28°); sweep 30→68% (screen first, then the FSR, stops at its middle); callouts from 72%, every 6.5% (all of chapter 3) | chapter 3 | `src/shoes/fsr-reveal.js`; the full recipe is in [electronics-style-guide.md](electronics-style-guide.md) |
 | Gray sole stage | 0 → 41% of that scroll | when the gray sole slides away | `stage` in `src/shoes/sketch-sole.js` |
 | White midsole stage | 7% → 48% (starts just after the gray sole, so they separate together), travels 0.34 of the path (about 54px vs. the gray sole's 160px) | when the white midsole slides away | `stage` and `travel` in `src/shoes/sketch-midsole.js` |
 | Layer paths | Down-left: 120px left, 240px down, 5° tilt; Down: 240px down; both lift the whole shoe 80px | the gray sole's full path; the white midsole moves an 'even' share (equal gaps, ~78px each) | `src/shoes/sole-moves.js` |

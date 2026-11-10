@@ -116,6 +116,11 @@ export function setTransition(section, progress) {
   transition.flight.setProgress(progress);
 }
 
+// Chapter 3: 0 = the big FSR facing you, 1 = turned, half sketch, labelled.
+export function setReveal(section, progress) {
+  transitions.get(section)?.flight.setReveal(progress);
+}
+
 // How far the shoe has come apart: 0 = whole, 1 = fully separated.
 export function setShoeOpening(section, progress) {
   shoeControls.get(section)?.setProgress(progress);

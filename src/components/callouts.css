@@ -1,0 +1,36 @@
+/* Camera-style callouts: hairline leaders + small uppercase labels. */
+.callouts {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  color: var(--color-ink);
+}
+
+.callouts__lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.callouts__lines path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-dasharray: 1;
+}
+
+.callouts__label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin-top: -0.6em; /* centre the text on its line */
+  font-family: var(--font-callout);
+  font-size: var(--text-callout);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}

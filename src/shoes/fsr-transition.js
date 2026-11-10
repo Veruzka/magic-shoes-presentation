@@ -2,6 +2,8 @@
 // to face you, and grows to the centre of the screen while the shoe scene
 // scrolls away. (Drawn by src/components/fsr-transition.js.)
 //
+import { fsrReveal } from './fsr-reveal.js';
+
 // Every stage is a stretch of chapter 2's scroll, from 0 (start) to 1 (end).
 // Stages overlap a little so it all flows as one movement.
 
@@ -26,4 +28,7 @@ export const fsrTransition = {
   // section's background rises in behind it.
   sceneAway: { start: 0.15, end: 0.8 },
   nextBackground: 'var(--color-bg)', // the next section's colour (we'll style it next)
+
+  // Chapter 3: the door turn and the half-sketch (src/shoes/fsr-reveal.js).
+  reveal: fsrReveal,
 };

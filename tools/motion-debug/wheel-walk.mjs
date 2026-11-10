@@ -11,7 +11,7 @@
 import { openChrome, pick } from './chrome.mjs';
 
 const URL = process.argv[2] || 'http://localhost:5173';
-const NOTCHES = 36; // wheel notches per pass
+const NOTCHES = 48; // wheel notches per pass (enough to reach the end of chapter 3)
 const NOTCH = 100; // pixels per notch
 
 // What we read from the page after each notch.
@@ -25,6 +25,7 @@ const READ_STATE = `(() => {
     labels: labels.join('/'),                        // how visible each label is (%)
     fsr: flight ? (flight.hidden ? 'in pocket' : 'flying') : '-',
     scene: document.querySelector('.hero__scene')?.style.translate || '',
+    sketch: document.querySelector('.fsr-flight__sketch')?.style.clipPath || '-',  // chapter 3: how much is sketch
   };
 })()`;
 

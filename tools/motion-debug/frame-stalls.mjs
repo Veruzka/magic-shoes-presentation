@@ -24,6 +24,10 @@ const SUSPECTS = [
   ['no cloud pictures', '.clouds__layer{display:none!important}'],
   ['no shoe shadows', '.separating-shoe__picture,.separating-shoe__original{filter:none!important}'],
   ['no flying FSR', '.fsr-flight{display:none!important}'],
+  ['no paper (chapter 3)', '.fsr-paper{display:none!important}'],
+  ['no sketch (chapter 3)', '.fsr-flight__drawing{display:none!important}'],
+  ['no callouts (chapter 3)', '.callouts{display:none!important}'],
+  ['no 3D turn (chapter 3)', '.fsr-flight__door{transform:none!important}'],
 ];
 
 async function measure(name, css) {
@@ -41,7 +45,7 @@ async function measure(name, css) {
 
   const stalls = [];
   let worst = 0;
-  for (let i = 0; i < 28; i++) {
+  for (let i = 0; i < 44; i++) { // enough notches to reach the end of chapter 3
     await chrome.wheel(120);
     await chrome.wait(90);
     const [gap, progress] = await chrome.run(

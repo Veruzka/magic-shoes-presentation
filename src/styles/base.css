@@ -14,6 +14,9 @@
   --font-signature: 'Mrs Saint Delafield', 'Segoe Script', cursive; /* part label titles */
   --font-note: 'Poppins', 'Inter', system-ui, sans-serif; /* part label descriptions */
   --color-note: #2f2a25; /* part label text and arrows: warm near-black */
+  --font-callout: 'Barlow Semi Condensed', 'Inter', system-ui, sans-serif; /* technical callout labels (chapter 3) */
+  --color-ink: #3a332b; /* sketch ink and callouts: warm dark brown-gray */
+  --text-callout: 0.8rem;
 
   /* Text sizes */
   --text-xs: 0.72rem;  /* label descriptions */
