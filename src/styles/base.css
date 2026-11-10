@@ -1,0 +1,46 @@
+/* Design tokens and global styles shared by every section. */
+:root {
+  --color-bg: #120d24;
+  --color-surface: #1e1638;
+  --color-text: #f6f1ff;
+  --color-muted: #b7a9d9;
+  --color-accent: #ffcf5c;
+  --color-hill-far: #2c2152;
+  --color-hill-near: #3d2d6e;
+
+  --font-display: 'Georgia', 'Times New Roman', serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* Temporary spacer so there's room to scroll until more sections exist. */
+#app::after {
+  content: '';
+  display: block;
+  height: 100vh;
+  background: var(--color-surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
