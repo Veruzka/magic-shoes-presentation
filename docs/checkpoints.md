@@ -7,14 +7,14 @@ You decide when a checkpoint is made. Say something like *"save this as a checkp
 ## How it works (in plain words)
 - The project's history is kept by **git**, a tool that records snapshots of every file.
 - Each checkpoint is a snapshot with a **name tag**, like `checkpoint-01-gray-sole`, so it's easy to find.
-- Checkpoints live **on your computer** until we push to GitHub. Pushing doesn't happen automatically, and a checkpoint never publishes anything to the live site.
+- Checkpoints are saved **on your computer** first. They're copied to GitHub only when you ask for a push. Making a checkpoint never publishes anything to the live site by itself.
 
 ## The list
 Newest at the bottom.
 
 | # | Name tag | Date | What works at this point | What's still open |
 |---|---|---|---|---|
-| 1 | `checkpoint-01-gray-sole` | 2026-11-09 | **Clouds** (main look) and **Meadow** backgrounds; **Photo** and **Sketch** shoes; switchers for Background, Shoe and Sole. On the Sketch shoe, the **gray sole detaches cleanly** like a puzzle piece (Down-left or Down): the shoe keeps a thin sketch outline, and the sole is solid with flowing molded tread on top. Living docs and the "i" info panel. | The shape of the sole's top surface is a guess. Next: more changes to the sole. |
+| 1 | `checkpoint-01-gray-sole` (also on GitHub) | 2026-11-09 | **Clouds** (main look) and **Meadow** backgrounds; **Photo** and **Sketch** shoes; switchers for Background, Shoe and Sole. On the Sketch shoe, the **gray sole detaches cleanly** like a puzzle piece (Down-left or Down): the shoe keeps a thin sketch outline, and the sole is solid with flowing molded tread on top. Living docs and the "i" info panel. | The shape of the sole's top surface is a guess. Next: more changes to the sole. |
 
 ## Going back to a checkpoint
 Just ask: *"go back to checkpoint 1"*. Claude will:
