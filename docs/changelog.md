@@ -2,6 +2,13 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: "Magic Shoes" title
+**What changed**
+- **A big "Magic Shoes" title,** styled and placed like the reference:
+  - huge, extra-bold, slightly condensed letters (Bricolage Grotesque) in soft sand
+  - centered across the top half, with the shoe floating in front of their lower part
+- **On Meadow** it turns into a see-through cream so it reads over the flowers. On phones it scales down to fit.
+
 ## 2026-11-10: part labels + equal spacing
 **What changed**
 - **Labels for Outsole, Midsole and FSR,** styled like your references:

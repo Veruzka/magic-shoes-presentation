@@ -19,13 +19,14 @@ The visual rules we're using. **Shared** values live in one place, `src/styles/b
 | Cloud sky | `--cream-top`, `--cream-middle`, `--cream-bottom` | Clouds background | `src/backgrounds/cloud-studio.css` |
 | Box | `--box-top`, `--box-left`, `--box-right` | the box under the shoe | cloud-studio.css |
 | Meadow | `--meadow-*`, `--flower-*`, `--tint` | Meadow background | `src/backgrounds/flower-meadow.css` |
-| Text on a background | `inkColors` | text and outlines drawn over each background (brown on Clouds, white on Meadow) | each background's `.js` file |
+| Text on a background | `inkColors` | text, outlines and the big title drawn over each background (brown text and a sand title on Clouds; white text and a see-through cream title on Meadow) | each background's `.js` file |
 
 ## Typography
 | Name | Value | Used for |
 |---|---|---|
 | `--font-body` / `--font-display` | Inter | everything |
 | `--font-script` | Caveat (handwritten) | the handwritten accent word in the old (set-aside) labels |
+| `--font-title` | Bricolage Grotesque, extra bold (800), 88% width, about 14.5vw | the big "Magic Shoes" title |
 | `--font-signature` | Mrs Saint Delafield (signature script) | part label titles (Outsole, Midsole, FSR) |
 | `--font-note` | Poppins, 0.68rem, letter-spaced 0.06em | part label descriptions |
 | `--text-xs` | 0.72rem (about 11.5px) | small descriptions |

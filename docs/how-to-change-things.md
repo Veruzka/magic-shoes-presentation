@@ -56,6 +56,18 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 
 ---
 
+## Big title ("Magic Shoes")
+**What:** the huge title behind the shoe, with the shoe floating in front of its lower part.
+**Files:** `src/components/hero-title.js` and `.css`. The text is set in `src/sections/hero.js` (`heroTitle('Magic Shoes')`).
+**Safe to change:**
+- in `hero-title.css`: `--title-size` (how big), `--title-top` (how far down; lower means the shoe overlaps more of it), `font-stretch` (narrower or wider letters) and `letter-spacing`
+- the font: `--font-title` in `base.css` (Bricolage Grotesque, extra bold)
+- the color: `inkColors.title` in each background file (sand on Clouds, see-through cream on Meadow)
+
+> **Example:** to have the shoe cover more of the title, change `--title-top: 27vh` to `32vh`.
+
+---
+
 ## Shoe area and float
 **What:** how big the shoe is, the empty space around it, and the gentle up-and-down float.
 **File:** `src/styles/hero.css`
@@ -165,6 +177,7 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 | `setSoleMove(section, move)` | `src/sections/hero.js` | Switches the sole's path | hero + a move → nothing | Careful |
 | `separatingShoe(shoe, move)` | `src/components/separating-shoe.js` | Splits the Sketch drawing into layers and moves each one on scroll | shoe (with `layers`) + path → the shoe and its controls | Ask me |
 | `splitDrawing(...)` / `cutLayer(...)` | `src/components/separating-shoe.js` | Cuts each layer out, bottom up, and draws the outlines | drawing + layer settings → one picture per layer + the body | Ask me |
+| `heroTitle(text)` | `src/components/hero-title.js` | Makes the big title behind the shoe | the words → the title | Safe |
 | `partLabel(note, points)` | `src/components/part-labels.js` | Makes one part label (title, description, arrow) that fades in with its part | a label entry + spots like the sensor → the label and its show(0–1) | Careful |
 | `drawSensor(ctx, centre, sensor, outline)` | `src/components/sensor-drawing.js` | Draws the charging sensor (coil, wires, board) flat on the tray | where + settings → the drawing | Ask me |
 | `drawTreadFace(...)` / `drawTrayFace(...)` | `src/components/separating-shoe.js` | Paints a layer's top surface (gray tread / white foam tray) | layer settings → painted surface | Ask me |

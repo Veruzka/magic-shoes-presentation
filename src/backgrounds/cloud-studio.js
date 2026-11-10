@@ -55,6 +55,7 @@ export const cloudStudio = {
   inkColors: {
     text: 'rgb(110 90 60 / 0.9)',
     line: 'rgb(110 90 60 / 0.45)',
+    title: '#e6d6b9', // the big title: soft sand, just darker than the sky
   },
 
   build() {

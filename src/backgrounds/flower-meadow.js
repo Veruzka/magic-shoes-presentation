@@ -34,6 +34,7 @@ export const flowerMeadow = {
   inkColors: {
     text: 'rgb(255 255 255 / 0.85)',
     line: 'rgb(255 255 255 / 0.6)',
+    title: 'rgb(255 250 240 / 0.55)', // the big title: soft see-through cream over the flowers
   },
 
   build() {
