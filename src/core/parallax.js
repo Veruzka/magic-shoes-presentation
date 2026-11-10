@@ -35,7 +35,8 @@ export function createParallax({ selector = '[data-speed]' } = {}) {
       // Skip layers whose section is far off screen.
       if (rect.bottom < -window.innerHeight || rect.top > window.innerHeight * 2) continue;
 
-      const offset = (rect.top + rect.height / 2 - viewportCentre) * speed;
+      // Positive speed pushes the layer back against the scroll, so it lags (feels far).
+      const offset = -(rect.top + rect.height / 2 - viewportCentre) * speed;
       el.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
     }
   }

@@ -1,0 +1,27 @@
+/* The shoe whose gray sole detaches. Sized like the plain shoe images
+   (fits inside the shoe area from src/styles/hero.css). */
+.separating-shoe {
+  position: relative;
+  width: calc(var(--shoe-width) * 0.9);
+  aspect-ratio: 1356 / 846; /* the drawing's shape */
+  filter: drop-shadow(var(--shadow-shoe));
+}
+
+.separating-shoe > * {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Shown only until the drawing has been split into body + sole. */
+.separating-shoe.is-split .separating-shoe__original {
+  visibility: hidden;
+}
+
+/* The sole sits behind the body, so its top surface stays hidden until it pulls away.
+   It tilts around its toe. */
+.separating-shoe__sole {
+  transform-origin: 0% 80%;
+  will-change: transform;
+}

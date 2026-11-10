@@ -1,0 +1,112 @@
+/* The fan-open shoe. A square "drawing canvas" the parts are placed on,
+   sized from the shoe area in src/styles/hero.css. */
+.exploding-shoe {
+  position: relative;
+  width: calc(var(--shoe-width) * 1.1);
+  aspect-ratio: 1;
+  /* The stacked (closed) shoe sits a little below the canvas middle; lift it to centre. */
+  margin-top: calc(var(--shoe-width) * -0.04);
+}
+
+/* The whole shoe, lined up with where the stacked parts sit. */
+.exploding-shoe__whole {
+  position: absolute;
+  left: 9.5%;
+  top: 28%;
+  width: 82%;
+}
+
+.exploding-shoe__part {
+  position: absolute;
+  height: auto;
+  transform-origin: 0% 60%; /* turn around the toe, so the layers fan out */
+  will-change: transform, opacity;
+}
+
+/* ---------- Labels ---------- */
+.part-label {
+  position: absolute;
+  width: max-content;
+  max-width: 220px;
+  color: var(--ink-text);
+  pointer-events: none;
+  rotate: -6deg; /* undo the shoe's tilt so labels read level */
+}
+
+.part-label--left {
+  text-align: right;
+}
+
+/* The pointer line above the title, drawing out toward the shoe. */
+.part-label__line {
+  display: block;
+  height: 1px;
+  margin-bottom: 8px;
+  background: currentColor;
+  opacity: 0.6;
+  width: calc(var(--line-drawn, 0) * 140px);
+}
+
+.part-label--left .part-label__line {
+  margin-left: auto;
+  margin-right: calc(var(--line-drawn, 0) * -60px); /* reaches past the label, toward the shoe */
+}
+
+.part-label--right .part-label__line {
+  margin-left: calc(var(--line-drawn, 0) * -60px);
+}
+
+.part-label__title {
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.part-label__title strong {
+  font-weight: 900;
+}
+
+.part-label__title em {
+  font-family: var(--font-script);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1.5em;
+}
+
+.part-label__text {
+  margin: 6px 0 0;
+  font-size: var(--text-xs);
+  line-height: 1.35;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* Phones: titles only, smaller. */
+@media (max-width: 700px) {
+  .part-label__text {
+    display: none;
+  }
+
+  .part-label__title {
+    font-size: var(--text-sm);
+  }
+
+  /* Pull labels in from the sides so they stay on screen. */
+  .part-label--right {
+    left: auto !important;
+    right: 0;
+    text-align: right;
+  }
+
+  .part-label--left {
+    right: auto !important;
+    left: -8%;
+    text-align: left;
+  }
+
+  .part-label__line {
+    display: none;
+  }
+}

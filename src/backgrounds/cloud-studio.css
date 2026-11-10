@@ -1,0 +1,165 @@
+/* Cloud studio background: cream gradient, soft misty clouds, and a beige box. */
+
+.clouds {
+  --cream-top: #fbfaf8;
+  --cream-middle: #f1e8da;
+  --cream-bottom: #e4d3b8;
+
+  --box-top: #ebdfcb;
+  --box-left: #e6d8c0;
+  --box-right: #d2bc98;
+
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--cream-top) 0%,
+    var(--cream-middle) 45%,
+    var(--cream-bottom) 100%
+  );
+}
+
+/* Hidden: only holds the cloud texture filter. */
+.clouds__definitions {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* ---------- Clouds ---------- */
+.clouds__layer {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  filter: url(#cloud-texture);
+}
+
+/* Back clouds are a little fainter, so they feel further away. */
+.clouds__layer--back {
+  opacity: 0.85;
+}
+
+.cloud {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: calc(var(--size) * var(--cloud-scale, 1));
+  aspect-ratio: 2 / 1;
+  transform: translate(-50%, -50%);
+}
+
+.cloud--flipped {
+  transform: translate(-50%, -50%) scaleX(-1);
+}
+
+/* One soft puff: bright white in the middle, fading to nothing at the edge,
+   so neighbouring puffs blend into one cloud. */
+.cloud__puff {
+  position: absolute;
+  left: var(--px);
+  top: var(--py);
+  width: calc(var(--pr) * 1.7);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 42%,
+    rgb(255 255 255 / 1) 0%,
+    rgb(255 255 255 / 0.9) 35%,
+    rgb(252 248 242 / 0.5) 55%,
+    rgb(250 245 238 / 0) 70%
+  );
+}
+
+/* On narrow screens, make clouds bigger so they still read as clouds. */
+@media (max-width: 700px) {
+  .clouds {
+    --cloud-scale: 2;
+  }
+
+  /* …and sit the back clouds a bit lower so they stay out of the shoe's clear space. */
+  .clouds__layer--back {
+    translate: 0 8vh;
+  }
+}
+
+/* Low mist across the very bottom, in front of everything. */
+.clouds__mist {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22%;
+  background: linear-gradient(to top, rgb(255 255 255 / 0.75), rgb(255 255 255 / 0));
+}
+
+/* ---------- The box (pedestal) ---------- */
+
+/* Sits just below the shoe's clear space and runs off the bottom of the screen.
+   (--clear-height comes from src/styles/hero.css.) */
+.pedestal {
+  --box-width: min(80vw, 560px);
+
+  position: absolute;
+  left: 50%;
+  top: calc(50% + var(--clear-height) / 2 + 24px);
+  width: var(--box-width);
+  height: calc(var(--box-width) * 0.9);
+  transform: translateX(-50%);
+}
+
+.pedestal__face {
+  position: absolute;
+  inset: 0;
+}
+
+/* Light comes from the top left: top face brightest, right face in shade. */
+.pedestal__face--top {
+  background: linear-gradient(160deg, #f1e7d6 20%, var(--box-top) 60%, #e2d2b8 100%);
+  clip-path: polygon(0 14%, 51% 0, 100% 12%, 45% 27%);
+}
+
+.pedestal__face--left {
+  background: linear-gradient(to bottom, var(--box-left) 0%, #eadfcd 60%, #f4eee4 100%);
+  clip-path: polygon(0 14%, 45% 27%, 45% 100%, 0 100%);
+}
+
+.pedestal__face--right {
+  background:
+    radial-gradient(ellipse at 35% 40%, rgb(190 160 115 / 0.45), transparent 60%),
+    linear-gradient(to bottom, var(--box-right) 0%, #d9c5a5 55%, #ece2d2 100%);
+  clip-path: polygon(45% 27%, 100% 12%, 100% 100%, 45% 100%);
+}
+
+/* The floating shoe's shadow on top of the box. */
+.pedestal__shadow {
+  position: absolute;
+  left: 30%;
+  top: 9%;
+  width: 44%;
+  height: 7%;
+  border-radius: 50%;
+  background: rgb(110 90 60 / 0.3);
+  filter: blur(16px);
+  /* Breathes with the floating shoe (--float-duration is set in src/styles/hero.css). */
+  animation: shadow-breathe var(--float-duration, 4s) var(--ease-soft) infinite;
+}
+
+/* Shoe low = shadow bigger and darker; shoe high = smaller and lighter. */
+@keyframes shadow-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.82);
+    opacity: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pedestal__shadow {
+    animation: none;
+  }
+}

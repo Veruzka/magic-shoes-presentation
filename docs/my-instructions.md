@@ -1,0 +1,20 @@
+# My standing instructions
+
+Instructions and decisions meant to last. Newest at the bottom. When an instruction changes, its entry is edited instead of adding a duplicate.
+
+| Date | What you asked | Why (if said) | How it's done |
+|---|---|---|---|
+| 2026-11-09 | **Keep the app modular so I can change parts like the background and shoe styling independently.** Files should be readable from the folder structure. | So we can make adjustments together. | One folder per kind of part (`backgrounds/`, `shoes/`, `components/`, `data/`, `core/`), plain data lists for things you tweak, and shared style variables in `base.css`. |
+| 2026-11-09 | Publish by committing and pushing to GitHub. **Never deploy with the Vercel CLI.** | – | Vercel publishes automatically from GitHub. Nothing is pushed until you say so. |
+| 2026-11-09 | Treat this as a prototype: plan first and wait for approval; ask what you're trying to learn; offer 2–3 directions for real design choices; keep changes small; say what to look at; no automated tests unless asked; plain language; speed and variety over polish. | From `AGENTS.md`. | Followed every session. |
+| 2026-11-09 | Keep **32px of clear space** around the shoe so it feels central and uncrowded. | The shoe should be the focus. | `--shoe-clear-space: 32px` in `hero.css`; Meadow flowers fade out near the middle. While coming apart, parts may go beyond it (agreed). |
+| 2026-11-09 | Backgrounds must be **interchangeable**, so you can compare them as the site grows. | To decide which you like better. | `src/backgrounds/` + the Background switcher. |
+| 2026-11-09 | **Clouds is the main look**; style the rest of the site to match it. | – | Clouds is the default; cream, sand and brown palette and the Inter font in `base.css`. |
+| 2026-11-09 | Shoe styles are **switchable options** too. | To compare styles. | `src/shoes/` + the Shoe switcher. |
+| 2026-11-09 | Use the **Sketch** shoe only for the coming-apart work. | To avoid spending double the Figma credits. | Photo shoe just floats. |
+| 2026-11-09 | Figma AI credits go to the **Graft** team. | – | File "Magic Shoes – assets" in Graft. |
+| 2026-11-09 | Build the coming-apart effect **in small parts, one piece at a time**, starting from the whole Sketch drawing. | The all-at-once version didn't work. | Step 1: the gray sole detaches. The 5-part version is set aside. |
+| 2026-11-09 | When there are two good options for a motion, **build both as a switchable option** to compare. | – | The Sole switcher (Down-left / Down). |
+| 2026-11-09 | Keep **living docs** in plain English for a designer, and update them every session (see the rules in `AGENTS.md`). | – | This `docs/` folder + the "i" panel in the app. |
+| 2026-11-09 | **Don't push to GitHub** until you've reviewed the docs and info panel. | – | Nothing pushed. |
+| 2026-11-09 | **Save checkpoints** I can go back to if later changes go wrong. I'll say when each one should be made. | To experiment safely. | Each checkpoint is a git snapshot with a name tag (`checkpoint-NN-short-name`), saved locally (not pushed), and listed in [checkpoints.md](checkpoints.md) with what works and what's still open. Before going back, the current work is saved first. |

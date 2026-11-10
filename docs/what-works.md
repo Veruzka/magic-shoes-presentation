@@ -1,0 +1,21 @@
+# What works (and what doesn't)
+
+Notes on how we collaborate best, so good results can be repeated and bad ones avoided.
+
+## Worked
+| Date | What you asked (your phrasing) | What I did | Lesson |
+|---|---|---|---|
+| 2026-11-09 | Clouds looked cartoonish: *"now it looks too cartoonish, i want it to look like the screenshot i provided"*. Reaction: **"yes yes yes!"** | Swapped smooth round puffs for soft fading puffs, roughened their edges with a noise texture (wispy and realistic), and added low mist. | Realistic and soft beats clean and graphic for this brand. Match the reference's *feel*, not just its shapes. |
+| 2026-11-09 | *"make the background interchangeable … so I can … evaluate which one i like better"* | Built backgrounds as swappable modules with a switcher. | You like to **compare options side by side**. Offer a switcher whenever there are two good directions. |
+| 2026-11-09 | Sole motion: *"let's do both down and to the left, and straight down, and add them as option"* | Built both paths plus a "Sole" switcher. | Same lesson: build both and let you flip. |
+| 2026-11-09 | *"we're going to have to do this in small parts"* | Rebuilt the coming-apart effect one part at a time (sole first). | Big multi-part motion goes better in **small, reviewable steps**. |
+| 2026-11-09 | Sole cleanup in small rounds, each with a screenshot of the exact defect (*"clean up the remaining dark gray lines…"*, *"remove the string sticking out on the front"*). Reaction: **"the gray sole looks good"**. | Zoomed in on exactly the spot in your screenshot, found the cause, fixed it, and checked zoomed in and at page size. | Your screenshots of specific defects plus zoomed-in checks on my side works well. Small rounds are better than one big pass. |
+| 2026-11-09 | Tread texture from a reference photo (topographic-style molded ridges). | Built the ridges in code in the sole's own gray: swirls at the toe and heel, waves in the middle. Left out the photo's brand logo. | A real-world reference photo gives the clearest direction for texture. |
+
+## Didn't work, so avoid
+| Date | What happened | Lesson |
+|---|---|---|
+| 2026-11-09 | First clouds were drawn as clean round bubbles: *"too cartoonish"*. | Avoid hard-edged, cartoon-style shapes; aim for photographic softness. |
+| 2026-11-09 | The 5-part exploded view used parts from a **different drawing** than the whole shoe: there was a jump at the start, and the separated upper didn't match. | Every moving part must come from **the same image** the visitor sees whole. |
+| 2026-11-09 | My fix (building the closed shoe out of the parts) changed how the closed shoe looked: *"that didn't work, revert"*. | Don't change the look of something you've approved in order to fix a motion problem. Fix the motion and keep the approved look. |
+| 2026-11-09 | Clarifying questions had to come before planning: *"ask any clarifying questions before moving on"*. | For motion and multi-part work, **ask first**, then plan. |

@@ -1,15 +1,43 @@
-/* Design tokens and global styles shared by every section. */
+/* Design tokens and global styles shared by every section.
+   The palette follows the Clouds look: cream, sand and warm brown. */
 :root {
-  --color-bg: #120d24;
-  --color-surface: #1e1638;
-  --color-text: #f6f1ff;
-  --color-muted: #b7a9d9;
-  --color-accent: #ffcf5c;
-  --color-hill-far: #2c2152;
-  --color-hill-near: #3d2d6e;
+  --color-bg: #fbfaf8;        /* cream page background */
+  --color-surface: #f1e8da;   /* slightly darker cream for panels/sections */
+  --color-text: #3b3023;      /* warm dark brown */
+  --color-muted: #8c7b64;     /* soft brown for secondary text */
+  --color-accent: #c9ae84;    /* sand, for highlights */
 
-  --font-display: 'Georgia', 'Times New Roman', serif;
-  --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-script: 'Caveat', 'Segoe Script', cursive; /* handwritten accents */
+
+  /* Text sizes */
+  --text-xs: 0.72rem;  /* label descriptions */
+  --text-sm: 0.8rem;   /* switchers, small UI */
+  --text-md: 1.05rem;  /* label titles */
+
+  /* Spacing */
+  --space-edge: 16px;  /* gap between floating UI and the screen edge */
+  --space-gap: 8px;    /* gap between stacked UI pieces */
+
+  /* Corners */
+  --radius-pill: 999px; /* fully rounded (pills, round buttons) */
+  --radius-panel: 20px; /* panels and cards */
+
+  /* Frosted-white surfaces (switchers, info button, info panel) */
+  --glass-bg: rgb(255 255 255 / 0.6);
+  --glass-border: rgb(255 255 255 / 0.8);
+  --glass-blur: 12px;
+
+  /* Shadows (all warm brown, never gray) */
+  --shadow-ui: 0 4px 16px rgb(110 90 60 / 0.12);      /* floating UI */
+  --shadow-panel: 0 12px 40px rgb(110 90 60 / 0.18);  /* the info panel */
+  --shadow-shoe: 0 18px 24px rgb(110 90 60 / 0.18);   /* under the shoe */
+
+  /* Motion */
+  --duration-float: 4s;      /* one up-and-down float of the shoe */
+  --duration-ui: 0.25s;      /* panels and buttons */
+  --ease-soft: ease-in-out;  /* gentle start and stop */
 }
 
 *,

@@ -1,0 +1,124 @@
+/* Flower meadow background: blurry flowers on a green-teal base with a dark tint. */
+
+/* Colors used only by this background (flower names match src/data/flowers.js). */
+.meadow {
+  --meadow-sky: #8db4bd;
+  --meadow-base: #7f9a5c;
+  --meadow-deep: #4a5530;
+
+  --flower-pink: #f383b0;
+  --flower-coral: #ff6b4a;
+  --flower-red: #ee3f45;
+  --flower-yellow: #ffd43f;
+  --flower-white: #fbf6ec;
+  --flower-green: #6d9a3c;
+  --flower-sky: #93c1d0;
+
+  --tint: rgb(14 16 10 / 0.6);
+  --tint-soft: rgb(14 16 10 / 0.32);
+
+  position: absolute;
+  inset: 0;
+}
+
+/* ---------- 1. Base color: soft sky-to-meadow wash ---------- */
+.meadow__base {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    170deg,
+    var(--meadow-sky) 0%,
+    var(--meadow-base) 45%,
+    var(--meadow-deep) 100%
+  );
+}
+
+/* ---------- 2–4. Flower layers ---------- */
+
+/* Holds all flower layers. Its mask makes a soft clearing in the middle,
+   so no flower can ever cover the shoe or its 32px of clear space,
+   on any screen size and at any scroll position.
+   (--clear-width / --clear-height come from src/styles/hero.css.) */
+.meadow__flowers {
+  position: absolute;
+  inset: 0;
+  --clearing: radial-gradient(
+    ellipse calc(var(--clear-width) * 0.72) calc(var(--clear-height) * 0.72) at 50% 50%,
+    transparent 100%,
+    #000 150%
+  );
+  -webkit-mask-image: var(--clearing);
+  mask-image: var(--clearing);
+}
+
+.meadow__layer {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+/* Blur per depth: the closer a layer is, the more out of focus it looks. */
+.meadow__layer--far  { filter: blur(10px); }
+.meadow__layer--mid  { filter: blur(22px); }
+.meadow__layer--near { filter: blur(42px); }
+
+/* One flower. Its color comes from the --petal value set below. */
+.flower {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: var(--size);
+  transform: translate(-50%, -50%) rotate(var(--turn));
+  border-radius: 50%;
+}
+
+/* Round flower: a solid middle with petal shapes around it. */
+.flower--bloom,
+.flower--daisy {
+  background: radial-gradient(circle, var(--center, var(--petal)) 0 18%, var(--petal) 24%);
+  -webkit-mask-image:
+    radial-gradient(circle, #000 0 32%, transparent 33%),
+    repeating-conic-gradient(#000 0 20deg, transparent 20deg 36deg);
+  mask-image:
+    radial-gradient(circle, #000 0 32%, transparent 33%),
+    repeating-conic-gradient(#000 0 20deg, transparent 20deg 36deg);
+}
+
+/* Daisy: always has a yellow middle. */
+.flower--daisy {
+  --center: var(--flower-yellow);
+}
+
+/* Leaf: long and thin. */
+.flower--leaf {
+  height: calc(var(--size) * 0.18);
+  border-radius: 50% 0;
+  background: var(--petal);
+  opacity: 0.8;
+}
+
+/* Glow: a big, very soft patch of color. */
+.flower--glow {
+  background: radial-gradient(circle, var(--petal) 0%, transparent 70%);
+  opacity: 0.85;
+}
+
+/* Color names used in flowers.js → actual colors at the top of this file. */
+.flower--pink   { --petal: var(--flower-pink); }
+.flower--coral  { --petal: var(--flower-coral); }
+.flower--red    { --petal: var(--flower-red); }
+.flower--yellow { --petal: var(--flower-yellow); }
+.flower--white  { --petal: var(--flower-white); }
+.flower--green  { --petal: var(--flower-green); }
+.flower--sky    { --petal: var(--flower-sky); }
+
+/* ---------- 5. Dark tint: darker at the bottom and left ---------- */
+.meadow__tint {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, var(--tint) 0%, transparent 45%),
+    linear-gradient(to right, var(--tint-soft) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 45%, transparent 45%, var(--tint-soft) 100%);
+}
