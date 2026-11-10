@@ -30,11 +30,22 @@
   --glass-border: rgb(255 255 255 / 0.8);
   --glass-blur: 12px;
 
-  /* Frosted glass card (the Style lab card): see-through, blurred, with a light rim */
-  --glass-card-bg: linear-gradient(135deg, rgb(255 255 255 / 0.28), rgb(255 250 242 / 0.06));
-  --glass-card-border: rgb(255 255 255 / 0.75);
-  --glass-card-blur: 22px;
-  --glass-card-highlight: inset 0 1px 0 rgb(255 255 255 / 0.7); /* bright top edge */
+  /* Frosted glass card (the Style lab card): see-through, blurred, grainy, with a light-catching rim */
+  --glass-card-bg: linear-gradient(135deg, rgb(255 255 255 / 0.22), rgb(140 115 80 / 0.14) 55%, rgb(255 250 240 / 0.12)); /* milky sheen → faint warm smoke */
+  --glass-card-blur: 26px;
+  --glass-card-boost: saturate(170%) brightness(1.05); /* makes what's behind look richer through the glass */
+  --glass-card-depth:
+    inset 0 1px 0 rgb(255 255 255 / 0.85),       /* bright top edge */
+    inset 0 -1px 0 rgb(110 90 60 / 0.1),         /* faint shadow along the bottom edge */
+    inset 0 0 28px rgb(255 255 255 / 0.28);      /* milky glow just inside the edges */
+  --glass-card-rim: linear-gradient(
+    135deg,
+    rgb(255 255 255 / 0.95),
+    rgb(255 255 255 / 0.25) 35%,
+    rgb(255 255 255 / 0.08) 65%,
+    rgb(255 255 255 / 0.6)
+  );                                             /* light catches the top-left corner, then fades */
+  --glass-card-grain: 0.09;                      /* how visible the frosted grain is (0 = none) */
   --glass-divider: rgb(110 90 60 / 0.14);  /* hairlines between rows */
   --glass-track: rgb(110 90 60 / 0.08);    /* behind the segmented options */
   --glass-thumb: rgb(255 255 255 / 0.9);   /* the chosen option */

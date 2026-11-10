@@ -7,6 +7,7 @@ One short entry per work session, newest first.
 - The three switcher pills are now one **frosted-glass card** in the top-right corner, headed **STYLE LAB** with a small accent dot, modeled on your reference.
 - It has one row per setting, hairlines between rows, and **segmented pills** where the chosen option sits on a soft white thumb.
 - The glass is see-through, so the cream background (or the Meadow flowers) shows through blurred.
+- **Frosted look:** fine grain, a light-catching rim, a glow inside the edges, a stronger blur with a color boost, and a faint warm smoky tint, so it reads as glass even over the plain cream sky.
 - New shared glass variables are in `base.css`.
 
 

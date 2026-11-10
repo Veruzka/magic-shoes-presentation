@@ -113,9 +113,14 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 **Files:** `src/components/option-switcher.js` and `.css`. The card's heading and rows are set in `src/main.js`.
 **Safe to change:**
 - the heading text (`'Style lab'` in `main.js`) and each row's `title`
-- the glass look: `--glass-card-*`, `--glass-divider`, `--glass-track` and `--glass-thumb` in `base.css`
+- the glass look, in `base.css`:
+  - `--glass-card-bg`: the tint (milky to smoky)
+  - `--glass-card-blur`: how frosted it is
+  - `--glass-card-grain`: the texture
+  - `--glass-card-rim`: the light-catching edge
+  - `--glass-divider`, `--glass-track` and `--glass-thumb`: the hairlines and pills
 
-> **Example:** to make the glass more see-through, lower the first number in `--glass-card-bg` (now `0.28`) to `0.18` in `base.css`.
+> **Example:** for a smokier glass, raise the `0.14` in `--glass-card-bg` to `0.2`. For more visible frosting texture, raise `--glass-card-grain` from `0.09` to `0.14`.
 
 ---
 
