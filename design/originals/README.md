@@ -2,7 +2,7 @@
 
 The untouched images straight from Figma AI, before their backgrounds were removed. Never edit these. They let us redo a cut-out or re-measure at any time (see `docs/tools-and-setup.md`, "Making a new AI image").
 
-All were made in the Figma file **"Magic Shoes – assets"** (Graft team), on Page 1, where each one is a frame named "Generated Image", left to right in the order made.
+All were made in the Figma file **"Magic Shoes – assets"** (Graft team): https://www.figma.com/design/mnHnLX6S7rs63N8YTt9Igh (file key `mnHnLX6S7rs63N8YTt9Igh`), on Page 1, where each one is a frame named "Generated Image", left to right in the order made.
 
 | Original | Figma frame | Became | Cost |
 |---|---|---|---|

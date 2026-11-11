@@ -15,7 +15,7 @@ Every helper tool we use while building, what it's for, and the quirks of this M
 | `npm run image:bands -- image.png row 264` | Lists the bright, dark and see-through bands across one row or column (find exact line positions) | below |
 
 ## Making a new AI image (the image pipeline)
-1. **Generate** it with Figma AI in the file **"Magic Shoes – assets"** (Graft team). Use the prompt template in [electronics-style-guide.md](electronics-style-guide.md) for electronics. Each image is one frame on Page 1, left to right in the order made.
+1. **Generate** it with Figma AI in the file **"Magic Shoes – assets"** (Graft team, https://www.figma.com/design/mnHnLX6S7rs63N8YTt9Igh). Use the prompt template in [electronics-style-guide.md](electronics-style-guide.md) for electronics. Each image is one frame on Page 1, left to right in the order made.
 2. **Download the full-size original** into `design/originals/` and name it after the asset it becomes, plus `-original` (e.g. `fsr-render-front-original.png`). Originals are never edited, so any step can be redone.
 3. **Cut it out:** `npm run image:cutout -- design/originals/x-original.png src/assets/x.png`
 4. **Measure it** (for anything the code lines up with):
