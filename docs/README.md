@@ -47,7 +47,7 @@ We never publish with the Vercel command-line tool. Pushing to GitHub is the onl
 | [checkpoints.md](checkpoints.md) | see the saved points we can go back to, and how |
 | [debugging-motion.md](debugging-motion.md) | track down a scroll or motion problem, step by step (our playbook) |
 | [electronics-style-guide.md](electronics-style-guide.md) | show a sensor or electronic part: render look, sketch look, callouts, motion and sharpness rules (the FSR is the example) |
-| [how-we-work.md](how-we-work.md) | see our routine for each piece of work, and which doc each kind of information goes in |
+| [how-we-work.md](how-we-work.md) | **start here to work with Claude:** what to say to start each process, our routine, and which doc each kind of information goes in |
 | [visual-checks.md](visual-checks.md) | check that something looks right: screenshots, 2× zooms, real-browser sharpness, before/after (our playbook) |
 | [tools-and-setup.md](tools-and-setup.md) | find every helper tool (screenshots, image cut-outs, measuring, debugging), the AI image steps, and this Mac's quirks |
 | [glossary.md](glossary.md) | look up a word we use: chapter, stage, progress, swap, pocket, drawing pixels… |
