@@ -4,7 +4,7 @@ import './styles/base.css';
 import { createParallax } from './core/parallax.js';
 import { loadChoice, saveChoice } from './core/remember-choice.js';
 import { watchScrollProgress } from './core/scroll-progress.js';
-import { hero, showBackground, showShoe, setShoeOpening, setSoleMove, setTransition, setReveal, hasExitChapter } from './sections/hero.js';
+import { hero, showBackground, showShoe, setShoeOpening, setSoleMove, setTransition, setReveal, setSettle, hasExitChapter } from './sections/hero.js';
 import { chapterProgress } from './sections/hero-timeline.js';
 import { backgrounds } from './backgrounds/index.js';
 import { shoes } from './shoes/index.js';
@@ -22,7 +22,8 @@ const parallax = createParallax();
 
 // Scrolling through the hero: chapter 1 fans the shoe open (for shoes that have
 // parts), chapter 2 flies the FSR to the centre as the scene scrolls away,
-// chapter 3 turns it and half of it becomes a labelled sketch.
+// chapter 3 turns it and half of it becomes a labelled sketch, chapter 4 slides it
+// into the paper, fully drawn and flat, with texts on the left.
 const heroSection = app.querySelector('.hero');
 const shoeOpening = watchScrollProgress(heroSection, (progress) => {
   heroSection.dataset.progress = progress.toFixed(3); // handy when debugging the motion
@@ -30,6 +31,7 @@ const shoeOpening = watchScrollProgress(heroSection, (progress) => {
   setShoeOpening(heroSection, chapter.fan);
   setTransition(heroSection, chapter.exit);
   setReveal(heroSection, chapter.reveal);
+  setSettle(heroSection, chapter.settle);
 });
 // When a shoe finishes preparing (it takes a moment), re-measure the scroll right away.
 heroSection.addEventListener('shoe-ready', () => shoeOpening.refresh());

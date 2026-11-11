@@ -108,6 +108,21 @@ What we did for chapters 2 and 3, so the next one is quick:
 
 > **Example:** to make the turn stronger, change `angle: 28` to `40`. To put the red on the traces instead of the ring, change `accentPart: 'ring'` to `'traces'`. To rename a label, edit its `text`.
 
+## Chapter 4: the FSR settles (slide into the paper + texts)
+**What:** after the callouts, the FSR slides right through the still line and becomes fully drawn. It shrinks a little and turns back flat, the labels ride along, and two short texts appear on the left.
+**Files:**
+- `src/shoes/fsr-reveal.js` → `settle`: timings, slide, shrink and the texts' wording (safe to change).
+- `src/sections/hero-timeline.js`: `settle` is how long chapter 4 lasts, in screen-heights (safe to change).
+- `src/components/fsr-reveal.js` (the motion) and `src/components/fsr-explainer.js` + `.css` (the texts' look): ask me.
+
+**Safe to change** (each stage is a stretch of chapter 4, from 0 to 1):
+- `slide`: `to` is where the FSR's middle lands, as a share of the cream side's width (0.35 = a bit left of its centre, leaving room for the labels). `scale` is how big it ends up (0.8 = 80%).
+- `turnBack`: when the door turn unwinds to flat.
+- `texts`: each block's `title`, `body`, and when it fades in (`start`, `end`).
+- `rise`: how far each text rises as it fades in, in px.
+
+> **Example:** to have the FSR stay bigger, change `scale: 0.8` to `0.9`. To reword the first text, edit its `body`.
+
 ---
 
 ## Big title ("Magic Shoes")
@@ -243,11 +258,12 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 | `setSoleMove(section, move)` | `src/sections/hero.js` | Switches the sole's path | hero + a move → nothing | Careful |
 | `separatingShoe(shoe, move)` | `src/components/separating-shoe.js` | Splits the Sketch drawing into layers and moves each one on scroll | shoe (with `layers`) + path → the shoe and its controls | Ask me |
 | `splitDrawing(...)` / `cutLayer(...)` | `src/components/separating-shoe.js` | Cuts each layer out, bottom up, and draws the outlines | drawing + layer settings → one picture per layer + the body | Ask me |
-| `flyingFsr(stage, shoe, settings, sensor)` | `src/components/fsr-transition.js` | The FSR that flies out of the shoe to the center in chapter 2 | the screen + the shoe's controls + timings + the FSR's renders → the FSR, its setProgress(0–1) (chapter 2) and setReveal(0–1) (chapter 3) | Ask me |
+| `flyingFsr(stage, shoe, settings, sensor)` | `src/components/fsr-transition.js` | The FSR that flies out of the shoe to the center in chapter 2 | the screen + the shoe's controls + timings + the FSR's renders → the FSR, its setProgress(0–1) (chapter 2), setReveal(0–1) (chapter 3) and setSettle(0–1) (chapter 4) | Ask me |
 | `chapterProgress(overall, hasExit)` | `src/sections/hero-timeline.js` | Splits the hero's scroll into chapters 1, 2 and 3 | overall 0–1 → each chapter's 0–1 | Careful |
-| `fsrReveal(parts, sensor, settings, geometry)` | `src/components/fsr-reveal.js` | Chapter 3: the door turn, the sweep to sketch-on-paper, the callouts | the flying FSR's pieces + settings → its setProgress(0–1) | Ask me |
+| `fsrReveal(parts, sensor, settings, geometry)` | `src/components/fsr-reveal.js` | Chapter 3: the door turn, the sweep to sketch-on-paper, the callouts | the flying FSR's pieces + settings → its setProgress(0–1) (chapter 3), setSettle(0–1) (chapter 4) and the texts' element | Ask me |
 | `fsrSketch(shape, ink, width, height)` | `src/components/fsr-sketch.js` | Draws the FSR as a technical line drawing that lines up with the render | measurements + ink settings → the drawing | Ask me |
 | `callouts(texts)` | `src/components/callouts.js` | Camera-style labels with thin leader lines, in one column | the label words → the labels, place(positions) and show(progress) | Careful |
+| `fsrExplainer(blocks)` | `src/components/fsr-explainer.js` | Short texts (title + a few sentences) that fade and rise in one after the other (chapter 4) | the blocks' words → the texts and show(progress) | Careful |
 | `heroTitle(text)` | `src/components/hero-title.js` | Makes the big title behind the shoe | the words → the title | Safe |
 | `partLabel(note, points)` | `src/components/part-labels.js` | Makes one part label (title, description, arrow) that fades in with its part | a label entry + spots like the sensor → the label and its show(0–1) | Careful |
 | `drawSensor(ctx, centre, sensor, outline)` | `src/components/sensor-drawing.js` | Draws the charging sensor (coil, wires, board) flat on the tray | where + settings → the drawing | Ask me |

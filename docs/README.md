@@ -1,10 +1,11 @@
 # Magic Shoes: start here
 
 ## What it is
-Magic Shoes is a one-page website prototype. It shows a single sneaker floating in the middle of the screen, over a soft background. As you scroll, the page holds still and the story plays in three chapters:
+Magic Shoes is a one-page website prototype. It shows a single sneaker floating in the middle of the screen, over a soft background. As you scroll, the page holds still and the story plays in four chapters:
 1. **The shoe comes apart:** the gray outsole and the white midsole separate like puzzle pieces, revealing the **FSR** (a pressure sensor) in a pocket, and handwritten labels fade in.
 2. **The FSR flies out:** it lifts out of the shoe, turns to face you and grows to the centre while the shoe scene scrolls away.
 3. **The FSR is explained:** it turns like a door, its right half becomes a technical sketch on cream paper, and camera-style callouts name its parts.
+4. **The FSR settles:** it slides right into the paper and becomes fully drawn, turns back flat with its part names, and two short texts on the left say what an FSR is and what it does in the shoe.
 
 It's a **prototype**: we're trying out ideas, not shipping a finished product. Speed and variety matter more than polish.
 

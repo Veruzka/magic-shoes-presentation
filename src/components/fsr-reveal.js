@@ -4,9 +4,14 @@
 //   2. a line sweeps in from the right; behind it the FSR becomes a technical
 //      sketch (src/components/fsr-sketch.js) on cream paper;
 //   3. camera-style callouts fade in one by one (src/components/callouts.js).
-// Driven by a progress number 0 → 1. Settings: src/shoes/fsr-reveal.js
+// Chapter 4 (settle), on the same pieces: the line holds still like a scanner
+// while the FSR slides right through it and becomes fully drawn, shrinks a
+// little, turns back flat, then plain-English texts appear on the left
+// (src/components/fsr-explainer.js).
+// Driven by two progress numbers 0 → 1 (chapter 3, chapter 4). Settings: src/shoes/fsr-reveal.js
 import { fsrSketch } from './fsr-sketch.js';
 import { callouts } from './callouts.js';
+import { fsrExplainer } from './fsr-explainer.js';
 
 const clamp01 = (n) => Math.min(Math.max(n, 0), 1);
 const between = (value, { start, end }) => clamp01((value - start) / (end - start));
@@ -51,26 +56,35 @@ export function fsrReveal(parts, sensor, settings, geometry) {
   const labels = callouts(settings.callouts.items.map((item) => item.text));
   element.append(labels.element);
 
-  function setProgress(r) {
+  // Chapter 4's texts (kept outside the hidden-from-screen-readers FSR layer: see fsr-transition.js).
+  const settle = settings.settle;
+  const text = settle ? fsrExplainer(settle.texts) : null;
+
+  let r = 0; // chapter 3's progress
+  let s = 0; // chapter 4's progress
+
+  function draw() {
     const turn = ease(between(r, settings.turn));
     const sweep = ease(between(r, settings.sweep));
     const active = r > 0;
     element.classList.toggle('fsr-flight--reveal', active);
 
-    // 1. The door turn, around the screen's centre (where the FSR's centre line is).
-    const angle = (settings.turn.angle * turn * Math.PI) / 180;
-    const P = settings.turn.perspective;
-    for (const door of doors) door.style.transform = active ? `perspective(${P}px) rotateY(${angle}rad)` : '';
-    for (const copy of depthCopies) copy.style.opacity = turn > 0 ? 1 : 0;
+    // Chapter 4: slide right + shrink, and unwind the door turn.
+    const slide = settle ? ease(between(s, settle.slide)) : 0;
+    const turnBack = settle ? ease(between(s, settle.turnBack)) : 0;
 
     const { box, frontToScreen } = geometry();
     const cx = box.width / 2;
     const cy = box.height / 2;
-    // Where a point lands after the turn (rotateY + perspective, as the browser does it).
-    const project = (p) => {
+    const P = settings.turn.perspective;
+    const fullAngle = (settings.turn.angle * Math.PI) / 180;
+    const angle = fullAngle * turn * (1 - turnBack);
+
+    // Where a point lands after a door turn of angle a (rotateY + perspective, as the browser does it).
+    const turned = (p, a) => {
       const d = p.x - cx;
-      const k = P / (P + d * Math.sin(angle));
-      return { x: cx + d * Math.cos(angle) * k, y: cy + (p.y - cy) * k };
+      const k = P / (P + d * Math.sin(a));
+      return { x: cx + d * Math.cos(a) * k, y: cy + (p.y - cy) * k };
     };
     const padY = sensor.front.padCentre[1];
     const left = frontToScreen(0, padY).x;
@@ -79,14 +93,30 @@ export function fsrReveal(parts, sensor, settings, geometry) {
     // 2. The sweep: the line travels from the screen's right edge to the FSR's middle.
     // First it crosses the empty screen (speeding up), then the FSR itself (slowing to a stop),
     // so the interesting part, the FSR turning into a sketch, gets half the scroll.
-    const stopX = project(frontToScreen(settings.sweep.stopAt, padY)).x;
-    const edgeX = project(frontToScreen(1, padY)).x + 8;
-    const s = between(r, settings.sweep);
-    const lineX = s < 0.5
-      ? mix(box.width, edgeX, (s / 0.5) ** 2)
-      : mix(edgeX, stopX, 1 - (1 - (s - 0.5) / 0.5) ** 2);
-    // Which share of the FSR's width is left of the line (undo the turn to find out).
-    const dx = lineX - cx;
+    // (Measured with the full turn, so in chapter 4 the line stays exactly where it stopped.)
+    const stopX = turned(frontToScreen(settings.sweep.stopAt, padY), fullAngle * turn).x;
+    const edgeX = turned(frontToScreen(1, padY), fullAngle * turn).x + 8;
+    const sw = between(r, settings.sweep);
+    const lineX = sw < 0.5
+      ? mix(box.width, edgeX, (sw / 0.5) ** 2)
+      : mix(edgeX, stopX, 1 - (1 - (sw - 0.5) / 0.5) ** 2);
+
+    // Chapter 4's move, applied on top of the turn, around the screen's centre.
+    const scale = settle ? mix(1, settle.slide.scale, slide) : 1;
+    const targetX = lineX + (box.width - lineX) * (settle?.slide.to ?? 0.5);
+    const shift = (targetX - cx) * slide;
+    const place = (p) => {
+      const q = turned(p, angle);
+      return { x: cx + shift + (q.x - cx) * scale, y: cy + (q.y - cy) * scale };
+    };
+
+    // 1. The door turn (plus chapter 4's slide and shrink).
+    const move = shift || scale !== 1 ? `translateX(${shift}px) scale(${scale}) ` : '';
+    for (const door of doors) door.style.transform = active ? `${move}perspective(${P}px) rotateY(${angle}rad)` : '';
+    for (const copy of depthCopies) copy.style.opacity = turn > 0 ? 1 : 0;
+
+    // Which share of the FSR's width is left of the line (undo the move and the turn to find out).
+    const dx = (lineX - cx - shift) / scale;
     const flatX = cx + (dx * P) / (P * Math.cos(angle) - dx * Math.sin(angle));
     const split = sweep > 0 ? clamp01((flatX - left) / (right - left)) : 1;
     for (const layer of renderLayers) layer.style.clipPath = split < 1 ? `inset(0 ${(1 - split) * 100}% 0 0)` : '';
@@ -95,19 +125,32 @@ export function fsrReveal(parts, sensor, settings, geometry) {
     paper.style.clipPath = `inset(0 0 0 ${lineX}px)`;
     paper.hidden = sweep <= 0;
 
-    // 3. The callouts, one by one, in a column to the right of the FSR.
+    // 3. The callouts, one by one, in a column to the right of the FSR (they ride along in chapter 4).
     const { start, each, fade, gap, items } = settings.callouts;
-    const column = project(frontToScreen(1, padY)).x + gap;
+    const column = place(frontToScreen(1, padY)).x + gap;
     const width = front.naturalWidth || 1;
     const height = front.naturalHeight || 1;
     labels.place(items.map((item) => {
-      const point = project(frontToScreen(item.point[0] / width, item.point[1] / height));
-      return { point, label: { x: column, y: point.y + (item.rise || 0) } };
+      const point = place(frontToScreen(item.point[0] / width, item.point[1] / height));
+      return { point, label: { x: column, y: point.y + (item.rise || 0) * scale } };
     }));
     labels.show(items.map((_, i) => clamp01((r - (start + i * each)) / fade)));
+
+    // 4. Chapter 4's texts on the left, one after the other.
+    if (text) text.show(settle.texts.map((t) => ease(between(s, t))), settle.rise);
   }
 
-  return { setProgress };
+  function setProgress(value) {
+    r = value;
+    draw();
+  }
+
+  function setSettle(value) {
+    s = value;
+    draw();
+  }
+
+  return { setProgress, setSettle, text: text?.element ?? null };
 }
 
 // A darker copy of the render (same shape), for the pad's thickness edge.

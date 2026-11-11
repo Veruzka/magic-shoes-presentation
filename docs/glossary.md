@@ -5,7 +5,7 @@ Words we use in the code, the settings and these docs.
 ## Scrolling and motion
 - **Hero:** the first (and for now only) section of the page. It stays **pinned** (holds still) while you scroll through it, and that scrolling drives everything.
 - **Progress:** how far through something you are, as a number from **0** (start) to **1** (end). The hero shows its overall progress in `data-progress`, which is handy when debugging.
-- **Chapter:** one part of the hero's scroll, with its own progress 0–1. **Chapter 1 (fan):** the shoe comes apart and the labels appear. **Chapter 2 (exit):** the FSR flies out and grows. **Chapter 3 (reveal):** the door turn and the sketch half. Their lengths are in `src/sections/hero-timeline.js`.
+- **Chapter:** one part of the hero's scroll, with its own progress 0–1. **Chapter 1 (fan):** the shoe comes apart and the labels appear. **Chapter 2 (exit):** the FSR flies out and grows. **Chapter 3 (reveal):** the door turn and the sketch half. **Chapter 4 (settle):** the FSR slides into the paper, fully drawn, turns flat, and the texts appear. Their lengths are in `src/sections/hero-timeline.js`.
 - **Screen-height:** a unit of scroll length: one full screen of scrolling. Chapter lengths use it.
 - **Stage:** a stretch *within* a chapter, written `{ start, end }`, both from 0 to 1. Example: `lift: { start: 0, end: 0.25 }` means "during the first quarter of chapter 2".
 - **Ease:** a soft start and stop instead of a constant speed. Every stage eases.
@@ -29,6 +29,7 @@ Words we use in the code, the settings and these docs.
 - **Swap:** the moment the angled render cross-fades into the straight-on one (chapter 2).
 - **Door turn:** the 3D turn around its upright centre line (chapter 3).
 - **Sweep:** the line that crosses from the right and turns the FSR into a sketch behind it.
+- **Scanner:** the same line in chapter 4. It holds still while the FSR slides through it, so the rest of the FSR becomes sketch.
 - **Callouts:** the camera-style labels with thin leader lines (chapter 3).
 
 ## Pixels and sizes

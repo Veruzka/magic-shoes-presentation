@@ -2,7 +2,8 @@
 // exactly where the real one lies in its pocket, lifts out, turns upright to face
 // you and grows to the centre of the screen. Driven by a progress number 0 → 1.
 //
-// Chapter 3 (the door turn and the half-sketch) runs on the same pieces:
+// Chapter 3 (the door turn and the half-sketch) and chapter 4 (the slide into
+// the paper, turn back flat and texts) run on the same pieces:
 // src/components/fsr-reveal.js
 //
 // Timings and sizes: src/shoes/fsr-transition.js
@@ -169,8 +170,14 @@ export function flyingFsr(stage, shoe, settings, sensor = {}) {
     if (reveal && placed?.box) reveal.setProgress(r);
   }
 
+  // Chapter 4: 0 = as chapter 3 left it, 1 = fully drawn, flat, on the right, with texts on the left.
+  function setSettle(s) {
+    if (reveal && placed?.box) reveal.setSettle(s);
+  }
+
   setProgress(0);
-  return { element, setProgress, setReveal };
+  // text: chapter 4's texts, to be added to the page next to (not inside) the hidden FSR layer.
+  return { element, setProgress, setReveal, setSettle, text: reveal?.text ?? null };
 }
 
 // One stack: a still wrapper → the door (chapter-3 turn) → the mover → the

@@ -2,6 +2,14 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-11: chapter 4, the FSR settles and explains itself
+- **New scroll chapter** (1.6 screen-heights) after the callouts. Designed with the Superpowers brainstorming steps; the goal is to test **how the motion feels**.
+  1. **Slide + scan:** the line holds still like a scanner. The FSR slides right through it, so it becomes **fully drawn**, and shrinks to 80% to fit the cream side.
+  2. **Turn flat:** the door turn unwinds to face you. The **callouts ride along**, pinned to their parts.
+  3. **Texts on the left:** "What is an FSR?", then "What it does in the shoe". The wording is a **first draft**.
+- **New component:** `src/components/fsr-explainer.js` (texts that fade and rise in, reusable).
+- **Checked:** screenshots through chapter 4; `debug:stalls` longest frame 17–33ms over three runs (17 before the change), no stalls.
+
 ## 2026-11-10: tools, playbooks and docs for working consistently
 - **Image tools are now part of the project** (they used to live in a temporary folder): `npm run image:cutout`, `image:outline` and `image:bands`, in `tools/images/`.
 - **A screenshot tool for visual checks:** `npm run check:shot` (any scroll point, 2× sharpness, `--real` browser, zoomed `--crop`, `--css` for before/after).

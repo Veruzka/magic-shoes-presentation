@@ -84,11 +84,13 @@ export function showShoe(section, shoe) {
 
   // Shoes with a chapter-2 transition get the flying FSR.
   section.querySelector('.fsr-flight')?.remove();
+  section.querySelector('.fsr-explainer')?.remove();
   transitions.delete(section);
   if (controls && shoe.transition) {
     const sensor = shoe.layers?.find((layer) => layer.topFace?.sensor)?.topFace.sensor;
     const flight = flyingFsr(section.querySelector('.hero__stage'), controls, shoe.transition, sensor);
     section.querySelector('.hero__stage').append(flight.element);
+    if (flight.text) section.querySelector('.hero__stage').append(flight.text); // chapter 4's texts
     section.querySelector('.hero__next').style.background = shoe.transition.nextBackground;
     transitions.set(section, { flight, settings: shoe.transition });
   }
@@ -119,6 +121,11 @@ export function setTransition(section, progress) {
 // Chapter 3: 0 = the big FSR facing you, 1 = turned, half sketch, labelled.
 export function setReveal(section, progress) {
   transitions.get(section)?.flight.setReveal(progress);
+}
+
+// Chapter 4: 0 = as chapter 3 left it, 1 = fully drawn, flat, on the right, texts on the left.
+export function setSettle(section, progress) {
+  transitions.get(section)?.flight.setSettle(progress);
 }
 
 // How far the shoe has come apart: 0 = whole, 1 = fully separated.

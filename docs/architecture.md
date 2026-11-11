@@ -10,6 +10,7 @@ flowchart TD
   flight["Flying FSR<br/>chapter 2: lifts out,<br/>grows to the centre"]
   reveal["FSR reveal<br/>chapter 3: door turn,<br/>half sketch on paper"]
   sketch["Sketch drawing<br/>+ callout labels"]
+  settle["FSR settles<br/>chapter 4: slides into the paper,<br/>turns flat, texts on the left"]
   data["Settings and images<br/>layers, sensor, assets"]
   helpers["Helpers<br/>scroll depth,<br/>scroll progress,<br/>remember picks"]
   styles["Shared look<br/>base.css"]
@@ -26,6 +27,7 @@ flowchart TD
   hero --> shoe
   shoe --> flight
   flight --> reveal --> sketch
+  reveal --> settle
   bg --> data
   shoe --> data
   helpers --> hero
@@ -56,7 +58,7 @@ Interchangeable shoe styles, listed in `src/shoes/index.js`. **Photo** is a real
 `src/components/separating-shoe.js` splits the Sketch drawing in the browser, layer by layer from the bottom up: first the **gray sole**, then the **white foam midsole**. Each cut follows one smooth seam, like a puzzle piece. Each layer has its own settings file (`src/shoes/sketch-sole.js`, `src/shoes/sketch-midsole.js`), its own timing, and a painted top surface (gray tread, white foam tray). The **FSR** (a 3D render of the real force-sensing resistor, `src/assets/fsr-render.png`, placed by `src/components/sensor-drawing.js`, settings in `src/shoes/sketch-sensor.js`) sits in a keyhole-shaped pocket on the white tray. **Part labels** (`src/components/part-labels.js`, wording in `src/shoes/sketch-labels.js`) ride along with their part and fade in as it separates: Outsole, Midsole and FSR. The white midsole's travel is worked out so the gaps between the three pieces are equal.
 
 ### Chapter 2: the FSR transition
-After the shoe has fanned out and the labels are shown, scrolling on starts **chapter 2**. The FSR lifts out of its pocket, turns upright to face you, and grows to the center of the screen, while the shoe scene scrolls up and away and the next section's background rises in. The page ends with the FSR big and centered (for now).
+After the shoe has fanned out and the labels are shown, scrolling on starts **chapter 2**. The FSR lifts out of its pocket, turns upright to face you, and grows to the center of the screen, while the shoe scene scrolls up and away and the next section's background rises in.
 - **The flying FSR:** `src/components/fsr-transition.js`. It starts exactly where the real FSR lies, using three invisible markers on the FSR's own layer. While it turns to face you, it cross-fades from the angled render to a sharp straight-on render (`fsr-render-front.png`), which does the growing.
 - **Its timings:** `src/shoes/fsr-transition.js`.
 
@@ -67,7 +69,13 @@ Scrolling on after the FSR is big: it **turns like a door** (real 3D, with the p
 - **The callouts:** `src/components/callouts.js`, reusable for any part.
 - **Its settings:** `src/shoes/fsr-reveal.js`.
 - **The whole style, as a recipe for other parts:** [electronics-style-guide.md](electronics-style-guide.md).
-- **The length of each chapter:** `src/sections/hero-timeline.js` (chapter 1: 1.6 screen-heights, chapter 2: 1.8).
+- **The length of each chapter:** `src/sections/hero-timeline.js` (chapter 1: 1.6 screen-heights, chapter 2: 1.8, chapter 3: 1.6, chapter 4: 1.6).
+
+### Chapter 4: the FSR settles and explains itself
+After the callouts, the line holds still like a **scanner** while the FSR **slides right through it**, so it becomes **fully drawn**. It shrinks a little to fit the cream side and **turns back flat**, and the callouts ride along. Then two short plain-English texts fade in on the left: **"What is an FSR?"** and **"What it does in the shoe"**. The page ends here.
+- **The motion:** the same `src/components/fsr-reveal.js` (it takes chapter 3's and chapter 4's progress).
+- **The texts:** `src/components/fsr-explainer.js`, reusable for any part. They're added to the page next to the FSR layer, not inside it, so screen readers can read them.
+- **Its settings and wording:** `settle` in `src/shoes/fsr-reveal.js`.
 
 ### Settings and images
 Plain lists you can edit: where each cloud and flower sits (`src/data/`), where the gray sole is in the drawing, and which paths it can take (`src/shoes/`). The shoe images live in `src/assets/`.

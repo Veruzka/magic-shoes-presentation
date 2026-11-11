@@ -44,4 +44,28 @@ export const fsrReveal = {
       { text: 'Connector', point: [320, 1300], rise: 0 },
     ],
   },
+
+  // Chapter 4 (its own scroll, 0 → 1): the line holds still like a scanner while
+  // the FSR slides right through it and becomes fully drawn, shrinks a little,
+  // turns back flat, then two short texts appear on the left.
+  settle: {
+    slide: { start: 0, end: 0.45, to: 0.35, scale: 0.8 }, // to: where the FSR's middle lands, as a share of the cream side's width
+    turnBack: { start: 0.3, end: 0.55 }, // the door turn unwinds to flat
+    // The texts on the left, one after the other (they fade and rise in).
+    texts: [
+      {
+        start: 0.6,
+        end: 0.75,
+        title: 'What is an FSR?',
+        body: 'FSR stands for force-sensing resistor. It is a thin, bendy pad that lets more electricity through the harder you press on it. Light touch, a little signal. Firm press, a strong one.',
+      },
+      {
+        start: 0.78,
+        end: 0.93,
+        title: 'What it does in the shoe',
+        body: 'Tucked into the midsole, it feels every step. The shoe can tell when your foot lands, how hard, and how often.',
+      },
+    ],
+    rise: 14, // px each text rises as it fades in
+  },
 };

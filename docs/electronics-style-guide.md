@@ -82,8 +82,11 @@ One continuous sequence, driven by scrolling. Every number below is a share of i
 | 6 | **Door turn** | turns around its upright centre line in real 3D; the pad's thickness shows as a dark edge | `fsr-reveal.js → turn`, `depth` | 0–0.35, 28°, 12 px thick |
 | 7 | **Sweep** | a line crosses the screen from the right, then the part (half the time each), and stops at its middle; behind it, sketch on paper | `sweep` | 0.3–0.68, stops at 0.5 |
 | 8 | **Callouts** | one by one: the line draws, then the text fades in | `callouts` | from 0.72, every 0.065 |
+| 9 | **Slide + scan** *(chapter 4)* | the line holds still; the part slides right through it and becomes fully sketched, shrinking a little to fit the paper side | `settle.slide` | 0–0.45, ×0.8 |
+| 10 | **Turn flat** | the door turn unwinds to face you; the callouts ride along | `settle.turnBack` | 0.3–0.55 |
+| 11 | **Texts** | on the left: "What is it?", then "What it does in the shoe", each fading and rising in | `settle.texts` | 0.6–0.75, 0.78–0.93 |
 
-Chapter lengths (in screen-heights of scrolling) are in `src/sections/hero-timeline.js`: `fan` 1.6, `exit` 1.8, `reveal` 1.6.
+Chapter lengths (in screen-heights of scrolling) are in `src/sections/hero-timeline.js`: `fan` 1.6, `exit` 1.8, `reveal` 1.6, `settle` 1.6.
 
 **Motion rules:**
 - **Every stage eases in and out** (soft start and stop). Stages overlap slightly so it flows as one movement.
