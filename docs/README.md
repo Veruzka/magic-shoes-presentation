@@ -1,7 +1,10 @@
 # Magic Shoes: start here
 
 ## What it is
-Magic Shoes is a one-page website prototype. It shows a single sneaker floating in the middle of the screen, over a soft background. As you scroll, the page holds still and the shoe starts to come apart. Right now, the gray bottom sole detaches like a puzzle piece.
+Magic Shoes is a one-page website prototype. It shows a single sneaker floating in the middle of the screen, over a soft background. As you scroll, the page holds still and the story plays in three chapters:
+1. **The shoe comes apart:** the gray outsole and the white midsole separate like puzzle pieces, revealing the **FSR** (a pressure sensor) in a pocket, and handwritten labels fade in.
+2. **The FSR flies out:** it lifts out of the shoe, turns to face you and grows to the centre while the shoe scene scrolls away.
+3. **The FSR is explained:** it turns like a door, its right half becomes a technical sketch on cream paper, and camera-style callouts name its parts.
 
 It's a **prototype**: we're trying out ideas, not shipping a finished product. Speed and variety matter more than polish.
 
@@ -44,15 +47,10 @@ We never publish with the Vercel command-line tool. Pushing to GitHub is the onl
 | [checkpoints.md](checkpoints.md) | see the saved points we can go back to, and how |
 | [debugging-motion.md](debugging-motion.md) | track down a scroll or motion problem, step by step (our playbook) |
 | [electronics-style-guide.md](electronics-style-guide.md) | show a sensor or electronic part: render look, sketch look, callouts, motion and sharpness rules (the FSR is the example) |
+| [how-we-work.md](how-we-work.md) | see our routine for each piece of work, and which doc each kind of information goes in |
+| [visual-checks.md](visual-checks.md) | check that something looks right: screenshots, 2× zooms, real-browser sharpness, before/after (our playbook) |
+| [tools-and-setup.md](tools-and-setup.md) | find every helper tool (screenshots, image cut-outs, measuring, debugging), the AI image steps, and this Mac's quirks |
+| [glossary.md](glossary.md) | look up a word we use: chapter, stage, progress, swap, pocket, drawing pixels… |
 
 ## How we document things
-Each kind of information has one home, so nothing is written twice:
-- **"How do I change X?"** → [how-to-change-things.md](how-to-change-things.md): the file and setting, with an example.
-- **"How does it fit together?"** → [architecture.md](architecture.md): the diagram, each part, and every AI image with its cost.
-- **"What are the visual rules?"** → [design-spec.md](design-spec.md) for the page (colors, fonts, spacing, motion numbers); [electronics-style-guide.md](electronics-style-guide.md) for sensors and electronics (render look, sketch look, callouts, motion sequence, sharpness).
-- **"What happened, and why?"** → [changelog.md](changelog.md): one entry per session, including the exact AI prompts.
-- **"What did we learn?"** → [what-works.md](what-works.md): what you liked (with your words) and what failed, each with a lesson.
-- **"What did you ask me to always do?"** → [my-instructions.md](my-instructions.md).
-- **"How do we fix motion bugs?"** → [debugging-motion.md](debugging-motion.md).
-
-When a style or technique becomes reusable (like the FSR's look), it gets its own **recipe doc** (like the electronics style guide), and the other docs link to it rather than repeating it.
+Each kind of information has one home, and other docs link to it instead of repeating it. The full map, and our step-by-step routine, are in [how-we-work.md](how-we-work.md).

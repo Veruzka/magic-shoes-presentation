@@ -8,10 +8,9 @@
 //
 // Run (with `npm run dev` going in another terminal):
 //   npm run debug:walk
-import { openChrome, pick } from './chrome.mjs';
+import { openChrome, pick, notchesToEnd } from '../shared/chrome.mjs';
 
 const URL = process.argv[2] || 'http://localhost:5173';
-const NOTCHES = 48; // wheel notches per pass (enough to reach the end of chapter 3)
 const NOTCH = 100; // pixels per notch
 
 // What we read from the page after each notch.
@@ -33,6 +32,7 @@ const chrome = await openChrome({ visible: false });
 await chrome.open(URL);
 await chrome.run(pick('Sketch'));
 await chrome.wait(2500);
+const NOTCHES = await chrome.run(notchesToEnd(NOTCH)); // enough to reach the end, however long the page gets
 
 for (const [name, direction] of [['DOWN (first pass)', 1], ['UP', -1], ['DOWN (second pass)', 1]]) {
   console.log(`\n--- ${name} ---`);

@@ -65,7 +65,7 @@ It repeats step 3 once per suspect, each time **switching off just one visual** 
 
 The labels and shadows only *triggered* the work. The real cost was the clouds' wispy texture filter, recalculated across the whole screen on every frame.
 
-> When you add new visuals, add them to the `SUSPECTS` list in `frame-stalls.mjs`, so they can be tested the same way.
+> When you add new visuals, add them to the `SUSPECTS` list in `frame-stalls.mjs`, so they can be tested the same way. Both scripts measure the page's length themselves, so they always scroll to the end. Their shared Chrome helper is `tools/shared/chrome.mjs`. For **looks** rather than motion, see [visual-checks.md](visual-checks.md).
 
 ## 5. Fix the cause, then prove it
 **The fix:** each cloud layer is drawn **once** into a picture with the texture baked in, and then just slides around. It looks the same and costs almost nothing per frame. Two safety nets were added too:

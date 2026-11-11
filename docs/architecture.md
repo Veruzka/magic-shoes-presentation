@@ -19,6 +19,7 @@ flowchart TD
   vercel["Vercel"]
   fonts["Google Fonts"]
   figma["Figma AI<br/>(made the images,<br/>once)"]
+  devtools["Builder tools (tools/)<br/>screenshots, checks,<br/>image cut-outs"]
 
   visitor --> page --> hero
   hero --> bg
@@ -33,7 +34,8 @@ flowchart TD
   tools --> docs
   page --> fonts
   github --> vercel --> visitor
-  figma -.-> data
+  figma -.-> devtools -.-> data
+  devtools -.-> hero
 ```
 
 ## The parts
@@ -110,6 +112,9 @@ AI was used **once, while building**, to create the shoe images:
 | FSR high-end 3D render (`fsr-render.png`) | same | [changelog.md](changelog.md), 2026-11-10 "FSR as a high-end 3D render" | 1 credit, one time |
 | FSR straight-on render for the big view (`fsr-render-front.png`) | same | [changelog.md](changelog.md), 2026-11-10 "the big FSR is now high-definition" | 2 credits, one time |
 
-Backgrounds were removed from the images with Apple's built-in "lift subject" feature on the Mac (free, no internet).
+Backgrounds were removed from the images with Apple's built-in "lift subject" feature on the Mac (free, no internet), using `npm run image:cutout`. The untouched originals, and which Figma frame each came from, are in `design/originals/` (see its README). The steps for a new image are in [tools-and-setup.md](tools-and-setup.md).
+
+### Builder tools
+Helpers used only while building, never on the live site: screenshots and zoomed checks (`tools/visual-check/`), motion checks (`tools/motion-debug/`), image cut-out and measuring (`tools/images/`), all sharing one Chrome helper (`tools/shared/chrome.mjs`). See [tools-and-setup.md](tools-and-setup.md).
 
 There are **no secret keys** in this project.

@@ -1,15 +1,20 @@
-// Shared helper for the motion-debugging scripts: starts a fresh Chrome (nothing
-// remembered), connects to it, and gives simple commands to drive the page.
+// Shared helper for the motion-debugging and visual-check scripts: starts a fresh
+// Chrome (nothing remembered), connects to it, and gives simple commands to drive the page.
 //
-//   visible: false → hidden Chrome (fast; good for checking the page's logic)
+//   visible: false → hidden Chrome (fast; good for checking the page's logic and layout)
 //   visible: true  → a real Chrome window using the graphics card (needed to see
-//                    real frame rates; it pops up on screen while the test runs)
+//                    real frame rates and real sharpness; it pops up on screen while it runs)
+//   scale          → hidden Chrome only: pixel density (2 = like a Mac screen).
+//                    A visible window always uses the screen's own (2 on this Mac).
+//
+// Setup quirk: Node 20 needs the flag --experimental-websocket to run these
+// (the npm scripts already add it).
 import { spawn } from 'node:child_process';
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export async function openChrome({ visible = false, width = 1440, height = 900 } = {}) {
+export async function openChrome({ visible = false, width = 1440, height = 900, scale = 1 } = {}) {
   const port = 9300 + Math.floor(Math.random() * 600);
   const args = [
     `--remote-debugging-port=${port}`,
@@ -49,7 +54,7 @@ export async function openChrome({ visible = false, width = 1440, height = 900 }
     });
 
   if (!visible) {
-    await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
+    await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: scale, mobile: width < 600 });
   }
 
   return {
@@ -79,3 +84,8 @@ export async function openChrome({ visible = false, width = 1440, height = 900 }
 // Clicks a Style lab option by its label (e.g. 'Sketch'), if it's there.
 export const pick = (label) =>
   `[...document.querySelectorAll('.option-switcher__option')].find((b) => b.textContent === ${JSON.stringify(label)})?.click()`;
+
+// How many wheel notches it takes to scroll through the whole page (plus a few
+// spare), measured from the page itself, so new chapters never need a manual change.
+export const notchesToEnd = (notch) =>
+  `Math.ceil((document.documentElement.scrollHeight - innerHeight) / ${notch}) + 4`;

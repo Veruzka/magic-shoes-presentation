@@ -11,7 +11,7 @@
 // Run (with `npm run dev` going in another terminal; don't click the window):
 //   npm run debug:stalls              → one run, everything on
 //   npm run debug:stalls -- --suspects → one run per suspect
-import { openChrome, pick } from './chrome.mjs';
+import { openChrome, pick, notchesToEnd } from '../shared/chrome.mjs';
 
 const URL = 'http://localhost:5173';
 
@@ -45,7 +45,8 @@ async function measure(name, css) {
 
   const stalls = [];
   let worst = 0;
-  for (let i = 0; i < 44; i++) { // enough notches to reach the end of chapter 3
+  const notches = await chrome.run(notchesToEnd(120)); // enough to reach the end, however long the page gets
+  for (let i = 0; i < notches; i++) {
     await chrome.wheel(120);
     await chrome.wait(90);
     const [gap, progress] = await chrome.run(

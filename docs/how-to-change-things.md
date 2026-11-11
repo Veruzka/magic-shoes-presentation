@@ -76,6 +76,21 @@ Flowers near the middle fade out on their own, so the shoe always keeps its clea
 
 ---
 
+## Adding a new scroll chapter (recipe)
+What we did for chapters 2 and 3, so the next one is quick:
+1. **Length:** add it to `heroTimeline` in `src/sections/hero-timeline.js`, and to `chapterProgress` and `pinLength` there.
+2. **Settings:** a new file in `src/shoes/` with its stages (`{ start, end }` from 0 to 1), sizes and colors, each with a comment.
+3. **Motion:** a component in `src/components/` with a `setProgress(0–1)`.
+4. **Wiring:** a `setX(section, progress)` in `src/sections/hero.js`, called from the scroll watcher in `src/main.js`.
+5. **Checks:**
+   - Add its visuals to `SUSPECTS` in `tools/motion-debug/frame-stalls.mjs`. (The debug scripts work out the page's length themselves.)
+   - Run `debug:walk`, `debug:stalls`, the visual checks and the build.
+6. **Docs:**
+   - this file, architecture (and its diagram), design-spec's motion table, the changelog
+   - the `--at` table in [visual-checks.md](visual-checks.md), since chapter positions shift
+
+---
+
 ## Chapter 3: the FSR reveal (door turn + half sketch)
 **What:** after the FSR is big, scrolling on turns it like a door, then a line sweeps in from the right and stops at its middle. Behind the line it becomes a technical sketch on cream paper, and callout labels fade in one by one. The full style recipe is in [electronics-style-guide.md](electronics-style-guide.md).
 **Files:**

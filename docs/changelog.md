@@ -2,6 +2,22 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-10: tools, playbooks and docs for working consistently
+- **Image tools are now part of the project** (they used to live in a temporary folder): `npm run image:cutout`, `image:outline` and `image:bands`, in `tools/images/`.
+- **A screenshot tool for visual checks:** `npm run check:shot` (any scroll point, 2× sharpness, `--real` browser, zoomed `--crop`, `--css` for before/after).
+- **AI originals saved** in `design/originals/`, with the Figma frame each came from and the credits (7 so far).
+- **The debug scripts measure the page's length themselves,** so they always reach the end, whatever chapters are added.
+- **New docs:**
+  - [how-we-work.md](how-we-work.md): our routine, and where each kind of information goes
+  - [visual-checks.md](visual-checks.md): the looks playbook
+  - [tools-and-setup.md](tools-and-setup.md): every tool, the AI image steps and this Mac's quirks
+  - [glossary.md](glossary.md)
+- **Updated:**
+  - the README's description (all three chapters)
+  - a recipe for adding a chapter in how-to
+  - known issues and open decisions (phones and reduced motion for chapters 2–3) gathered in [design-improvements.md](design-improvements.md)
+- **Checked:** every new tool was run once (re-cutting the saved original reproduces the exact image); `debug:walk` reaches the end; `debug:stalls` longest frame 18ms, no stalls.
+
 ## 2026-11-10: chapter 3, the FSR turns and becomes half sketch
 - **New scroll chapter** (1.6 screen-heights) after the FSR is big:
   1. **It turns like a door** (28°, real 3D). The pad's thickness shows as a dark glossy edge.

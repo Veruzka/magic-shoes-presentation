@@ -8,7 +8,11 @@
     "build": "vite build",
     "preview": "vite preview",
     "debug:walk": "node --experimental-websocket tools/motion-debug/wheel-walk.mjs",
-    "debug:stalls": "node --experimental-websocket tools/motion-debug/frame-stalls.mjs"
+    "debug:stalls": "node --experimental-websocket tools/motion-debug/frame-stalls.mjs",
+    "check:shot": "node --experimental-websocket tools/visual-check/shot.mjs",
+    "image:cutout": "sh tools/images/run.sh cutout",
+    "image:outline": "sh tools/images/run.sh outline",
+    "image:bands": "sh tools/images/run.sh bands"
   },
   "devDependencies": {
     "vite": "^8.3.7"

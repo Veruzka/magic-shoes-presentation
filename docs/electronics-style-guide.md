@@ -35,8 +35,9 @@ Model `gpt-image-2.5-flare`. Use a tall 864×1536 frame for the straight-on view
 - **At most 2–3 tries,** then ask before spending more credits. Log every image in [architecture.md](architecture.md) and the prompt in [changelog.md](changelog.md).
 
 ### After generating
-1. **Cut it out** with Apple's subject lift (the `cutout.swift` script; ask me).
-2. **Measure it:** the pad's centre and width, and for the straight-on render every part's position (`front.shape` in `src/shoes/sketch-sensor.js`). The sketch is drawn from these numbers, so it lines up exactly.
+0. **Keep the original** in `design/originals/` (see [tools-and-setup.md](tools-and-setup.md)).
+1. **Cut it out:** `npm run image:cutout -- design/originals/x-original.png src/assets/x.png`.
+2. **Measure it** with `npm run image:outline` and `npm run image:bands`: the pad's centre and width, and for the straight-on render every part's position (`front.shape` in `src/shoes/sketch-sensor.js`). The sketch is drawn from these numbers, so it lines up exactly.
 
 ---
 
@@ -97,7 +98,7 @@ Chapter lengths (in screen-heights of scrolling) are in `src/sections/hero-timel
 - **Shadows go on a still wrapper,** not on the moving image.
 - **Bake textures** (paper grain, clouds) into pictures once; never run live filters every frame.
 - **Sketches are vector lines**, so they're sharp at any size.
-- **Check at 2× (Mac) sharpness in a visible Chrome:** hidden test browsers show jagged edges that real ones don't. Then run `npm run debug:stalls` (see [debugging-motion.md](debugging-motion.md)).
+- **Check at 2× (Mac) sharpness in a visible Chrome** (`npm run check:shot -- --real`, see [visual-checks.md](visual-checks.md)): hidden test browsers show jagged edges that real ones don't. Then run `npm run debug:stalls` (see [debugging-motion.md](debugging-motion.md)).
 
 ## 5. Adding a new part: checklist
 1. Generate both renders (template above), cut them out, and save them in `src/assets/`.

@@ -1,6 +1,6 @@
 # Design improvements
 
-A running list of design ideas and issues. Status: **idea**, **in progress** or **done**.
+The one list of design ideas, known issues and open decisions. Status: **idea**, **open decision**, **known issue**, **in progress** or **done**. (Known issues found during a session are moved here from the changelog.)
 
 | # | Problem | Suggested fix | Status |
 |---|---|---|---|
@@ -11,3 +11,9 @@ A running list of design ideas and issues. Status: **idea**, **in progress** or 
 | 5 | **There was an empty cream block below the first screen** (a temporary spacer), so the scroll ended without a payoff. | Removed: the page now ends on the fully separated shoe with its labels. When we add more sections, they'll go after the hero. | done |
 | 6 | **Glass needs something behind it.** Glassmorphism (like your samples) shines when soft colored shapes pass behind the glass. Over the plain cream sky, the Style lab card is a quiet milky pane. | Optionally add a few soft, blurred warm orbs or cloud wisps near the top-right, so the glass has color to frost. | idea |
 | 7 | **Part labels on phones are cramped.** On narrow screens the Down-left path pushes the gray sole past the left edge, and the FSR title sits on its own arrow. | On phones, use straight-down movement, place labels above or below the pieces, and shorten the arrows. | idea |
+| 8 | **Callouts on phones (chapter 3).** On narrow screens the callout column can run off the right edge. | Options: stack the labels below the FSR, or shrink the FSR and labels to fit on the right. | open decision (2026-11-10: document for now) |
+| 9 | **Reduced motion for chapters 2–3.** Visitors who ask their device for less motion still get the FSR's flight, 3D turn and sweep (only the float and parallax switch off). | Options: simple fades through the same story; or the same sequence without the 3D turn and smoothing. | open decision (2026-11-10: document for now) |
+| 10 | **Faint white specks in the straight-on FSR,** inside the leftmost silver line (from the AI image). | Retouch the cut-out, or regenerate (1 credit). | known issue |
+| 11 | **The old "drawn" FSR look** (copper coil and green board, `look: 'drawn'` in `sketch-sensor.js`) is still in the code, unused. | Keep it as an option, or remove it to simplify `sensor-drawing.js`. | open decision |
+| 12 | **The callout leader lines cross the sketch's lines** where a point sits deep inside the pad. | Move the `point`s nearer the edge, or add a small dot at each line's start like technical drawings. | idea |
+
