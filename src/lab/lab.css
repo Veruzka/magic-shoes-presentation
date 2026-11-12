@@ -121,7 +121,9 @@
   pointer-events: none;
 }
 
-.lab-shoe__layer * { vector-effect: non-scaling-stroke; fill: none; }
+.lab-shoe__layer * { vector-effect: non-scaling-stroke; }
+/* Shapes are hollow; text keeps its ink (a label's lines are tspans, which must not be emptied). */
+.lab-shoe__layer :is(path, circle, ellipse, rect) { fill: none; }
 
 .lab-marker__zone-under { stroke: var(--color-bg); stroke-width: 4; }
 .lab-marker__zone { stroke: var(--color-ink); stroke-width: 1.5; stroke-dasharray: 5 4; }
