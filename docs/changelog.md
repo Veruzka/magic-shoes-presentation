@@ -19,6 +19,7 @@ One short entry per work session, newest first.
   - the room around the shoe now scales with its size
   - the long "empty pocket" label is on two lines
 - **Template updated:** the movement step is now ✅ with its real fields; known gaps added.
+- **Fixed afterwards:** the shoe's labels had gone invisible. Splitting labels into lines made each line a separate text piece, and the "shapes are hollow" style emptied those too. The rule now applies only to shapes.
 - **Checked:** `npm run build`. Not seen on screen yet.
 
 ## 2026-11-12: the lab template
