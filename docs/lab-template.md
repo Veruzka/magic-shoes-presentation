@@ -21,7 +21,7 @@ The lab is built so a new interaction is **mostly new entries in lists**, not ne
 | **Zone** | A spot on the shoe where sensors of a certain kind can go | `src/lab/data/zones.js` | ✅ |
 | **Layer** | A layer of the shoe (outsole, midsole, insole, upper) that a zone sits in | `src/lab/data/layers.js` | ✅ |
 | **Movement** | Something the wearer does (stomp, tiptoe, twist), where on the shoe it happens, and how to recognise it from the readings | `src/lab/data/movements.js` | ✅ |
-| **Sound** | What plays, and how the movement's strength shapes it | `src/lab/data/sounds.js` (+ `sounds.json` for sound files) | 🔜 piece 4 |
+| **Sound** | What plays, and how the movement's strength and sharpness shape it | `src/lab/data/sounds.js` (+ `sounds.json` for sound files) | ✅ |
 | **Interaction** | One sensor + zone + movement + sound, joined together | `src/lab/data/interactions.js` | 🔜 piece 6 |
 
 **How they connect.** Each block points to the others **by id**, never by position or file name:
@@ -116,15 +116,31 @@ Copy the Stomp entry and change every field:
 - A new sensor kind needs a line in `kindNeeds` in `movements.js` (e.g. `motion: 'a gyro'`).
 - **Tiptoe** (sound-designer notes, already in `movements.js`) is a held press: it sends strength continuously while held, plus `heldMs`. That's a different kind of rule from a one-off hit.
 
-### Step 5: the sound (`src/lab/data/sounds.js`) 🔜 piece 4
-Planned fields. Confirm them when piece 4 is built:
-- `id`, `name`, `status`.
-- `source`:
-  - `'synth'`: made in the browser with Tone.js, with its recipe and settings (see the boom recipe in [lab-roadmap.md](lab-roadmap.md))
-  - `'file'`: an id from `sounds.json`. Never point at a file directly; follow [sound-library.md](sound-library.md).
-- `shape`: how strength (0–1) changes it (volume, pitch, length, brightness).
-- **License:** for files, it must be logged in `sound-library.md`. Never guess it.
-- **Paid tools:** ask before generating a sound with a tool that costs credits.
+### Step 5: the sound (`src/lab/data/sounds.js`) ✅
+Copy the Deep boom entry and change every field:
+
+| Field | What to write | Deep boom example |
+|---|---|---|
+| `id`, `name`, `status` | Short id, display name, `'active'` or `'soon'` | `'deep-boom'`, `'Deep boom'`, `'active'` |
+| `source` | `'synth'` (made in code with Tone.js) or `'file'` (an id from `sounds.json`; never a file path) | `'synth'` |
+| `type` | `'hit'` (one-off, for stomp) or `'held'` (swells while held, for tiptoe) | `'hit'` |
+| `takes` | What it uses from the movement (must be in the movement's `gives`) | `['strength', 'sharpness']` |
+| `preview` | The values the ▶ button plays it with | strength `0.7`, sharpness `0.7` (0.6 sounds timid on laptops) |
+| `seconds` | About how long it rings (for the ▶ playing look) | `1.5` |
+| `recipe` | For synth sounds: the instruments, and how strength and sharpness shape them | body, thud, sub, reverb, loudness, octaves, length, wet, brightness |
+
+✅ **You then get, with no new code:**
+- the sound's row in the SOUNDS list, with the ▶ button and its playing look
+- picking it (stored in your picks)
+
+⚠️ **Known gaps:**
+- **A new synth sound needs its own builder** (a function like `buildBoom`) added to `builders` in `src/lab/lab-sound.js`. The recipe numbers are data, but how the instruments connect is code.
+- **File sounds (`source: 'file'`) can't play yet.** The first one needs a player in `lab-sound.js` that reads `sounds.json`. File it by the [sound-library](sound-library.md) rules first (name, folder, web copy, license; never guess the license). Ask before using a paid generator.
+- **The matching check** (the sound's `type` and `takes` against the movement) is stored but not enforced yet. That comes in the test step (piece 6).
+
+**Sound rules:**
+- Laptop speakers can't play the deep parts (under about 60 Hz), so a sound needs something audible higher up (the boom's thud and pitch drop).
+- Check every sound on both a laptop speaker and headphones.
 
 ### Step 6: wiring (Wokwi) 🔜 piece 5
 - Make a Wokwi project for the sensor (with the hardware-engineer agent). Use the sensor's `wokwi.standIn` if Wokwi has no matching part.
@@ -153,6 +169,9 @@ Planned fields. Confirm them when piece 4 is built:
 | Only one shoe picture (`sketch34`); no 3D yet | `views` in `zones.js` and `layers.js` | When the 3D shoe is built (add `views.model3d`) |
 | The FSR picture is the round 402; the square 406 would be more forgiving | `sketch-sensor.js` render and `sensors.js` `model` | When the 406 is chosen |
 | The spec card chart only knows the stomp curve | `stompAt` in `src/lab/movement-chart.js` | When the second movement becomes active |
+| A new synth sound needs its own builder | `builders` in `src/lab/lab-sound.js` | When the second synth sound becomes active |
+| File sounds can't play yet | `src/lab/lab-sound.js` | When the first recorded sound is added |
+| The sound/movement matching check isn't enforced | 🔜 the test step | Piece 6 |
 | Pins aren't checked for clashes between sensors yet | 🔜 the Wiring step (piece 5) | Piece 5 |
 
 ---

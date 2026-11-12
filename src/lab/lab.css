@@ -273,16 +273,11 @@
 
 .lab-card {
   display: none;
-  margin-top: 1.2rem;
-  padding-top: 0.8rem;
-  border-top: 1px solid var(--color-ink);
+  margin-top: 0.8rem;
 }
 .lab-card.is-shown { display: block; }
 
-.lab-card__title { margin: 0; font-size: 1rem; font-weight: 500; letter-spacing: 0.1em; }
-.lab-card__text,
-.lab-card__rule { margin: 0.3rem 0 0; font-size: 0.72rem; letter-spacing: 0.08em; line-height: 1.5; color: var(--color-muted); }
-.lab-card__rule { margin-top: 0.6rem; }
+.lab-card__text { margin: 0; font-size: 0.72rem; letter-spacing: 0.08em; line-height: 1.5; color: var(--color-muted); }
 
 /* The chart: ink only, hairlines, small Barlow labels (illustrator review). */
 .lab-chart { display: block; width: 100%; height: auto; margin-top: 0.6rem; overflow: visible; }
@@ -299,8 +294,7 @@
    with its sensor: no replay; the whole card fades in after the sensor's marker. */
 .lab-card.is-drawing .lab-chart__line { animation: lab-draw 500ms linear both; }
 .lab-card.is-drawing .lab-chart__peak,
-.lab-card.is-drawing .lab-card__text,
-.lab-card.is-drawing .lab-card__rule { animation: lab-fade 120ms ease-out 500ms both; }
+.lab-card.is-drawing .lab-card__text { animation: lab-fade 120ms ease-out 500ms both; }
 .lab-card.is-returning { animation: lab-fade 120ms ease-out var(--wait, 0ms) both; }
 
 @keyframes lab-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
@@ -310,10 +304,63 @@
   .lab-card * , .lab-card { animation: none !important; }
 }
 
-/* Smaller laptops: the movements drop under the sensors and shoe. */
+/* ---- The right column: movements, then sounds ---- */
+.lab__right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+/* A sound row: the pick button, and ▶ at its right edge (active sounds only). */
+.lab-sound {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+.lab-sound .lab-list__item { flex: 1; }
+
+.lab-sound__play {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px dashed rgb(58 51 43 / 0.35);
+  background: transparent;
+  color: var(--color-ink);
+  cursor: pointer;
+}
+.lab-sound__play svg { width: 15px; height: 15px; }
+.lab-sound__play path { fill: transparent; stroke: currentColor; stroke-width: 1.2; stroke-linejoin: round; }
+.lab-sound__play:hover path { fill: var(--color-surface); }
+.lab-sound__play:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+
+/* While it rings: the triangle fills with ink and a hairline runs under the row. */
+.lab-sound.is-playing .lab-sound__play path { fill: var(--color-ink); }
+.lab-sound::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+.lab-sound.is-playing::after { animation: lab-ring var(--ring, 1.5s) linear both; }
+@keyframes lab-ring { from { transform: scaleX(0); } 99% { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-sound.is-playing::after { animation: lab-ring var(--ring, 1.5s) steps(1, end) both; transform: scaleX(0); }
+}
+
+/* Smaller laptops: the movements and sounds drop under the sensors and shoe. */
 @media (max-width: 1100px) {
   .lab__workspace { grid-template-columns: minmax(190px, 15rem) minmax(0, 1fr); }
-  .lab-list--movements { grid-column: 1 / -1; max-width: 24rem; }
+  .lab__right { grid-column: 1 / -1; max-width: 24rem; }
 }
 
 /* Phones: sensors, then the shoe, then movements, stacked. */

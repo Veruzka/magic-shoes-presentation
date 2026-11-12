@@ -34,10 +34,10 @@ export function movementChart(movement) {
   const element = svg('svg', { class: 'lab-chart', viewBox: `0 0 ${W} ${H}`, role: 'img' });
   element.setAttribute('aria-label', `${movement.name}: what it looks like in the readings (illustrative)`);
 
-  // Axes: a hairline baseline and side line, ticks at 0, 0.5, 1 and 0 s, 1 s.
+  // Axes: a hairline baseline and side line, ticks at 0 and 1 (strength) and 0 s, 1 s.
   const frame = svg('g', { class: 'lab-chart__frame' });
   frame.append(svg('path', { class: 'lab-chart__axis', d: `M ${PLOT.left} ${PLOT.top} V ${PLOT.bottom} H ${PLOT.right}` }));
-  for (const value of [0, 0.5, 1]) frame.append(svg('text', { class: 'lab-chart__tick', x: PLOT.left - 6, y: y(value), 'text-anchor': 'end' }, String(value)));
+  for (const value of [0, 1]) frame.append(svg('text', { class: 'lab-chart__tick', x: PLOT.left - 6, y: y(value), 'text-anchor': 'end' }, String(value)));
   frame.append(svg('text', { class: 'lab-chart__tick', x: PLOT.left, y: PLOT.bottom + 16, 'text-anchor': 'middle' }, '0'));
   frame.append(svg('text', { class: 'lab-chart__tick', x: PLOT.right, y: PLOT.bottom + 16, 'text-anchor': 'end' }, '1 s'));
   frame.append(svg('text', { class: 'lab-chart__tick', x: PLOT.right, y: 10, 'text-anchor': 'end' }, 'Illustrative'));

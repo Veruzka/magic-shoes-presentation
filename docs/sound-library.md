@@ -43,3 +43,6 @@ Sorted by category (in the order above), then by file name.
 | File | Category | Role | Source | Prompt used | License | Mood | Shoe action | Notes |
 |---|---|---|---|---|---|---|---|---|
 | *(no sounds yet)* | | | | | | | | |
+
+## Sounds made in code (the lab)
+Some lab sounds aren't files. They're made in the browser with Tone.js from a recipe in `src/lab/data/sounds.js` (`source: 'synth'`), like the **Deep boom**. They need no license or filing. A recorded sound used in the lab is filed here as usual and added to `sounds.json`. The lab entry then points to its id (`source: 'file'`).

@@ -253,6 +253,11 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
   - its `rule` numbers (start, rearm, peakMs, maxRiseMs, cooldownMs)
   - its `chart` numbers (the illustrative curve: when the foot lands, how high, the standing level, when it lifts)
 - **The chart's look**, in `lab.css` under "The chart".
+- **A sound**, in `src/lab/data/sounds.js`:
+  - `preview` (what ▶ plays: strength and sharpness from 0 to 1)
+  - the `recipe` numbers: how loud (`loudness`, in dB), how deep the pitch drop is (`octaves`), how long it rings (`length`), how much echo (`wet`), how bright the thud is (`brightness`, in Hz), and when the rumble joins in (`sub.from`)
+
+> **Example:** to make the boom longer, change `length: { light: 0.5, hard: 1.5 }` to `{ light: 0.8, hard: 2.2 }`. If ▶ sounds too quiet, raise `preview.strength` from `0.7` to `0.85`.
 - **A zone**, in `src/lab/data/zones.js`: `anchor` (where the crosshair sits), `outline` (the dashed shape) and `label` (where the leader line bends and ends, and its text). They're in the drawing's own pixels (1356 × 846, top-left is 0, 0).
 
 > **Example:** to move the crosshair a little toward the back of the heel, change the heel's `anchor: [1195, 505]` to `[1230, 500]`. To make the gyro clickable, it first needs an `upper-top` zone in `zones.js`, then change its `status` to `'active'`. The lab's technical look comes from the FSR callouts' font (`--font-callout`, Barlow Semi Condensed) in uppercase, set once on `.lab` in `lab.css`.
@@ -298,9 +303,11 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 | `hero()` | `src/sections/hero.js` | Builds the first screen | nothing → the section | Careful |
 | `sensorList()` | `src/lab/sensor-list.js` | The lab's sensor parts list; clicking puts a sensor on the shoe or takes it off | nothing → the list | Careful |
 | `labShoe()` | `src/lab/lab-shoe.js` | The lab's shoe: the story's coming-apart shoe with sensor markers (closed) and technical labels (open) | nothing → the shoe | Careful |
-| `labState` | `src/lab/lab-state.js` | Your picks: `toggleSensor(id)`, `isPlaced(id)`, `pickMovement(id)`, `movement()`, `setOpen(true/false)`, `isOpen()`, `onChange(fn)` | – | Ask me |
+| `labState` | `src/lab/lab-state.js` | Your picks: `toggleSensor(id)`, `isPlaced(id)`, `pickMovement(id)`, `movement()`, `pickSound(id)`, `sound()`, `setOpen(true/false)`, `isOpen()`, `onChange(fn)` | – | Ask me |
 | `movementList()` | `src/lab/movement-list.js` | The movements list with its matching check, and the picked movement's spec card | nothing → the list | Careful |
 | `movementChart(movement)` | `src/lab/movement-chart.js` | The illustrative chart on a spec card (stomp shape only for now) | a movement → the chart | Careful |
+| `soundList()` | `src/lab/sound-list.js` | The sounds list with ▶ buttons | nothing → the list | Careful |
+| `play(soundId, { strength, sharpness })` | `src/lab/lab-sound.js` | Plays a sound once, shaped by strength and sharpness (call it inside a click) | a sound id + values → nothing | Ask me |
 | `insideSwitch()` | `src/lab/inside-switch.js` | The "Show inside" switch and the hardware note under the shoe | nothing → the switch | Safe |
 | `pieceFor(layerId)` | `src/lab/data/layers.js` | Which drawing piece shows a layer (the insole → the midsole it rests on) | a layer name → a piece name | Careful |
 | `pageSwitch({ label, href })` | `src/components/page-switch.js` | The floating pill that links between the story and the lab | wording + address → the pill | Safe |

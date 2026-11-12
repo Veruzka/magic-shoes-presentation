@@ -27,12 +27,10 @@ function specCard(movement) {
   const card = document.createElement('div');
   card.className = 'lab-card';
   card.dataset.movement = movement.id;
-  const { rule } = movement;
-  card.innerHTML = `
-    <h3 class="lab-card__title">${movement.name}</h3>
-    <p class="lab-card__text">${movement.description}</p>
-    <p class="lab-card__rule">Start &gt; ${rule.start} · Re-arm &lt; ${rule.rearm} · Rise ≤ ${rule.maxRiseMs} ms · Cooldown ${rule.cooldownMs} ms</p>`;
-  card.querySelector('.lab-card__text').after(movementChart(movement));
+  // Slim (illustrator review, piece 4): the one-line description and the chart. The
+  // rule's other numbers (rise, cooldown) stay in movements.js.
+  card.innerHTML = `<p class="lab-card__text">${movement.description}</p>`;
+  card.append(movementChart(movement));
   return card;
 }
 

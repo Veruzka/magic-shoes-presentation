@@ -2,6 +2,15 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-12: lab piece 4, sounds
+- **Reviewed first** by the sound-designer and illustrator agents. Both said it's a good plan. Their notes are in [lab-roadmap.md](lab-roadmap.md).
+- **A SOUNDS list** in the right column, under the movements: 01 Deep boom, with 02 Ground rumble and 03 Giant hum "soon". Click a row to pick it.
+- **▶ at the right edge of Deep boom** plays it once at strength 0.7. The triangle fills with ink while it rings and a hairline runs under the row.
+- **The boom is made in code** with **Tone.js 15.1.22** (free; installed and pinned): a body, a thud, a sub rumble, echo, a compressor and a limiter, from the sound designer's recipe. It loads only when needed (when the page is idle or the pointer reaches ▶).
+- **The Stomp card was slimmed** to its description and chart, so the right column fits on a laptop screen.
+- **Template updated:** the sound step is now ✅ with its real fields; known gaps added (each synth sound needs a builder, file sounds can't play yet, the matching check comes in piece 6).
+- **Checked:** `npm run build` (Tone.js is built into its own file, loaded on demand). Not heard or seen yet.
+
 ## 2026-11-12: lab piece 3, movements
 - **Reviewed first** by the hardware-engineer, sound-designer, illustrator, motion-director and 3d-artist agents. All said it's a good plan. Their notes are in [lab-roadmap.md](lab-roadmap.md).
 - **A MOVEMENTS list** on the right of the lab: 01 Stomp, with 02 Tiptoe and 03 Twist "soon".

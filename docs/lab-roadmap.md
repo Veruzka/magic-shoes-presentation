@@ -11,7 +11,8 @@ The MVP uses **one of each**: one sensor, one location, one movement, one sound,
   - 2b (the "Show inside" switch), saved as `checkpoint-04-lab-show-inside`
   - the lab template
   - piece 3 (the movements list and the Stomp spec card)
-- **Next:** piece **4**, the sound list and the boom (Tone.js). 2c (a sketch-style FSR in the open shoe) is polish for any time.
+  - piece 4 (the sounds list and the deep boom, with a ▶ preview)
+- **Next:** piece **5**, wiring: the Wokwi FSR project, the "slider replaces FSR" note and the safety checklist. Before it: `docs/hardware.md` (hardware-engineer agent). 2c (a sketch-style FSR in the open shoe) is polish for any time.
 - **Not pushed yet:** everything after checkpoint 4 is committed on this Mac only. Push it all together next time.
 - **To add the next sensor, movement, sound or interaction:** follow [lab-template.md](lab-template.md).
 - **How we work on the lab:**
@@ -20,7 +21,7 @@ The MVP uses **one of each**: one sensor, one location, one movement, one sound,
   3. Build it, update the docs (including [lab-template.md](lab-template.md)), and tick it off here.
 - **Don't** take screenshots after each change; you check the result yourself.
 - **Checked on screen by you:** 2b's FSR spot at the heel is fine.
-- **Not checked on screen yet:** piece 3's layout (three columns) and the Stomp chart.
+- **Not checked on screen or by ear yet:** piece 4's sounds list, the ▶ button and the boom itself (try a laptop speaker and headphones).
 
 ## Decided (brainstorm, 2026-11-11 and 2026-11-12)
 
@@ -41,7 +42,7 @@ The MVP uses **one of each**: one sensor, one location, one movement, one sound,
    - 2b. ✅ The "Show inside" switch (2026-11-12). The story's coming-apart shoe opens straight down, with the FSR render in its pocket at the heel. Technical labels appear (OUTSOLE, MIDSOLE, FSR · HEEL), or "EMPTY · PLACE A SENSOR" when no FSR is placed, along with the hardware note.
    - 2c. A sketch-style FSR in the pocket instead of the glossy render: the chapter 3 sketch, squashed and tilted to lie in the pocket, with a red ring (the illustrator's suggestion).
 3. ✅ **The movement list + stomp** (2026-11-12): a MOVEMENTS list that greys out movements without a matching sensor, and the Stomp spec card with an illustrative chart.
-4. **The sound list + the boom** (Tone.js), with a play button.
+4. ✅ **The sound list + the boom** (2026-11-12): a SOUNDS list (Deep boom, with Ground rumble and Giant hum "soon") and a ▶ preview at strength 0.7. Tone.js 15.1.22 loads only when needed.
 5. **Wiring:** the Wokwi FSR project, the note and the safety checklist.
 6. **Test:** press on the heel, hear the boom.
 
@@ -120,6 +121,18 @@ All five said it's a good plan.
 - **Motion director:**
   - The line draws in 0.5 s at a steady speed, then the text fades in. No looping.
   - When the sensor comes back, the card fades in after the marker, with no replay. Never two motions at once.
+
+## Agent reviews of piece 4 (2026-11-12)
+The user chose the simplest option: a list plus one ▶ button.
+- **Sound designer:**
+  - Preview at strength **0.7** (0.6 sounds timid on laptops).
+  - The "soon" sounds are Ground rumble (a layer) and Giant hum (held, for tiptoe).
+  - Pin Tone.js 15.x and load it lazily. Start audio inside the click (Safari), and wait for the reverb or the first boom plays dry.
+  - Test on the laptop speaker.
+  - Store `type` and `takes` now and enforce them in piece 6.
+- **Illustrator:**
+  - ▶ is always visible at the right edge of the active row: an outlined ink triangle that fills while the sound rings, with a hairline running under the row. No red.
+  - The Stomp card was slimmed to its description and chart, so the right column fits a 900 px-tall window.
 
 ## The boom recipe (from the sound-designer agent, 2026-11-12)
 - **Body:** Tone.js `MembraneSynth` at about G1 (49 Hz), `pitchDecay` 0.08, `octaves` 4, decay 1.0 s.
