@@ -1,0 +1,4 @@
+{
+  "about": "The app's list of sounds. The app reads sounds from this file only, so swapping a sound means changing one line. Rules: docs/sound-library.md",
+  "sounds": []
+}

@@ -39,6 +39,14 @@ Words we use in the code, the settings and these docs.
 - **Image pixels:** positions on a specific image, e.g. the straight-on FSR (532 × 1458). The sketch's measurements and the callout points use these.
 - **Share:** a fraction of something's size, e.g. `padWidth: 0.32` = 32% of the image's width.
 
+## Sounds
+- **One-shot:** a sound that plays once, e.g. a single stomp.
+- **Loop:** a sound that repeats seamlessly, e.g. a beat.
+- **Layer:** a sound mixed on top of another to add character, e.g. a rumble under a stomp.
+- **Original / web copy:** the untouched file in `sounds/`, and its small `.m4a` copy in `public/sounds/` that the app loads.
+- **Catalog:** `sounds.json`, the app's list of sounds.
+- **BPM:** beats per minute, the tempo of a music file.
+
 ## Building and publishing
 - **Commit:** a saved snapshot of the code, on your computer.
 - **Push:** copying commits to GitHub. Vercel then publishes the live site.

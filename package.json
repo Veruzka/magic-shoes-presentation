@@ -12,7 +12,8 @@
     "check:shot": "node --experimental-websocket tools/visual-check/shot.mjs",
     "image:cutout": "sh tools/images/run.sh cutout",
     "image:outline": "sh tools/images/run.sh outline",
-    "image:bands": "sh tools/images/run.sh bands"
+    "image:bands": "sh tools/images/run.sh bands",
+    "sound:web": "sh tools/sounds/make-web.sh"
   },
   "devDependencies": {
     "vite": "^8.3.7"

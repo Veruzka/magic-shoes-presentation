@@ -20,7 +20,8 @@ flowchart TD
   vercel["Vercel"]
   fonts["Google Fonts"]
   figma["Figma AI<br/>(made the images,<br/>once)"]
-  devtools["Builder tools (tools/)<br/>screenshots, checks,<br/>image cut-outs"]
+  devtools["Builder tools (tools/)<br/>screenshots, checks,<br/>image cut-outs, sound copies"]
+  sounds["Sounds<br/>originals → web copies<br/>+ sounds.json (not playing yet)"]
 
   visitor --> page --> hero
   hero --> bg
@@ -38,6 +39,7 @@ flowchart TD
   github --> vercel --> visitor
   figma -.-> devtools -.-> data
   devtools -.-> hero
+  devtools -.-> sounds
 ```
 
 ## The parts
@@ -101,6 +103,9 @@ The small "i" in the bottom-right corner (`src/components/info-panel.js`). It op
 ### Set aside (not shown right now)
 The earlier 5-part exploded view (`src/components/exploding-shoe.js`, `src/shoes/sketch-parts.js`, `src/assets/sketch-parts/`). It's kept in case we want pieces of it back. We're rebuilding the fan one part at a time instead.
 
+### Sounds (not playing yet)
+The untouched originals live in `sounds/`, sorted by category and role. Their small web copies live in `public/sounds/`. The app's list of sounds is `sounds.json`; the app will read sounds from there only. Details and the log: [sound-library.md](sound-library.md).
+
 ### Outside services
 - **GitHub** stores the code.
 - **Vercel** publishes the site whenever new code is pushed to GitHub. The live address is https://magic-shoes.vercel.app/.
@@ -123,6 +128,6 @@ AI was used **once, while building**, to create the shoe images:
 Backgrounds were removed from the images with Apple's built-in "lift subject" feature on the Mac (free, no internet), using `npm run image:cutout`. The untouched originals, and which Figma frame each came from, are in `design/originals/` (see its README). The steps for a new image are in [tools-and-setup.md](tools-and-setup.md).
 
 ### Builder tools
-Helpers used only while building, never on the live site: screenshots and zoomed checks (`tools/visual-check/`), motion checks (`tools/motion-debug/`), image cut-out and measuring (`tools/images/`), all sharing one Chrome helper (`tools/shared/chrome.mjs`). See [tools-and-setup.md](tools-and-setup.md).
+Helpers used only while building, never on the live site: screenshots and zoomed checks (`tools/visual-check/`), motion checks (`tools/motion-debug/`), image cut-out and measuring (`tools/images/`), sound web copies (`tools/sounds/`), all sharing one Chrome helper (`tools/shared/chrome.mjs`). See [tools-and-setup.md](tools-and-setup.md).
 
 There are **no secret keys** in this project.

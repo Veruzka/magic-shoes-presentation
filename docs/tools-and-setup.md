@@ -13,6 +13,7 @@ Every helper tool we use while building, what it's for, and the quirks of this M
 | `npm run image:cutout -- in.png out.png` | Removes an image's background and crops to the object | below |
 | `npm run image:outline -- image.png 10` | Lists where the object starts and ends on every 10th row (find centres and widths) | below |
 | `npm run image:bands -- image.png row 264` | Lists the bright, dark and see-through bands across one row or column (find exact line positions) | below |
+| `npm run sound:web` | Makes the small web copy (.m4a) of every new sound original, using the Mac's built-in `afconvert` | [sound-library.md](sound-library.md) |
 
 ## Making a new AI image (the image pipeline)
 1. **Generate** it with Figma AI in the file **"Magic Shoes – assets"** (Graft team, https://www.figma.com/design/mnHnLX6S7rs63N8YTt9Igh). Use the prompt template in [electronics-style-guide.md](electronics-style-guide.md) for electronics. Each image is one frame on Page 1, left to right in the order made.
@@ -42,5 +43,7 @@ Every helper tool we use while building, what it's for, and the quirks of this M
 - `tools/motion-debug/`: logic and smoothness checks.
 - `tools/visual-check/`: screenshots and zoomed crops.
 - `tools/images/`: cut-out and measuring tools (built automatically the first time; the builds sit in `tools/images/.build`, not saved in git).
+- `tools/sounds/`: the sound converter.
 - `design/originals/`: the untouched AI originals.
+- `sounds/`: the untouched sound originals. Their web copies are in `public/sounds/`.
 - `shots/`: screenshots from `check:shot` (not saved in git; delete any time).
