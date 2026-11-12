@@ -2,6 +2,12 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-12: the story's FSR moves to the heel
+- **The FSR now lies at the heel in the story too**, in the same spot as in the lab: `along: 0.78` in `src/shoes/sketch-sensor.js`, shared by both. The lab's separate copy of that setting is gone.
+- Chapter 1's pocket, chapter 2's lift-out and the FSR label's arrow all follow it automatically.
+- **To look at:** the FSR label sits on the left of the shoe, so its arrow now runs further, to the heel. If it looks long or crosses the Midsole label, the FSR and Midsole labels could swap sides (`src/shoes/sketch-labels.js`).
+- **Checked:** `npm run build`. Not seen on screen yet.
+
 ## 2026-11-12: lab piece 4, sounds
 - **Reviewed first** by the sound-designer and illustrator agents. Both said it's a good plan. Their notes are in [lab-roadmap.md](lab-roadmap.md).
 - **A SOUNDS list** in the right column, under the movements: 01 Deep boom, with 02 Ground rumble and 03 Giant hum "soon". Click a row to pick it.

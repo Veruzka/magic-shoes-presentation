@@ -46,7 +46,7 @@ export const sketchSensor = {
     },
   },
 
-  along: 0.5, // where it sits from toe (0) to heel (1) — the middle of the sole
+  along: 0.78, // where it sits from toe (0) to heel (1) — the heel (same spot as in the lab)
   // It always lies along the shoe: coil (its head) toward the toe, board toward the heel.
   turn: 10, // degrees: turns the sensor's head (the coil) to the left (+) or right (−) — fine-tune by eye
   across: 0.5, // where it sits from the tray's near edge (0) to far edge (1) — the middle

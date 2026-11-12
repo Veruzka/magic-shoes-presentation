@@ -20,7 +20,7 @@ The MVP uses **one of each**: one sensor, one location, one movement, one sound,
   2. Have the illustrator, motion-director, 3d-artist and hardware-engineer agents review the plan.
   3. Build it, update the docs (including [lab-template.md](lab-template.md)), and tick it off here.
 - **Don't** take screenshots after each change; you check the result yourself.
-- **Checked on screen by you:** 2b's FSR spot at the heel is fine.
+- **Checked on screen by you:** 2b's FSR spot at the heel is fine. The story's FSR now uses the same heel spot (shared setting).
 - **Not checked on screen or by ear yet:** piece 4's sounds list, the ▶ button and the boom itself (try a laptop speaker and headphones).
 
 ## Decided (brainstorm, 2026-11-11 and 2026-11-12)

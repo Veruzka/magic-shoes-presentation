@@ -53,6 +53,6 @@ export const sketchMidsole = {
     lipLight: 0.9, // how bright the lip is (0–1)
     recessShade: 0.22, // shadow where the floor dips below the lip (0–1)
     grain: 0.18, // faint foam grain (0 = perfectly smooth)
-    sensor: sketchSensor, // the small charging sensor lying in the middle of the tray
+    sensor: sketchSensor, // the FSR lying in its pocket at the heel end of the tray
   },
 };

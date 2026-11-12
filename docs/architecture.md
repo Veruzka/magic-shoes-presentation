@@ -62,7 +62,7 @@ flowchart TD
 ### Lab page (`/lab/`)
 The prototyping lab, a second page next to the story. `lab/index.html` is its empty page and `src/lab/main.js` fills it. It's being built one small piece at a time; the plan is in [lab-roadmap.md](lab-roadmap.md). Right now it has:
 - **The sensor parts list** (`src/lab/sensor-list.js`), on the left: 01 FSR, with 02 Gyro and 03 Capacitive greyed out as "soon".
-- **The shoe** (`src/lab/lab-shoe.js`), in the middle. It's the story's coming-apart Sketch shoe (`separating-shoe.js`) with lab-only settings: the FSR lies at the heel, the shoe opens straight down, and there are no handwritten labels. Drawn layers sit on top:
+- **The shoe** (`src/lab/lab-shoe.js`), in the middle. It's the story's coming-apart Sketch shoe (`separating-shoe.js`) with lab-only settings: the shoe opens straight down, and there are no handwritten labels. The FSR lies at the heel in both the story and the lab (`along` in `src/shoes/sketch-sensor.js`). Drawn layers sit on top:
   - **Closed:** picking a sensor draws its marker (a dashed outline of its zone, a red crosshair, and a leader line to a label).
   - **Open:** technical labels ride along with each layer.
 - **The movements list** (`src/lab/movement-list.js`), on the right. A movement can be picked only when a placed sensor matches its kind and zone; otherwise it's greyed out with what it needs. The picked movement's **spec card** sits under it: description, rule, and an illustrative chart of what it looks like in the readings (`src/lab/movement-chart.js`).

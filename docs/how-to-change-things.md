@@ -242,8 +242,8 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
   - the title's size and `letter-spacing`
   - the marker and label motion timings (in ms, with comments)
 - **A sensor**, in `src/lab/data/sensors.js`: its name, kind, status (`'active'` or `'soon'`) and zone, and its wiring and safety details.
+- **Where the FSR lies** (story and lab together): `along` in `src/shoes/sketch-sensor.js`, from toe 0 to heel 1 (now `0.78`, the heel).
 - **"Show inside"**, at the top of `src/lab/lab-shoe.js`:
-  - `FSR_ALONG` (where the FSR lies, from toe 0 to heel 1, now 0.78)
   - `OPEN_MOVE` (how far the layers move down; `y: 150`)
   - `OPEN_SECONDS` and `CLOSE_SECONDS` (0.8 and 0.6)
 - **The open-shoe labels**, in `src/lab/data/layers.js`: each layer's `label` (where the leader line starts, bends and ends, and its text, in drawing pixels).

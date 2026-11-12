@@ -1,8 +1,8 @@
 // The shoe in the middle of the lab.
 //
 // The picture is the story's coming-apart Sketch shoe (src/components/separating-shoe.js),
-// with lab-only settings: the FSR lies in its pocket at the heel, not mid-foot, and
-// the story's handwritten labels are left out. On top sit two drawn layers (SVG, in
+// with the FSR in its pocket at the heel (set in src/shoes/sketch-sensor.js, shared
+// with the story), opening straight down, and without the story's handwritten labels. On top sit two drawn layers (SVG, in
 // the drawing's own pixels, 1356 × 846):
 //   • closed: one marker per placed sensor – dashed zone outline, red crosshair,
 //     leader line and label (2a)
@@ -13,7 +13,6 @@ import shoeUrl from '../assets/shoe-sketch.png';
 import { separatingShoe } from '../components/separating-shoe.js';
 import { sketchSole } from '../shoes/sketch-sole.js';
 import { sketchMidsole } from '../shoes/sketch-midsole.js';
-import { sketchSensor } from '../shoes/sketch-sensor.js';
 import { sensors, sensorById } from './data/sensors.js';
 import { zoneById } from './data/zones.js';
 import { layers, pieceFor } from './data/layers.js';
@@ -25,16 +24,12 @@ const WIDTH = 1356;
 const HEIGHT = 846;
 
 // ---- Lab-only settings for the coming-apart shoe (the story's stay unchanged) ----
-const FSR_ALONG = 0.78; // where the FSR lies from toe (0) to heel (1): the heel
+// (Where the FSR lies, `along`, is shared with the story: src/shoes/sketch-sensor.js.)
 const OPEN_MOVE = { x: 0, y: 150, turn: 0, lift: 50 }; // straight down, less far than the story
 const OPEN_SECONDS = 0.8; // motion-director review: open 0.8s, close a bit faster
 const CLOSE_SECONDS = 0.6;
 
-const labMidsole = {
-  ...sketchMidsole,
-  topFace: { ...sketchMidsole.topFace, sensor: { ...sketchSensor, along: FSR_ALONG } },
-};
-const labLayers = [sketchSole, labMidsole];
+const labLayers = [sketchSole, sketchMidsole];
 // The moment all layers have finished moving (the story's labels come after it).
 const OPEN_END = Math.max(...labLayers.map((layer) => layer.stage.end));
 
