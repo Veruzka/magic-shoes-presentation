@@ -7,10 +7,11 @@ The MVP uses **one of each**: one sensor, one location, one movement, one sound,
 ## Where we left off (update this at the end of every lab session)
 - **Done:** piece 1 (the lab page and pill buttons), 2a (the parts list and the FSR marker at the heel) and 2b (the "Show inside" switch). Saved as `checkpoint-04-lab-show-inside`.
 - **Next:** piece **2c**, a sketch-style FSR in the open shoe's pocket. Then piece 3, the movement list and stomp.
+- **To add the next sensor, movement, sound or interaction:** follow [lab-template.md](lab-template.md).
 - **How we work on the lab:**
   1. Brainstorm one small piece with the Superpowers brainstorming steps, one question at a time, with a recommendation each time.
   2. Have the illustrator, motion-director, 3d-artist and hardware-engineer agents review the plan.
-  3. Build it, update the docs, and tick it off here.
+  3. Build it, update the docs (including [lab-template.md](lab-template.md)), and tick it off here.
 - **Don't** take screenshots after each change; you check the result yourself.
 - **Not checked on screen yet:** 2b's FSR spot at the heel (`FSR_ALONG`) and the positions of the open-shoe labels.
 

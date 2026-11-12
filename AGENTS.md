@@ -15,6 +15,8 @@ I'm exploring ideas, not building a finished product.
 
 We're building the prototyping lab (`/lab/`) one small piece at a time. **Read [docs/lab-roadmap.md](docs/lab-roadmap.md) first.** It has what's decided, where we left off and what's next. Update its "Where we left off" section at the end of every lab session.
 
+To add a sensor, movement, sound or interaction, follow [docs/lab-template.md](docs/lab-template.md). Keep it current using its "When to update this template" table.
+
 ## Documentation rules
 
 The living docs are in `docs/` (start with `docs/README.md`). Write them in plain English for a designer: short sentences, no jargon (or explain it in one line), and examples where helpful. Dates are written YYYY-MM-DD.

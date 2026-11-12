@@ -5,8 +5,6 @@ import { sensors } from './data/sensors.js';
 import { zoneById } from './data/zones.js';
 import { labState } from './lab-state.js';
 
-const ZONE_NAMES = { 'upper-top': 'Top', 'outer-midsole': 'Side' }; // zones not drawn yet
-
 export function sensorList() {
   const element = document.createElement('section');
   element.className = 'lab-list';
@@ -19,7 +17,7 @@ export function sensorList() {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'lab-list__item';
-    const where = zoneById(sensor.zone)?.name ?? ZONE_NAMES[sensor.zone] ?? sensor.zone;
+    const where = zoneById(sensor.zone)?.name ?? sensor.zone;
     button.innerHTML = `
       <span class="lab-list__number">${String(i + 1).padStart(2, '0')}</span>
       <span class="lab-list__name">${sensor.name}</span>

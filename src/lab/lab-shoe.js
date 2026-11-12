@@ -158,7 +158,8 @@ export function labShoe() {
     if (!spot) return null;
     const [x, y] = spot;
     const group = svg('g', { class: 'lab-fsr-inside' });
-    const placedLabel = callout([x, y], [x + 70, y - 70], [WIDTH + 40, y - 70], 'FSR · Heel', 'lab-callout lab-callout--fsr');
+    const text = zoneById(fsr.zone).views[VIEW].label.text; // same words as the closed marker
+    const placedLabel = callout([x, y], [x + 70, y - 70], [WIDTH + 40, y - 70], text, 'lab-callout lab-callout--fsr');
     placedLabel.style.setProperty('--order', partLabels.length);
     const empty = svg('g', { class: 'lab-empty-pocket' });
     empty.append(svg('ellipse', { cx: x, cy: y, rx: 95, ry: 38 }));

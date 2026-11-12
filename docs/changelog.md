@@ -2,6 +2,20 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-12: the lab template
+- **New doc:** [lab-template.md](lab-template.md), the recipe for adding a sensor, movement, sound or interaction. It covers:
+  - the building blocks and how they connect
+  - a step-by-step checklist with every required field and the FSR example
+  - the safety rules
+  - known gaps
+  - when to update it
+- It's linked from `AGENTS.md`, the docs index and the roadmap.
+- **Cleanups so new sensors need only data:**
+  - The not-yet-drawn zones (Top, Side) are now entries in `zones.js`.
+  - The hardware note under "Show inside" comes from any placed sensor's `insideNote`.
+  - The FSR's open-shoe label uses the zone's label text.
+- **Checked:** `npm run build`.
+
 ## 2026-11-12: lab piece 2b, "Show inside"
 - **Reviewed first** by the same four agents. All said it's a good MVP. Their notes are in [lab-roadmap.md](lab-roadmap.md).
 - **A "Show inside" switch** under the shoe. The lab's shoe is now the story's coming-apart Sketch shoe:
