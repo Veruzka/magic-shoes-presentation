@@ -120,6 +120,7 @@ What we did for chapters 2 and 3, so the next one is quick:
 - `turnBack`: when the door turn unwinds to flat.
 - `texts`: each block's `title`, `body`, and when it fades in (`start`, `end`).
 - `rise`: how far each text rises as it fades in, in px.
+- The texts' typography, in `src/components/fsr-explainer.css`: the title (Mrs Saint Delafield, `--font-signature`) has its `font-size` and `line-height`. The paragraph (Poppins, `--font-note`) has its `font-weight` (300; Poppins loads 300, 400 and 500), `font-size` and `line-height` (1.7). There's also the `gap` between blocks. Phone sizes are at the bottom of the file. To swap the handwritten font everywhere, change `--font-signature` in `base.css` and the font link in `index.html`.
 
 > **Example:** to have the FSR stay bigger, change `scale: 0.8` to `0.9`. To reword the first text, edit its `body`.
 
@@ -238,6 +239,17 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 - `npm run debug:stalls`: measures slow frames in a visible Chrome window. Add `-- --suspects` to switch off one visual at a time.
 
 **Safe to change:** the `SUSPECTS` list in `frame-stalls.mjs` (add new visuals as they're built).
+
+---
+
+## Sounds
+**What:** the sounds the shoe makes. Nothing plays them yet. Rules, naming and the log are in [sound-library.md](sound-library.md).
+**Files:** originals in `sounds/`, web copies in `public/sounds/`, the list in `sounds.json`.
+- **Swap a sound:** change the `file` line of its entry in `sounds.json`.
+- **Add a sound:** just give it to Claude and say its category, shoe action and license. Claude renames it, files it, makes the web copy and logs it.
+- **Make web copies by hand:** `npm run sound:web`.
+
+**Safe to change:** anything in `sounds.json`, as long as each path points to a real file in `public/sounds/`.
 
 ---
 

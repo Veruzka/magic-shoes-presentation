@@ -2,6 +2,21 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-11: chapter 4 texts read like an article
+- **Fonts, matching the shoe's part labels:** handwritten **Mrs Saint Delafield** titles (the part labels' title font) and **Poppins Light** (300) paragraphs. We tried Inter + Source Serif 4, all Poppins, and Homemade Apple first.
+- **Paragraphs:** about 18px with roomy line spacing. They're now dark brown instead of light brown, so they're easier to read.
+- **Spacing:** a wider text column and more space between the two blocks. Phones get smaller sizes.
+- **Words unchanged.** The styles live in `src/components/fsr-explainer.css`. Poppins 300 was added to the font link in `index.html`.
+- **Checked:** screenshots at the end of chapter 4 (laptop, zoomed 2×, phone). On a phone the drawing still pokes into the text column and the Style Lab covers the first title. That's the existing phone layout, not this change.
+
+## 2026-11-11: a home for sounds
+- **Sound folders:** `sounds/` with 6 categories (giant, lightning, cartoon, music, ambient, experiments), each split into one-shots, loops and layers. Empty for now.
+- **Rules and log:** [sound-library.md](sound-library.md) holds the naming rule, the web format and the sound log.
+- **App catalog:** `sounds.json`, the only place the app will read sounds from.
+- **Web copies:** `npm run sound:web` makes small AAC (.m4a) copies in `public/sounds/` with the Mac's built-in converter.
+- **AGENTS.md** has a new Sounds section, so Claude follows the rules every session.
+- **Checked:** the converter on a test tone (then deleted it); `npm run build`.
+
 ## 2026-11-11: chapter 4, the FSR settles and explains itself
 - **New scroll chapter** (1.6 screen-heights) after the callouts. Designed with the Superpowers brainstorming steps; the goal is to test **how the motion feels**.
   1. **Slide + scan:** the line holds still like a scanner. The FSR slides right through it, so it becomes **fully drawn**, and shrinks to 80% to fit the cream side.

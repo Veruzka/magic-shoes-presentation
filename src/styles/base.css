@@ -11,7 +11,7 @@
   --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-script: 'Caveat', 'Segoe Script', cursive; /* handwritten accents */
   --font-title: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif; /* the big title behind the shoe */
-  --font-signature: 'Mrs Saint Delafield', 'Segoe Script', cursive; /* part label titles */
+  --font-signature: 'Mrs Saint Delafield', 'Segoe Script', cursive; /* handwritten titles: part labels + chapter 4 texts */
   --font-note: 'Poppins', 'Inter', system-ui, sans-serif; /* part label descriptions */
   --color-note: #2f2a25; /* part label text and arrows: warm near-black */
   --font-callout: 'Barlow Semi Condensed', 'Inter', system-ui, sans-serif; /* technical callout labels (chapter 3) */

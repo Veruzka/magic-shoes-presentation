@@ -11,6 +11,7 @@ You don't need to open these docs to work with Claude. `AGENTS.md` is loaded aut
 | "This looks wrong" + a screenshot of the spot | Follows [visual-checks.md](visual-checks.md): zooms in at 2×, finds the cause, shows a before/after |
 | "The motion feels off / jumps / is slow" + what happened and what's different on a second try | Follows [debugging-motion.md](debugging-motion.md): wheel-notch walk, frame check, suspects |
 | "Make a new image of X" | Follows the AI image steps in [tools-and-setup.md](tools-and-setup.md): prompt template, keep the original, cut out, measure, log credits |
+| "Add this sound" + the file, its category, shoe action and license | Follows [sound-library.md](sound-library.md): renames, files, makes the web copy, logs it, adds it to `sounds.json` |
 | "Add another sensor / part" | Follows the checklist in [electronics-style-guide.md](electronics-style-guide.md) |
 | "I like this" / "perfect" | Records it in [what-works.md](what-works.md) |
 | "From now on, always…" | Adds it to [my-instructions.md](my-instructions.md) and follows it |
@@ -32,7 +33,7 @@ You don't need to open these docs to work with Claude. `AGENTS.md` is loaded aut
 3. **I describe the plan and wait for your OK.** The plan says which files change, what you'll see, and how I'll check it.
 4. **I build it in small steps,** one visible change at a time. Big motion is split into pieces (e.g. one shoe layer at a time).
 5. **I check it:**
-   - **looks:** [visual-checks.md](visual-checks.md), zoomed at 2× and in a real browser for sharpness
+   - **looks:** you check them yourself in your browser. Screenshots ([visual-checks.md](visual-checks.md)) only when you ask, or when something looks wrong
    - **motion:** `npm run debug:walk` (logic) and `npm run debug:stalls` (smoothness, under about 20ms per frame)
    - **build:** `npm run build`
 6. **I update the docs** it affected (see "Where things go" below).
@@ -52,6 +53,7 @@ You don't need to open these docs to work with Claude. `AGENTS.md` is loaded aut
 | What you liked, what failed, lessons | [what-works.md](what-works.md) |
 | Your lasting instructions | [my-instructions.md](my-instructions.md) |
 | Known issues, ideas and open decisions | [design-improvements.md](design-improvements.md) |
+| Every sound, its license, and the sound rules | [sound-library.md](sound-library.md) |
 | Tools and Mac quirks | [tools-and-setup.md](tools-and-setup.md) |
 | Words we use | [glossary.md](glossary.md) |
 

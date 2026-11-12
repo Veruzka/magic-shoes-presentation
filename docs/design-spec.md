@@ -29,7 +29,7 @@ The visual rules we're using. **Shared** values live in one place, `src/styles/b
 | `--font-body` / `--font-display` | Inter | everything |
 | `--font-script` | Caveat (handwritten) | the handwritten accent word in the old (set-aside) labels |
 | `--font-title` | Bricolage Grotesque, extra bold (800), 88% width, about 14.5vw | the big "Magic Shoes" title |
-| `--font-signature` | Mrs Saint Delafield (signature script) | part label titles (Outsole, Midsole, FSR) |
+| `--font-signature` | Mrs Saint Delafield (signature script) | part label titles (Outsole, Midsole, FSR) and chapter 4's titles |
 | `--font-note` | Poppins, 0.68rem, letter-spaced 0.06em | part label descriptions |
 | `--font-callout` / `--text-callout` | Barlow Semi Condensed 500, uppercase, 0.8rem, letter-spaced 0.04em | callout labels on the sketch (chapter 3) |
 | `--text-xs` | 0.72rem (about 11.5px) | small descriptions |

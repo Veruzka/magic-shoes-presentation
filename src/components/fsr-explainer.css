@@ -1,30 +1,41 @@
-/* Chapter 4: the plain-English texts on the left half, next to the drawn FSR. */
+/* Chapter 4: the plain-English texts on the left half, next to the drawn FSR.
+   Styled like a Medium article, matching the part labels: handwritten titles
+   (Mrs Saint Delafield) and light, airy Poppins paragraphs (both loaded in index.html). */
 .fsr-explainer {
   position: absolute;
   z-index: 6;
   left: max(6vw, 32px);
   top: 50%;
   translate: 0 -50%;
-  width: min(34ch, 38vw);
+  width: min(30rem, 40vw);
   display: flex;
   flex-direction: column;
-  gap: 2.2rem;
+  gap: 3rem;
   pointer-events: none;
   color: var(--color-text);
 }
 
 .fsr-explainer__title {
-  margin: 0 0 0.6rem;
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  margin: 0 0 0.8rem;
+  font-family: var(--font-signature);
+  font-size: clamp(2.4rem, 3.2vw, 3rem); /* this script runs small, like the part labels' 2.1rem */
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--color-text);
 }
 
 .fsr-explainer__body {
   margin: 0;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.55;
-  color: var(--color-muted);
+  font-family: var(--font-note);
+  font-weight: 300; /* light: slightly lighter than regular (400) */
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--color-text);
+}
+
+/* Phones: the column is only ~40% of a narrow screen, so scale the type down. */
+@media (max-width: 600px) {
+  .fsr-explainer { gap: 1.6rem; }
+  .fsr-explainer__title { font-size: 1.7rem; margin-bottom: 0.5rem; }
+  .fsr-explainer__body { font-size: 0.9rem; line-height: 1.6; }
 }
