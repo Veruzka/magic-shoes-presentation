@@ -13,7 +13,7 @@ The MVP uses **one of each**: one sensor, one location, one movement, one sound,
   - piece 3 (the movements list and the Stomp spec card)
   - piece 4 (the sounds list and the deep boom, with a ▶ preview)
 - **Next:** piece **5**, wiring: the Wokwi FSR project, the "slider replaces FSR" note and the safety checklist. Before it: `docs/hardware.md` (hardware-engineer agent). 2c (a sketch-style FSR in the open shoe) is polish for any time.
-- **Not pushed yet:** everything after checkpoint 4 is committed on this Mac only. Push it all together next time.
+- **Pushed to GitHub** on 2026-11-12, with everything up to piece 4 and the story's FSR at the heel.
 - **To add the next sensor, movement, sound or interaction:** follow [lab-template.md](lab-template.md).
 - **How we work on the lab:**
   1. Brainstorm one small piece with the Superpowers brainstorming steps, one question at a time, with a recommendation each time.
