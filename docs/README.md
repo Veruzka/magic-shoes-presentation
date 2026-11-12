@@ -51,6 +51,7 @@ We never publish with the Vercel command-line tool. Pushing to GitHub is the onl
 | [how-we-work.md](how-we-work.md) | **start here to work with Claude:** what to say to start each process, our routine, and which doc each kind of information goes in |
 | [visual-checks.md](visual-checks.md) | check that something looks right: screenshots, 2× zooms, real-browser sharpness, before/after (our playbook) |
 | [tools-and-setup.md](tools-and-setup.md) | find every helper tool (screenshots, image cut-outs, measuring, debugging), the AI image steps, and this Mac's quirks |
+| [lab-roadmap.md](lab-roadmap.md) | see what we decided for the prototyping lab and which piece comes next |
 | [sound-library.md](sound-library.md) | find a sound, check its license, or see how sounds are named and filed |
 | [glossary.md](glossary.md) | look up a word we use: chapter, stage, progress, swap, pocket, drawing pixels… |
 

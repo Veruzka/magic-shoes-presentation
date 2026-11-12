@@ -11,6 +11,7 @@ import { shoes } from './shoes/index.js';
 import { soleMoves } from './shoes/sole-moves.js';
 import { optionSwitcher, switcherPanel } from './components/option-switcher.js';
 import { infoButton } from './components/info-panel.js';
+import { pageSwitch } from './components/page-switch.js';
 
 // Add new sections here, in page order. Each one returns a DOM element.
 const sections = [hero];
@@ -74,3 +75,6 @@ document.body.append(styleLab);
 
 // The "i" button (bottom-right): shows how the app is built, read from docs/.
 document.body.append(infoButton());
+
+// The floating pill (bottom-right, left of "i"): jump to the prototyping lab.
+document.body.append(pageSwitch({ label: 'Start prototyping →', href: '/lab/' }));

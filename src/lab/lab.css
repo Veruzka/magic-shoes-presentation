@@ -1,0 +1,270 @@
+/* The lab page (/lab/). Same palette as the story (src/styles/base.css), but a
+   technical look: everything in the FSR callouts' font (Barlow Semi Condensed),
+   uppercase and spaced out, like labels on a technical drawing. */
+.lab {
+  --lab-red: #b5473b;          /* the one red element: the sensor crosshair */
+  --lab-shoe-filter: none;     /* e.g. sepia(0.35) saturate(0.7) to calm the coloured drawing */
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 40px max(16px, 4vw) 96px;
+  font-family: var(--font-callout);
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+.lab__title {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.08em;
+}
+
+/* Parts list on the left, shoe in the middle (a right column comes with movements and sounds). */
+.lab__workspace {
+  display: grid;
+  grid-template-columns: minmax(200px, 16rem) minmax(0, 1fr);
+  align-items: center;
+  gap: 2rem 3rem;
+  flex: 1;
+}
+
+/* ---- Sensor parts list ---- */
+.lab-list__title {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--color-ink);
+  font-size: var(--text-callout);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+}
+
+.lab-list__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lab-list__item {
+  display: grid;
+  grid-template-columns: 2.2em 1fr auto;
+  grid-template-areas: 'number name soon' 'number meta soon';
+  align-items: baseline;
+  column-gap: 0.4em;
+  width: 100%;
+  padding: 0.6rem 0.5rem;
+  border: 0;
+  border-bottom: 1px dashed rgb(58 51 43 / 0.35);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: inherit;
+  cursor: pointer;
+  transition: background var(--duration-ui) var(--ease-soft);
+}
+
+.lab-list__item:hover:not(:disabled) { background: var(--color-surface); }
+.lab-list__item:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+.lab-list__item:disabled { cursor: default; opacity: 0.4; }
+
+.lab-list__number { grid-area: number; color: var(--color-muted); font-size: var(--text-callout); }
+.lab-list__name { grid-area: name; font-size: 1rem; }
+.lab-list__meta { grid-area: meta; color: var(--color-muted); font-size: 0.72rem; }
+.lab-list__soon { grid-area: soon; font-size: 0.68rem; letter-spacing: 0.12em; }
+
+/* A placed sensor: its number turns red, like its crosshair on the shoe. */
+.lab-list__item[aria-pressed='true'] { background: var(--color-surface); }
+.lab-list__item[aria-pressed='true'] .lab-list__number { color: var(--lab-red); }
+
+/* ---- The shoe and its markers ---- */
+.lab__centre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.lab-shoe {
+  margin: 0 auto;
+  width: min(100%, 820px);
+  padding: 0 180px 110px; /* room for labels left and right, and for the open sole below */
+}
+
+.lab-shoe__stage {
+  position: relative;
+}
+
+.lab-shoe .separating-shoe {
+  width: 100%;
+}
+
+.lab-shoe .separating-shoe__picture,
+.lab-shoe .separating-shoe__original {
+  filter: var(--lab-shoe-filter) drop-shadow(var(--shadow-shoe));
+}
+
+/* The drawn layers (markers and labels), in the drawing's own pixels. */
+.lab-shoe__layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.lab-shoe__layer * { vector-effect: non-scaling-stroke; fill: none; }
+
+.lab-marker__zone-under { stroke: var(--color-bg); stroke-width: 4; }
+.lab-marker__zone { stroke: var(--color-ink); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.lab-marker__cross { stroke: var(--lab-red); stroke-width: 2; transform-box: fill-box; transform-origin: center; }
+
+/* Leader lines keep normal (scaling) strokes so their draw-on effect (pathLength) is
+   reliable: 2 drawing pixels ≈ 1px on screen. */
+.lab-shoe__layer .lab-callout__leader { vector-effect: none; stroke: var(--color-ink); stroke-width: 2; stroke-dasharray: 1; }
+.lab-callout__label {
+  fill: var(--color-ink);
+  font-size: 30px; /* drawing pixels: about 15px on screen at the usual size */
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  dominant-baseline: middle;
+}
+
+/* The FSR in its pocket (part of the coming-apart shoe) only shows when placed. */
+.lab-shoe .separating-shoe__fsr { opacity: 0; transition: opacity 120ms ease-out; }
+.lab-shoe.has-fsr .separating-shoe__fsr { opacity: 1; }
+
+/* Motion, closed shoe (motion-director review, 2026-11-12). Taking a sensor off:
+   everything fades out together in 0.12s. Putting it on (.is-placed): outline 0.15s,
+   then the crosshair grows in, then the leader draws, then the label fades in,
+   about 0.4s in all. Clicks are never blocked: a second click reverses from wherever it is. */
+.lab-marker > * {
+  opacity: 0;
+  transition: opacity 120ms ease-out, transform 120ms ease-out, stroke-dashoffset 120ms ease-out;
+}
+.lab-marker__cross { transform: scale(0.85); }
+.lab-marker .lab-callout__leader { stroke-dashoffset: 1; }
+
+.lab-marker.is-placed > * { opacity: 1; }
+.lab-marker.is-placed .lab-marker__zone-under,
+.lab-marker.is-placed .lab-marker__zone { transition: opacity 150ms ease-out; }
+.lab-marker.is-placed .lab-marker__cross {
+  transform: none;
+  transition: opacity 180ms cubic-bezier(0.2, 0.8, 0.2, 1) 100ms, transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1) 100ms;
+}
+.lab-marker.is-placed .lab-callout__leader {
+  stroke-dashoffset: 0;
+  transition: opacity 0ms linear 220ms, stroke-dashoffset 160ms ease-out 220ms;
+}
+.lab-marker.is-placed .lab-callout__label { transition: opacity 120ms ease-out 380ms; }
+
+/* While the shoe is open (or still closing), the markers are hidden: they fade out
+   in 0.12s as the opening starts, and replay their placing motion once it's closed. */
+.lab-shoe.is-inside .lab-marker.is-placed > * {
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+}
+
+/* Motion, open shoe: once fully open, each label's leader draws, then its label fades
+   in, one after another (--order). They go at once when closing starts. */
+.lab-callout { opacity: 0; transition: opacity 120ms ease-out; }
+.lab-callout .lab-callout__leader { stroke-dashoffset: 1; transition: stroke-dashoffset 120ms ease-out; }
+.lab-callout .lab-callout__label { opacity: 0; transition: opacity 120ms ease-out; }
+
+.lab-shoe.show-parts .lab-callout {
+  opacity: 1;
+  transition: opacity 0ms linear calc(var(--order, 0) * 220ms);
+}
+.lab-shoe.show-parts .lab-callout .lab-callout__leader {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 160ms ease-out calc(var(--order, 0) * 220ms);
+}
+.lab-shoe.show-parts .lab-callout .lab-callout__label {
+  opacity: 1;
+  transition: opacity 120ms ease-out calc(var(--order, 0) * 220ms + 160ms);
+}
+
+/* With the FSR placed: its label. Without: a dashed empty pocket and an invitation. */
+.lab-empty-pocket ellipse { stroke: var(--color-ink); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.lab-empty-pocket { opacity: 0; transition: opacity 120ms ease-out; }
+.lab-shoe.show-parts:not(.has-fsr) .lab-empty-pocket { opacity: 1; }
+.lab-shoe:not(.has-fsr) .lab-callout--fsr,
+.lab-shoe.has-fsr .lab-callout--empty { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-shoe *,
+  .lab-shoe.show-parts * { transition: none !important; }
+}
+
+/* ---- "Show inside" switch ---- */
+.lab-inside {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  max-width: 34rem;
+  text-align: center;
+}
+
+.lab-inside__switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 0.4rem 0.6rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--text-callout);
+  letter-spacing: 0.14em;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.lab-inside__switch:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+.lab-inside__track {
+  position: relative;
+  width: 34px;
+  height: 18px;
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius-pill);
+  transition: background var(--duration-ui) var(--ease-soft);
+}
+
+.lab-inside__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  transition: transform var(--duration-ui) var(--ease-soft), background var(--duration-ui) var(--ease-soft);
+}
+
+.lab-inside__switch[aria-checked='true'] .lab-inside__track { background: var(--color-ink); }
+.lab-inside__switch[aria-checked='true'] .lab-inside__thumb { transform: translateX(16px); background: var(--color-bg); }
+
+.lab-inside__note {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  color: var(--color-muted);
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+}
+.lab-inside__note.is-shown { opacity: 1; }
+
+/* Phones: the list above the shoe. */
+@media (max-width: 760px) {
+  .lab__workspace { grid-template-columns: 1fr; }
+  .lab-shoe { padding: 0 90px 70px; }
+}

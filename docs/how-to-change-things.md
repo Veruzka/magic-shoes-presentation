@@ -225,6 +225,33 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 
 ---
 
+## Page switch pill (story ↔ lab)
+**What:** the dark pill in the bottom-right corner that jumps between the story and the lab.
+**Files:** `src/components/page-switch.js` and `.css`. The wording is set where it's added: `src/main.js` (story) and `src/lab/main.js` (lab).
+**Safe to change:** the wording, the colors (`background`, `color`), the height and padding, the font (the technical `--font-callout`, uppercase, like the lab).
+
+> **Example:** to make the pill sand-colored, change `background: var(--color-text)` to `var(--color-accent)` and `color` to `var(--color-text)`.
+
+## Lab page
+**What:** the prototyping lab at `/lab/`. See [lab-roadmap.md](lab-roadmap.md) for the plan.
+**Files:** `lab/index.html` (the page and its fonts), `src/lab/main.js` (what's on it), `src/lab/lab.css` (its look), `src/lab/data/` (the sensor and zone lists).
+**Safe to change:**
+- **The look**, in `lab.css`:
+  - `--lab-red` (the crosshair)
+  - `--lab-shoe-filter`, to calm the coloured drawing, for example `sepia(0.35) saturate(0.7)`
+  - the title's size and `letter-spacing`
+  - the marker and label motion timings (in ms, with comments)
+- **A sensor**, in `src/lab/data/sensors.js`: its name, kind, status (`'active'` or `'soon'`) and zone, and its wiring and safety details.
+- **"Show inside"**, at the top of `src/lab/lab-shoe.js`:
+  - `FSR_ALONG` (where the FSR lies, from toe 0 to heel 1, now 0.78)
+  - `OPEN_MOVE` (how far the layers move down; `y: 150`)
+  - `OPEN_SECONDS` and `CLOSE_SECONDS` (0.8 and 0.6)
+- **The open-shoe labels**, in `src/lab/data/layers.js`: each layer's `label` (where the leader line starts, bends and ends, and its text, in drawing pixels).
+- **The hardware note** under the switch: `insideNote` in `sensors.js`.
+- **A zone**, in `src/lab/data/zones.js`: `anchor` (where the crosshair sits), `outline` (the dashed shape) and `label` (where the leader line bends and ends, and its text). They're in the drawing's own pixels (1356 × 846, top-left is 0, 0).
+
+> **Example:** to move the crosshair a little toward the back of the heel, change the heel's `anchor: [1195, 505]` to `[1230, 500]`. To make the gyro clickable, it first needs an `upper-top` zone in `zones.js`, then change its `status` to `'active'`. The lab's technical look comes from the FSR callouts' font (`--font-callout`, Barlow Semi Condensed) in uppercase, set once on `.lab` in `lab.css`.
+
 ## Info button and panel
 **What:** the "i" in the bottom-right corner. It opens a panel that shows [architecture.md](architecture.md) and [design-improvements.md](design-improvements.md).
 **Files:** `src/components/info-panel.js` and `.css`.
@@ -264,6 +291,12 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 | Function | File | What it does | In → Out | Safe to edit? |
 |---|---|---|---|---|
 | `hero()` | `src/sections/hero.js` | Builds the first screen | nothing → the section | Careful |
+| `sensorList()` | `src/lab/sensor-list.js` | The lab's sensor parts list; clicking puts a sensor on the shoe or takes it off | nothing → the list | Careful |
+| `labShoe()` | `src/lab/lab-shoe.js` | The lab's shoe: the story's coming-apart shoe with sensor markers (closed) and technical labels (open) | nothing → the shoe | Careful |
+| `labState` | `src/lab/lab-state.js` | Your picks: `toggleSensor(id)`, `isPlaced(id)`, `setOpen(true/false)`, `isOpen()`, `onChange(fn)` | – | Ask me |
+| `insideSwitch()` | `src/lab/inside-switch.js` | The "Show inside" switch and the hardware note under the shoe | nothing → the switch | Safe |
+| `pieceFor(layerId)` | `src/lab/data/layers.js` | Which drawing piece shows a layer (the insole → the midsole it rests on) | a layer name → a piece name | Careful |
+| `pageSwitch({ label, href })` | `src/components/page-switch.js` | The floating pill that links between the story and the lab | wording + address → the pill | Safe |
 | `showBackground(section, background)` | `src/sections/hero.js` | Swaps the background and the text colors | hero + a background → nothing | Careful |
 | `showShoe(section, shoe)` | `src/sections/hero.js` | Swaps the shoe; turns pinning on for shoes that come apart | hero + a shoe → nothing | Careful |
 | `setShoeOpening(section, progress)` | `src/sections/hero.js` | Tells the shoe how far apart to be | hero + a number 0–1 → nothing | Careful |

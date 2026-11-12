@@ -2,6 +2,32 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-12: lab piece 2b, "Show inside"
+- **Reviewed first** by the same four agents. All said it's a good MVP. Their notes are in [lab-roadmap.md](lab-roadmap.md).
+- **A "Show inside" switch** under the shoe. The lab's shoe is now the story's coming-apart Sketch shoe:
+  - Opening takes 0.8 s: the sole and midsole move straight down, and the FSR render sits in its pocket at the heel.
+  - Closing takes 0.6 s. A click midway reverses it.
+- **When open:**
+  - The red marker fades out.
+  - Technical labels draw in one after another: OUTSOLE, MIDSOLE and FSR · HEEL, or "EMPTY · PLACE A SENSOR" when no FSR is placed.
+  - The hardware note appears under the switch.
+- **Fixes from the hardware review:** the FSR is now listed as the round FSR 402 (to match the picture), and the ESP32 pin is GPIO34.
+- **New data:** `src/lab/data/layers.js` (the shoe's layers, for a future 3D shoe).
+- **Checked:** `npm run build`. No screenshots, per your rule. `debug:stalls` only scrolls the story, which didn't change, so it wasn't run.
+
+## 2026-11-12: lab piece 2a, the FSR on the shoe
+- **Reviewed first** by the illustrator, motion-director, 3d-artist and hardware-engineer agents. All four said it's a good MVP. Their notes are in [lab-roadmap.md](lab-roadmap.md).
+- **The lab now shows** the three-quarter Sketch shoe and a sensor parts list: 01 FSR, with 02 Gyro and 03 Capacitive "soon". Clicking FSR draws its marker at the heel: the dashed zone outline, a red crosshair, a leader line and "FSR · HEEL". Clicking again takes it off.
+- **The start of the template:** `src/lab/data/sensors.js` (with wiring, voltage and safety details per board) and `src/lab/data/zones.js` (zones named after body parts, with where each is drawn kept separate, so 3D can come later).
+- **Checked:** `npm run build`. No screenshots taken, per your rule.
+
+## 2026-11-12: the prototyping lab, piece 1 (the page and the switch)
+- **New lab page** at `/lab/`: the title "Magic Shoes Lab" and a "Coming next: sensors" placeholder. It looks **technical**: the FSR callouts' font (Barlow Semi Condensed), in uppercase and spaced out, in the story's colors.
+- **Floating pill** in the bottom-right corner, left of the "i": "Start prototyping →" on the story, "← Back to the story" in the lab. Both use the technical font, uppercase.
+- **Two pages in one build:** `vite.config.js` includes both, so Vercel publishes `/lab/` too.
+- **Lab plan saved** in [lab-roadmap.md](lab-roadmap.md), from a Superpowers brainstorm (including the sound designer's boom recipe).
+- **Checked:** `npm run build` makes both pages.
+
 ## 2026-11-11: chapter 4 texts read like an article
 - **Fonts, matching the shoe's part labels:** handwritten **Mrs Saint Delafield** titles (the part labels' title font) and **Poppins Light** (300) paragraphs. We tried Inter + Source Serif 4, all Poppins, and Homemade Apple first.
 - **Paragraphs:** about 18px with roomy line spacing. They're now dark brown instead of light brown, so they're easier to read.

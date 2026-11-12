@@ -15,6 +15,10 @@ flowchart TD
   helpers["Helpers<br/>scroll depth,<br/>scroll progress,<br/>remember picks"]
   styles["Shared look<br/>base.css"]
   tools["Prototype tools<br/>Style lab card, i panel"]
+  lab["Lab page /lab/<br/>lab/index.html + src/lab/main.js"]
+  labdata["Lab data<br/>sensors, zones, layers"]
+  labparts["Lab parts<br/>sensor list, shoe + markers,<br/>Show inside switch, your picks"]
+  pill["Page switch pill<br/>story ↔ lab"]
   docs["docs/ folder"]
   github["GitHub"]
   vercel["Vercel"]
@@ -24,6 +28,12 @@ flowchart TD
   sounds["Sounds<br/>originals → web copies<br/>+ sounds.json (not playing yet)"]
 
   visitor --> page --> hero
+  visitor --> lab
+  page --> pill
+  lab --> pill
+  lab --> labparts --> labdata
+  labparts --> shoe
+  styles --> lab
   hero --> bg
   hero --> shoe
   shoe --> flight
@@ -46,6 +56,19 @@ flowchart TD
 
 ### Page shell
 `index.html` is the empty page. `src/main.js` fills it: it adds the hero section, starts the scroll effects, and adds the prototype tools.
+
+### Lab page (`/lab/`)
+The prototyping lab, a second page next to the story. `lab/index.html` is its empty page and `src/lab/main.js` fills it. It's being built one small piece at a time; the plan is in [lab-roadmap.md](lab-roadmap.md). Right now it has:
+- **The sensor parts list** (`src/lab/sensor-list.js`), on the left: 01 FSR, with 02 Gyro and 03 Capacitive greyed out as "soon".
+- **The shoe** (`src/lab/lab-shoe.js`), in the middle. It's the story's coming-apart Sketch shoe (`separating-shoe.js`) with lab-only settings: the FSR lies at the heel, the shoe opens straight down, and there are no handwritten labels. Drawn layers sit on top:
+  - **Closed:** picking a sensor draws its marker (a dashed outline of its zone, a red crosshair, and a leader line to a label).
+  - **Open:** technical labels ride along with each layer.
+- **The "Show inside" switch** (`src/lab/inside-switch.js`), under the shoe. It opens and closes the shoe, and shows the hardware note when the FSR is placed.
+- **Your picks** (`src/lab/lab-state.js`): remembers which sensors are on the shoe and whether the shoe is open, and tells the other parts to redraw. It only stores the choice; each view decides how to animate it, so a 3D shoe can follow the same switch later.
+- **The data** (`src/lab/data/`): `sensors.js` (the sensor library, with wiring and safety details) and `zones.js` (where sensors can go, and where each zone is drawn), and `layers.js` (the shoe's layers, bottom to top, and which drawing piece shows each one). Adding a sensor or a zone means adding an entry here. It uses the same shared look (`base.css`) and the same "i" button as the story. `vite.config.js` tells the build to include both pages.
+
+### Page switch pill
+The floating dark pill in the bottom-right corner, just left of the "i": **"Start prototyping →"** on the story and **"← Back to the story"** in the lab. One reusable component, `src/components/page-switch.js`, so both look identical.
 
 ### Hero section
 The first screen you see (`src/sections/hero.js`). It holds a **background**, the big **"Magic Shoes" title** (`src/components/hero-title.js`) and a **shoe** floating in front of it. When the shoe can come apart, the hero is taller than the screen. Its contents stay pinned while you scroll through it, and that scrolling drives the shoe's motion.
