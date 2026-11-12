@@ -20,7 +20,7 @@ The lab is built so a new interaction is **mostly new entries in lists**, not ne
 | **Sensor** | A part that measures something (pressure, motion, touch) | `src/lab/data/sensors.js` | ✅ |
 | **Zone** | A spot on the shoe where sensors of a certain kind can go | `src/lab/data/zones.js` | ✅ |
 | **Layer** | A layer of the shoe (outsole, midsole, insole, upper) that a zone sits in | `src/lab/data/layers.js` | ✅ |
-| **Movement** | Something the wearer does (stomp, tiptoe, twist) and how to recognise it from the readings | `src/lab/data/movements.js` | 🔜 piece 3 |
+| **Movement** | Something the wearer does (stomp, tiptoe, twist), where on the shoe it happens, and how to recognise it from the readings | `src/lab/data/movements.js` | ✅ |
 | **Sound** | What plays, and how the movement's strength shapes it | `src/lab/data/sounds.js` (+ `sounds.json` for sound files) | 🔜 piece 4 |
 | **Interaction** | One sensor + zone + movement + sound, joined together | `src/lab/data/interactions.js` | 🔜 piece 6 |
 
@@ -30,6 +30,7 @@ sensor.kind  ──must match──  zone.fits
 sensor.zone  ──points to──   zone.id
 zone.layer   ──points to──   layer.id
 movement.kinds ─must include─ sensor.kind
+movement.zones ─must include─ sensor.zone
 interaction = { sensor, movement, sound }   (all ids)
 ```
 
@@ -91,11 +92,29 @@ If the sensor's zone already exists with `views.sketch34`, skip this. Otherwise 
 - **FSR-only for now:** the picture of the part inside the open shoe, its label, and the "empty pocket" invitation. They come from the story's coming-apart shoe, which has the FSR built into the midsole tray (see `makeFsrInside` in `src/lab/lab-shoe.js`).
 - **The first time a non-FSR sensor is added:** decide what its "inside" looks like. A gyro sits on top and may need no inside view at all. Then make `makeFsrInside` work from the sensor and zone data, and tick this step ✅ here.
 
-### Step 4: the movement (`src/lab/data/movements.js`) 🔜 piece 3
-Planned fields. Confirm them when piece 3 is built:
-- `id`, `name`, `status`, `description` (one plain sentence, e.g. "Bring your heel down fast and hard").
-- `kinds`: which sensor kinds can detect it (stomp → `['pressure']`).
-- `rule`: the detection settings, as numbers. Stomp example (from the sound designer): starts when strength rises above `0.15`, can't fire again until it drops below `0.08`, and the strength is the peak in the first `30` ms.
+### Step 4: the movement (`src/lab/data/movements.js`) ✅
+Copy the Stomp entry and change every field:
+
+| Field | What to write | Stomp example |
+|---|---|---|
+| `id`, `name`, `status` | Short id, display name, `'active'` or `'soon'` | `'stomp'`, `'Stomp'`, `'active'` |
+| `description` | One plain sentence for the spec card | "Bring your heel down fast and hard." |
+| `kinds` | Which sensor kinds can detect it | `['pressure']` |
+| `zones` | Where on the shoe it happens (zone ids). It's pickable only when a placed sensor matches a kind **and** a zone. | `['heel']` |
+| `rule` | How to recognise it, as numbers (starting values, tuned per wearer later) | start `0.15`, rearm `0.08`, peakMs `30`, maxRiseMs `60`, cooldownMs `200` |
+| `gives` | What it hands the sound each time | `['strength', 'sharpness']` |
+| `realShoe` | Reading settings for the real shoe | sampleRateHz `200`, smoothing "none or light" |
+| `chart` | The illustrative curve on the spec card (not real data) | contact `0.15` s, riseMs `10`, top `0.9`, standing `0.5`, lift `0.72` s |
+
+✅ **You then get, with no new code:**
+- the movement's row in the MOVEMENTS list
+- the matching check: it's greyed out with "NEEDS A PRESSURE SENSOR AT THE HEEL" until a matching sensor is placed
+- the remembered pick (it comes back with its sensor)
+
+⚠️ **Known gaps:**
+- The spec card's chart draws only the **stomp** shape (`stompAt` in `src/lab/movement-chart.js`). A held movement (tiptoe) or a turning one (twist) needs its own curve function.
+- A new sensor kind needs a line in `kindNeeds` in `movements.js` (e.g. `motion: 'a gyro'`).
+- **Tiptoe** (sound-designer notes, already in `movements.js`) is a held press: it sends strength continuously while held, plus `heldMs`. That's a different kind of rule from a one-off hit.
 
 ### Step 5: the sound (`src/lab/data/sounds.js`) 🔜 piece 4
 Planned fields. Confirm them when piece 4 is built:
@@ -133,6 +152,7 @@ Planned fields. Confirm them when piece 4 is built:
 | The open-shoe "inside" picture, label and empty pocket are FSR-only | `makeFsrInside` in `src/lab/lab-shoe.js` | When the second sensor becomes active |
 | Only one shoe picture (`sketch34`); no 3D yet | `views` in `zones.js` and `layers.js` | When the 3D shoe is built (add `views.model3d`) |
 | The FSR picture is the round 402; the square 406 would be more forgiving | `sketch-sensor.js` render and `sensors.js` `model` | When the 406 is chosen |
+| The spec card chart only knows the stomp curve | `stompAt` in `src/lab/movement-chart.js` | When the second movement becomes active |
 | Pins aren't checked for clashes between sensors yet | 🔜 the Wiring step (piece 5) | Piece 5 |
 
 ---

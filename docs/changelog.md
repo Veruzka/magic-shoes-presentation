@@ -2,6 +2,25 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-12: lab piece 3, movements
+- **Reviewed first** by the hardware-engineer, sound-designer, illustrator, motion-director and 3d-artist agents. All said it's a good plan. Their notes are in [lab-roadmap.md](lab-roadmap.md).
+- **A MOVEMENTS list** on the right of the lab: 01 Stomp, with 02 Tiptoe and 03 Twist "soon".
+  - Stomp can be picked only when a pressure sensor is at the heel. Otherwise it says "NEEDS A PRESSURE SENSOR AT THE HEEL".
+  - Taking the FSR off greys Stomp out but remembers the pick.
+- **The Stomp spec card** under it:
+  - the description and the rule numbers
+  - an ink-only chart of an illustrative stomp (a fast jump, a flat top near 0.9, settling to a standing level, the foot lifting), with START and RE-ARM lines and the 30 ms peak window
+  - the line draws on in 0.5 s, the first time only
+- **New data:** `src/lab/data/movements.js` (with zones, rule, what it gives the sound, and real-shoe settings), and a `forefoot` zone for tiptoe later.
+- **Layout:**
+  - three columns (sensors, shoe, movements)
+  - movements drop under the shoe on smaller laptops
+  - everything stacks on phones
+  - the room around the shoe now scales with its size
+  - the long "empty pocket" label is on two lines
+- **Template updated:** the movement step is now ✅ with its real fields; known gaps added.
+- **Checked:** `npm run build`. Not seen on screen yet.
+
 ## 2026-11-12: the lab template
 - **New doc:** [lab-template.md](lab-template.md), the recipe for adding a sensor, movement, sound or interaction. It covers:
   - the building blocks and how they connect

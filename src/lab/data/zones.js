@@ -32,6 +32,7 @@ export const zones = [
   },
   // Zones for the 'soon' sensors. They have no `views` yet, so nothing is drawn;
   // add views.sketch34 (anchor, outline, label) when their sensor becomes active.
+  { id: 'forefoot', name: 'Forefoot', fits: ['pressure'], side: 'both', layer: 'insole', views: {} }, // for tiptoe, later
   { id: 'upper-top', name: 'Top', fits: ['motion'], side: 'both', layer: 'upper', views: {} },
   { id: 'outer-midsole', name: 'Side', fits: ['touch'], side: 'outer', layer: 'midsole', views: {} },
 ];

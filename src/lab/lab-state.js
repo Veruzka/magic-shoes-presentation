@@ -1,10 +1,12 @@
-// "Your picks" in the lab: which sensors are on the shoe, and whether the shoe is
-// shown open ("Show inside"). Later also the movement and the sound. Other parts
+// "Your picks" in the lab: which sensors are on the shoe, whether the shoe is shown
+// open ("Show inside"), and the picked movement. Later also the sound. Other parts
 // listen with onChange and redraw. The state only says what's chosen; each view
 // decides how to animate it (so a 3D shoe can follow the same switch later).
 const placed = new Set();
 const listeners = new Set();
 let open = false;
+let movement = null; // the picked movement's id; kept even while its sensor is off
+
 
 const notify = () => listeners.forEach((listener) => listener());
 
@@ -14,6 +16,11 @@ export const labState = {
   toggleSensor(sensorId) {
     if (placed.has(sensorId)) placed.delete(sensorId);
     else placed.add(sensorId);
+    notify();
+  },
+  movement: () => movement,
+  pickMovement(id) {
+    movement = movement === id ? null : id; // picking it again un-picks it
     notify();
   },
   isOpen: () => open,

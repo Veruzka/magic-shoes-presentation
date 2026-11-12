@@ -63,7 +63,13 @@ function callout([x, y], bend, end, text, className) {
     y: end[1],
     'text-anchor': towardRight ? 'start' : 'end',
   });
-  label.textContent = text;
+  // A "\n" in the text stacks the label on several lines, centred on the line's end.
+  const lines = text.split('\n');
+  lines.forEach((line, i) => {
+    const row = svg('tspan', { x: label.getAttribute('x'), dy: i === 0 ? `${-(lines.length - 1) * 0.6}em` : '1.2em' });
+    row.textContent = line;
+    label.append(row);
+  });
   group.append(label);
   return group;
 }
@@ -163,7 +169,7 @@ export function labShoe() {
     placedLabel.style.setProperty('--order', partLabels.length);
     const empty = svg('g', { class: 'lab-empty-pocket' });
     empty.append(svg('ellipse', { cx: x, cy: y, rx: 95, ry: 38 }));
-    const emptyLabel = callout([x, y], [x + 70, y - 70], [WIDTH + 40, y - 70], 'Empty · Place a sensor', 'lab-callout lab-callout--empty');
+    const emptyLabel = callout([x, y], [x + 70, y - 70], [WIDTH + 40, y - 70], 'Empty\nPlace a sensor', 'lab-callout lab-callout--empty');
     emptyLabel.style.setProperty('--order', partLabels.length);
     empty.append(emptyLabel);
     group.append(placedLabel, empty);

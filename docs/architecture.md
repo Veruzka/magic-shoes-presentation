@@ -16,8 +16,8 @@ flowchart TD
   styles["Shared look<br/>base.css"]
   tools["Prototype tools<br/>Style lab card, i panel"]
   lab["Lab page /lab/<br/>lab/index.html + src/lab/main.js"]
-  labdata["Lab data<br/>sensors, zones, layers"]
-  labparts["Lab parts<br/>sensor list, shoe + markers,<br/>Show inside switch, your picks"]
+  labdata["Lab data<br/>sensors, zones, layers,<br/>movements"]
+  labparts["Lab parts<br/>sensor list, shoe + markers,<br/>Show inside switch, movements<br/>+ spec card, your picks"]
   pill["Page switch pill<br/>story ↔ lab"]
   docs["docs/ folder"]
   github["GitHub"]
@@ -63,9 +63,10 @@ The prototyping lab, a second page next to the story. `lab/index.html` is its em
 - **The shoe** (`src/lab/lab-shoe.js`), in the middle. It's the story's coming-apart Sketch shoe (`separating-shoe.js`) with lab-only settings: the FSR lies at the heel, the shoe opens straight down, and there are no handwritten labels. Drawn layers sit on top:
   - **Closed:** picking a sensor draws its marker (a dashed outline of its zone, a red crosshair, and a leader line to a label).
   - **Open:** technical labels ride along with each layer.
+- **The movements list** (`src/lab/movement-list.js`), on the right. A movement can be picked only when a placed sensor matches its kind and zone; otherwise it's greyed out with what it needs. The picked movement's **spec card** sits under it: description, rule, and an illustrative chart of what it looks like in the readings (`src/lab/movement-chart.js`).
 - **The "Show inside" switch** (`src/lab/inside-switch.js`), under the shoe. It opens and closes the shoe, and shows the hardware note when the FSR is placed.
-- **Your picks** (`src/lab/lab-state.js`): remembers which sensors are on the shoe and whether the shoe is open, and tells the other parts to redraw. It only stores the choice; each view decides how to animate it, so a 3D shoe can follow the same switch later.
-- **The data** (`src/lab/data/`): `sensors.js` (the sensor library, with wiring and safety details) and `zones.js` (where sensors can go, and where each zone is drawn), and `layers.js` (the shoe's layers, bottom to top, and which drawing piece shows each one). Adding a sensor or a zone means adding an entry here. It uses the same shared look (`base.css`) and the same "i" button as the story. `vite.config.js` tells the build to include both pages.
+- **Your picks** (`src/lab/lab-state.js`): remembers which sensors are on the shoe, whether the shoe is open, and the picked movement, and tells the other parts to redraw. It only stores the choice; each view decides how to animate it, so a 3D shoe can follow the same switch later.
+- **The data** (`src/lab/data/`): `sensors.js` (the sensor library, with wiring and safety details) and `zones.js` (where sensors can go, and where each zone is drawn), `layers.js` (the shoe's layers, bottom to top, and which drawing piece shows each one), and `movements.js` (what the wearer can do, where, and how to recognise it). Adding a sensor or a zone means adding an entry here. It uses the same shared look (`base.css`) and the same "i" button as the story. `vite.config.js` tells the build to include both pages.
 
 ### Page switch pill
 The floating dark pill in the bottom-right corner, just left of the "i": **"Start prototyping →"** on the story and **"← Back to the story"** in the lab. One reusable component, `src/components/page-switch.js`, so both look identical.

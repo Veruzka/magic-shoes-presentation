@@ -24,10 +24,10 @@
   letter-spacing: 0.08em;
 }
 
-/* Parts list on the left, shoe in the middle (a right column comes with movements and sounds). */
+/* Sensors on the left, the shoe in the middle, movements (later also sounds) on the right. */
 .lab__workspace {
   display: grid;
-  grid-template-columns: minmax(200px, 16rem) minmax(0, 1fr);
+  grid-template-columns: minmax(190px, 15rem) minmax(0, 1fr) minmax(220px, 18rem);
   align-items: center;
   gap: 2rem 3rem;
   flex: 1;
@@ -92,8 +92,10 @@
 
 .lab-shoe {
   margin: 0 auto;
-  width: min(100%, 820px);
-  padding: 0 180px 110px; /* room for labels left and right, and for the open sole below */
+  width: min(100%, 900px);
+  /* Room around the drawing, as a share of the width so it scales with the shoe:
+     labels on the left (OUTSOLE, MIDSOLE) and right (FSR · HEEL), the open sole below. */
+  padding: 0 15% 20% 8%;
 }
 
 .lab-shoe__stage {
@@ -263,8 +265,56 @@
 }
 .lab-inside__note.is-shown { opacity: 1; }
 
-/* Phones: the list above the shoe. */
+/* ---- Movements: unavailable rows and the spec card ---- */
+.lab-list__item.is-unavailable { cursor: not-allowed; opacity: 0.4; transition: opacity 150ms ease-out; }
+.lab-list__item.is-unavailable:hover { background: transparent; }
+
+.lab-card {
+  display: none;
+  margin-top: 1.2rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--color-ink);
+}
+.lab-card.is-shown { display: block; }
+
+.lab-card__title { margin: 0; font-size: 1rem; font-weight: 500; letter-spacing: 0.1em; }
+.lab-card__text,
+.lab-card__rule { margin: 0.3rem 0 0; font-size: 0.72rem; letter-spacing: 0.08em; line-height: 1.5; color: var(--color-muted); }
+.lab-card__rule { margin-top: 0.6rem; }
+
+/* The chart: ink only, hairlines, small Barlow labels (illustrator review). */
+.lab-chart { display: block; width: 100%; height: auto; margin-top: 0.6rem; overflow: visible; }
+.lab-chart * { fill: none; }
+.lab-chart__axis { stroke: var(--color-ink); stroke-width: 0.8; }
+.lab-chart__tick { fill: var(--color-muted); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; dominant-baseline: middle; }
+.lab-chart__window { fill: var(--color-surface); }
+.lab-chart__threshold { stroke: rgb(58 51 43 / 0.5); stroke-width: 0.8; stroke-dasharray: 3 3; }
+.lab-chart__line { stroke: var(--color-ink); stroke-width: 1.2; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+.lab-chart__peak { fill: var(--color-ink); }
+
+/* Motion (motion-director review). First pick: the frame is there at once, the line
+   draws left to right in 0.5s at a steady speed, then the text fades in. Coming back
+   with its sensor: no replay; the whole card fades in after the sensor's marker. */
+.lab-card.is-drawing .lab-chart__line { animation: lab-draw 500ms linear both; }
+.lab-card.is-drawing .lab-chart__peak,
+.lab-card.is-drawing .lab-card__text,
+.lab-card.is-drawing .lab-card__rule { animation: lab-fade 120ms ease-out 500ms both; }
+.lab-card.is-returning { animation: lab-fade 120ms ease-out var(--wait, 0ms) both; }
+
+@keyframes lab-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes lab-fade { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-card * , .lab-card { animation: none !important; }
+}
+
+/* Smaller laptops: the movements drop under the sensors and shoe. */
+@media (max-width: 1100px) {
+  .lab__workspace { grid-template-columns: minmax(190px, 15rem) minmax(0, 1fr); }
+  .lab-list--movements { grid-column: 1 / -1; max-width: 24rem; }
+}
+
+/* Phones: sensors, then the shoe, then movements, stacked. */
 @media (max-width: 760px) {
   .lab__workspace { grid-template-columns: 1fr; }
-  .lab-shoe { padding: 0 90px 70px; }
 }

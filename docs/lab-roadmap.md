@@ -5,15 +5,22 @@ The lab is a second page (`/lab/`) where you pick a **sensor**, a **movement** a
 The MVP uses **one of each**: one sensor, one location, one movement, one sound, one wiring and one test. It's a **template**: once it works, other sensors, movements and sounds are added as new entries in lists, not as new code.
 
 ## Where we left off (update this at the end of every lab session)
-- **Done:** piece 1 (the lab page and pill buttons), 2a (the parts list and the FSR marker at the heel) and 2b (the "Show inside" switch). Saved as `checkpoint-04-lab-show-inside`.
-- **Next:** piece **2c**, a sketch-style FSR in the open shoe's pocket. Then piece 3, the movement list and stomp.
+- **Done:**
+  - piece 1 (the lab page and pill buttons)
+  - 2a (the parts list and the FSR marker at the heel)
+  - 2b (the "Show inside" switch), saved as `checkpoint-04-lab-show-inside`
+  - the lab template
+  - piece 3 (the movements list and the Stomp spec card)
+- **Next:** piece **4**, the sound list and the boom (Tone.js). 2c (a sketch-style FSR in the open shoe) is polish for any time.
+- **Not pushed yet:** everything after checkpoint 4 is committed on this Mac only. Push it all together next time.
 - **To add the next sensor, movement, sound or interaction:** follow [lab-template.md](lab-template.md).
 - **How we work on the lab:**
   1. Brainstorm one small piece with the Superpowers brainstorming steps, one question at a time, with a recommendation each time.
   2. Have the illustrator, motion-director, 3d-artist and hardware-engineer agents review the plan.
   3. Build it, update the docs (including [lab-template.md](lab-template.md)), and tick it off here.
 - **Don't** take screenshots after each change; you check the result yourself.
-- **Not checked on screen yet:** 2b's FSR spot at the heel (`FSR_ALONG`) and the positions of the open-shoe labels.
+- **Checked on screen by you:** 2b's FSR spot at the heel is fine.
+- **Not checked on screen yet:** piece 3's layout (three columns) and the Stomp chart.
 
 ## Decided (brainstorm, 2026-11-11 and 2026-11-12)
 
@@ -33,7 +40,7 @@ The MVP uses **one of each**: one sensor, one location, one movement, one sound,
    - 2a. ✅ The Sketch, the parts list, and the FSR marker at the heel (2026-11-12).
    - 2b. ✅ The "Show inside" switch (2026-11-12). The story's coming-apart shoe opens straight down, with the FSR render in its pocket at the heel. Technical labels appear (OUTSOLE, MIDSOLE, FSR · HEEL), or "EMPTY · PLACE A SENSOR" when no FSR is placed, along with the hardware note.
    - 2c. A sketch-style FSR in the pocket instead of the glossy render: the chapter 3 sketch, squashed and tilted to lie in the pocket, with a red ring (the illustrator's suggestion).
-3. **The movement list + stomp.**
+3. ✅ **The movement list + stomp** (2026-11-12): a MOVEMENTS list that greys out movements without a matching sensor, and the Stomp spec card with an illustrative chart.
 4. **The sound list + the boom** (Tone.js), with a play button.
 5. **Wiring:** the Wokwi FSR project, the note and the safety checklist.
 6. **Test:** press on the heel, hear the boom.
@@ -95,6 +102,24 @@ All four said it's a good MVP.
   - Technical labels when the shoe is open, and a labelled empty pocket.
   - The glossy render clashes, so a sketch FSR is next (2c).
   - It suggested disabling the switch during the motion. We kept the reverse-on-click instead, to match the "never block clicks" rule.
+
+## Agent reviews of piece 3 (2026-11-12)
+All five said it's a good plan.
+- **Hardware engineer:**
+  - A real FSR stomp jumps up in 5–15 ms, flattens near 0.9, then **settles to a standing level** while the foot stays planted, and drops to 0 only when it lifts. The chart is drawn that way and labelled "illustrative".
+  - Add a fast-rise check and a cooldown.
+  - Real-shoe settings: at least 200 readings a second, light or no smoothing, and the thresholds tuned per wearer.
+- **Sound designer:**
+  - The same two checks (it suggested 80 ms and 150 ms; we used **60 ms** and **200 ms** as starting values).
+  - Each stomp hands the sound **strength and sharpness** (how fast it rose).
+  - Tiptoe is a held press with continuous strength (notes in `movements.js`).
+- **3D artist:** store `zones` on each movement (where it happens). That makes the matching check more precise and gives a 3D shoe a hook later. Nothing else is needed for 3D yet.
+- **Illustrator:**
+  - The chart is ink only (no red), with hairline axes, faded dashed START and RE-ARM lines, a sand PEAK · 30 MS band and an ink dot at the peak.
+  - It's a spec card in the right column, under the list.
+- **Motion director:**
+  - The line draws in 0.5 s at a steady speed, then the text fades in. No looping.
+  - When the sensor comes back, the card fades in after the marker, with no replay. Never two motions at once.
 
 ## The boom recipe (from the sound-designer agent, 2026-11-12)
 - **Body:** Tone.js `MembraneSynth` at about G1 (49 Hz), `pitchDecay` 0.08, `octaves` 4, decay 1.0 s.
