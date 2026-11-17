@@ -22,7 +22,7 @@ flowchart TD
   pill["Page switch pill<br/>story ↔ lab"]
   docs["docs/ folder"]
   github["GitHub"]
-  vercel["Vercel"]
+  vercel["GitHub Pages"]
   fonts["Google Fonts"]
   figma["Figma AI<br/>(made the images,<br/>once)"]
   devtools["Builder tools (tools/)<br/>screenshots, checks,<br/>image cut-outs, sound copies"]
@@ -136,7 +136,7 @@ The untouched originals live in `sounds/`, sorted by category and role. Their sm
 
 ### Outside services
 - **GitHub** stores the code.
-- **Vercel** publishes the site whenever new code is pushed to GitHub. The live address is https://magic-shoes.vercel.app/.
+- **GitHub Pages** publishes this team copy whenever new code is pushed to `main` (`.github/workflows/pages.yml`). The live address is https://veruzka.github.io/magic-shoes-presentation/. (The original repo publishes on Vercel instead.)
 - **Google Fonts** provides the Inter and Caveat typefaces.
 
 ## AI features

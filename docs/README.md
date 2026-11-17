@@ -16,7 +16,7 @@ It's a **prototype**: we're trying out ideas, not shipping a finished product. S
 ## Run it on your computer
 You need [Node.js](https://nodejs.org) installed (the engine that runs the local preview).
 
-1. Open a terminal in the `magic-shoes` folder.
+1. Open a terminal in the `magic-shoes-presentation` folder.
 2. Run `npm install`. This downloads the building blocks. You only need it once, or after new ones are added.
 3. Run `npm run dev`. This starts a local preview.
 4. Open the link it prints, usually **http://localhost:5173**.
@@ -25,15 +25,17 @@ Changes you save in the code show up in the browser right away.
 
 **Try it:** use the pills in the top-right corner to switch the **Background**, the **Shoe** and how the **Sole** moves. Click the small **"i"** in the bottom-right corner for a map of how the app is built.
 
-## How it gets published
+## How it gets published (this team copy)
+This repo is the **team presentation copy** of Magic Shoes, made on 2026-11-17 with the full history. The original (github.com/Veruzka/magic-shoes, private, published on Vercel) carries on separately. Changes here don't affect it.
+
 1. Changes are saved as a "commit" (a snapshot) in git.
-2. The commit is pushed to GitHub.
-3. **Vercel** notices the push and publishes the new version automatically.
+2. The commit is pushed to the `main` branch on GitHub.
+3. **GitHub Pages** builds and publishes it automatically, in a minute or two. The steps are in `.github/workflows/pages.yml`; you can watch them in the repo's **Actions** tab.
 
-We never publish with the Vercel command-line tool. Pushing to GitHub is the only way.
+**Live site:** https://veruzka.github.io/magic-shoes-presentation/ (the lab is at `…/lab/`)
+**Code:** github.com/Veruzka/magic-shoes-presentation (**public**: anyone can see the code, so never commit keys or passwords).
 
-**Live site:** https://magic-shoes.vercel.app/
-**Code:** github.com/Veruzka/magic-shoes (private). Vercel is connected, so every push to `main` publishes a new version within a minute or two.
+Pages serves the site from a sub-folder (`/magic-shoes-presentation/`), so links inside the app use `import.meta.env.BASE_URL` instead of starting with `/`. Locally it still runs at http://localhost:5173.
 
 ## The other docs
 | Doc | Read it when you want to… |

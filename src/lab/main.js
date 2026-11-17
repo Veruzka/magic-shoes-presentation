@@ -27,5 +27,5 @@ right.append(movementList(), soundList());
 workspace.append(sensorList(), centre, right);
 lab.append(workspace);
 
-document.body.append(pageSwitch({ label: '← Back to the story', href: '/' }));
+document.body.append(pageSwitch({ label: '← Back to the story', href: import.meta.env.BASE_URL }));
 document.body.append(infoButton());

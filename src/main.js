@@ -77,4 +77,4 @@ document.body.append(styleLab);
 document.body.append(infoButton());
 
 // The floating pill (bottom-right, left of "i"): jump to the prototyping lab.
-document.body.append(pageSwitch({ label: 'Start prototyping →', href: '/lab/' }));
+document.body.append(pageSwitch({ label: 'Start prototyping →', href: `${import.meta.env.BASE_URL}lab/` }));

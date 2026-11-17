@@ -5,7 +5,7 @@ Instructions and decisions meant to last. Newest at the bottom. When an instruct
 | Date | What you asked | Why (if said) | How it's done |
 |---|---|---|---|
 | 2026-11-09 | **Keep the app modular so I can change parts like the background and shoe styling independently.** Files should be readable from the folder structure. | So we can make adjustments together. | One folder per kind of part (`backgrounds/`, `shoes/`, `components/`, `data/`, `core/`), plain data lists for things you tweak, and shared style variables in `base.css`. |
-| 2026-11-09 | Publish by committing and pushing to GitHub. **Never deploy with the Vercel CLI.** | – | Vercel publishes automatically from GitHub. Nothing is pushed until you say so. |
+| 2026-11-09 | Publish by committing and pushing to GitHub. **Never deploy with the Vercel CLI.** | – | In this team copy, **GitHub Pages** publishes automatically from `main` (see [README.md](README.md)). Nothing is pushed until you say so. |
 | 2026-11-09 | Treat this as a prototype: plan first and wait for approval; ask what you're trying to learn; offer 2–3 directions for real design choices; keep changes small; say what to look at; no automated tests unless asked; plain language; speed and variety over polish. | From `AGENTS.md`. | Followed every session. |
 | 2026-11-09 | Keep **32px of clear space** around the shoe so it feels central and uncrowded. | The shoe should be the focus. | `--shoe-clear-space: 32px` in `hero.css`; Meadow flowers fade out near the middle. While coming apart, parts may go beyond it (agreed). |
 | 2026-11-09 | Backgrounds must be **interchangeable**, so you can compare them as the site grows. | To decide which you like better. | `src/backgrounds/` + the Background switcher. |

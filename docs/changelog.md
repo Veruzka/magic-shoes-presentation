@@ -2,6 +2,12 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-17: the team presentation copy
+- **This repo is a copy** of Magic Shoes for the team to turn into a presentation: github.com/Veruzka/magic-shoes-presentation (public), with the full history and checkpoint tags.
+- **Published with GitHub Pages** on every push to `main`: https://veruzka.github.io/magic-shoes-presentation/. The steps are in `.github/workflows/pages.yml`.
+- **For the sub-folder:** `vite.config.js` reads `BASE_PATH` (set by the workflow), and the story ↔ lab pill links use `import.meta.env.BASE_URL`.
+- Checked for secrets before going public: none in the files or the history.
+
 ## 2026-11-12: the story's FSR moves to the heel
 - **The FSR now lies at the heel in the story too**, in the same spot as in the lab: `along: 0.78` in `src/shoes/sketch-sensor.js`, shared by both. The lab's separate copy of that setting is gone.
 - Chapter 1's pocket, chapter 2's lift-out and the FSR label's arrow all follow it automatically.
