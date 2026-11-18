@@ -1,12 +1,12 @@
 // The movement vocabulary shown in the concept section, one scene per movement.
 // To add a movement: add an entry here. Nothing else needs to change.
 //
-//   group   basic | playful | whimsy (shown as the small label above the name)
+//   group   basic | playful | whimsy (for us; not shown on the page)
 //   name    the headline
 //   line    one short sentence
-//   sound   what it "makes" (shown under the ripples)
-//   motion  how the shoe moves; one of the motions in src/components/movement-scene.js
-//           (step, run, spin, pose, kick, sky)
+//   sound   what it "makes" (for us and the future sound library; not shown)
+//   motion  how the shoe moves; one of the motions in src/core/motions.js
+//           (step, run, spin, pose, kick, sky, heelclick)
 export const movementGroups = {
   basic: 'Basic movement',
   playful: 'Playful',
@@ -21,4 +21,5 @@ export const storyMovements = [
   { id: 'dancers-pose', group: 'whimsy', name: "Dancer's pose", line: 'Hold still on one foot and the world holds its breath.', sound: 'a shimmer, then silence', motion: 'pose' },
   { id: 'side-kick', group: 'whimsy', name: 'Side kick', line: 'Kick out and something erupts.', sound: 'a thunder crack', motion: 'kick' },
   { id: 'feet-to-sky', group: 'whimsy', name: 'Feet to the sky', line: 'Point your feet up and take a picture of the sky.', sound: 'a shutter and a twinkle', motion: 'sky' },
+  { id: 'heel-click', group: 'whimsy', name: 'Heel click', line: 'Click your heels to go back home.', sound: 'a whoosh and a chime', motion: 'heelclick' },
 ];
