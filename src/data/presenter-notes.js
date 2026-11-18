@@ -1,0 +1,44 @@
+// Who speaks and what to say, per part of the talk. Shown only in presenter
+// mode (press P), so the shared link stays clean.
+//   scenes   the data-scene names this part covers
+//   speaker  who presents it
+//   points   two or three short talking points (a draft: rewrite in your words)
+// TODO: the team picks who presents each part.
+export const presenterNotes = [
+  {
+    part: 'Opening',
+    scenes: ['hero'],
+    speaker: 'TODO: speaker',
+    points: ['Twinkle Toes: shoes that turn your movement into sound.', 'Two players, four shoes, stories they make up together.'],
+  },
+  {
+    part: 'The concept',
+    scenes: ['concept', 'move-walk', 'move-run', 'move-spin', 'move-dancers-pose', 'move-side-kick', 'move-feet-to-sky', 'move-heel-click'],
+    speaker: 'TODO: speaker',
+    points: ['Everyday moves first: walk, run.', 'Then whimsy from our bodystorm: dancer\'s pose, side kick, feet to the sky.', 'Heel click ends the session: back home.'],
+  },
+  {
+    part: "What we've built",
+    scenes: ['parts', 'built-inside'],
+    speaker: 'TODO: speaker',
+    points: ['Inside each shoe: an FSR under the heel and a gyro.', 'The FSR feels pressure: a stomp is a quick, hard press.'],
+  },
+  {
+    part: 'The MVP',
+    scenes: ['mvp', 'mvp-media', 'next-build'],
+    speaker: 'TODO: speaker',
+    points: ['Our music lab: two players remixed one song with their feet.', 'It proved the tech works: sensors to Bluetooth to sound.', 'Next build: a full pair each, sound effects instead of song parts.'],
+  },
+  {
+    part: 'The process',
+    scenes: ['process', 'tracked', 'critique', 'grid'],
+    speaker: 'TODO: speaker',
+    points: ['New to you: our bodystorm, 28 gestures outdoors on campus.', 'We tracked each move: video, pose, pictogram.', 'Kimiko pushed us to make it social and make sound the output.'],
+  },
+  {
+    part: "What's next",
+    scenes: ['forward', 'close'],
+    speaker: 'TODO: speaker',
+    points: ['Shoe development: a full pair per player.', 'Sound development: our own sound library.', 'Thank you. Questions?'],
+  },
+];

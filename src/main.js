@@ -15,6 +15,7 @@ import { pageSwitch } from './components/page-switch.js';
 import { startKeyboardNav } from './core/keyboard-nav.js';
 import { shoeStage } from './three/shoe-stage.js';
 import { startShoeDirector } from './three/shoe-director.js';
+import { startPresenterNotes } from './components/presenter-notes.js';
 import { ttHero } from './sections/tt-hero.js';
 import { conceptMovements } from './sections/concept-movements.js';
 import { builtShoeParts, builtParts } from './sections/built-parts.js';
@@ -102,6 +103,9 @@ startKeyboardNav();
 const shoe = shoeStage();
 document.body.append(shoe.element);
 startShoeDirector(shoe);
+
+// Presenter mode: press P for who speaks and the talking points.
+startPresenterNotes();
 
 // The "i" button (bottom-right): shows how the app is built, read from docs/.
 document.body.append(infoButton());
