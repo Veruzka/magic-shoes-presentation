@@ -1,5 +1,7 @@
 # This is a prototype, not production software
 
+> **Taking over the Twinkle Toes presentation (branch `web-presentation-draft`)? Read [HANDOFF.md](HANDOFF.md) first.**
+
 I'm exploring ideas, not building a finished product.
 
 - Before changing any files, describe your plan and wait for my approval.
