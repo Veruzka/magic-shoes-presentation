@@ -2,6 +2,17 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-18 (night): two players, real motion, the story behind them
+- **Two players:** player 1 (cyan) leads, player 2 (Veruzka's sand) copies a beat late and falls into sync; the sound rings grow as they sync (copy and heighten). Each wears a pair: four shoes.
+- **Real bodystorm motion:** the heel click is our tracked video loop (P-20, clip 3, cleaned, smoothed, looped). The side kick (P-09c) and dancer's pose (P-08a) use the tracked peak pose from the high-resolution stills, timed by hand; the video tracking had lost the feet there (the people were cut off at the bottom of the frame). The dancer's raised knee comes from the pictogram (the tracker was unsure). Walk, run, spin and feet to the sky stay hand-animated. Source: `crops_pose.json` and `windows_5fps.json` in the synthesis Drive folder.
+- **Loops while you talk:** scroll picks the movement; the players keep looping it in real time while the scene is on screen.
+- **Smoother:** springy joints (arms trail, knees soften), half-second blends between movements.
+- **The story behind them:** the badge wall is replaced by an abstract vignette for each "Yes, and…" offer, in the sprite's style (21 vignettes).
+- **One offer per move** (your call): walk → thin ice, run → being chased, spin → eye of a tornado, dancer's pose → statue in a museum, side kick → kick a door open, feet to the sky → gravity switched off, heel click → the curtain falls. Set with `pick` in `story-movements.js`; the spare offers and their vignettes stay for later.
+- **Checked:** build; a scripted run through all seven movements (two players, the right offer and vignette each time, four feet, no broken drawing values, no errors); frames 9 ms in the movement scene, every scene clean on the rerun. **Not checked by eye:** how the vignettes and the stand-in shoes look in the real scene.
+- **Shoes on the feet:** a solid stand-in shoe (not the flat card), seen from the side or the front like the figures. The Rhino model (`~/Documents/TUI/shoe/twinkle_toes.3dm`) will be exported to `shoe.glb` when it's ready.
+- **Anti-slop reviewer** brought in from Cassius's other projects: `.claude/agents/anti-slop-reviewer.md` + `docs/anti-slop.md`.
+
 ## 2026-11-18 (later): the movement sprite scene
 - **From Cassius's motion-sprite prompt** (in `cassius-agents/`), using the Apple Watch screen recording as a technique reference only (the recording stays out of git).
 - **One sprite scene replaces the seven movement scenes** (archived): a cyan pictogram figure on Veruzka's warm dark does walk → run → spin → dancer's pose → side kick → feet to the sky → heel click in place. One rig, poses based on our bodystorm pictograms, blends between movements.
