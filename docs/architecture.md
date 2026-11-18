@@ -30,11 +30,13 @@ flowchart TD
   story["Twinkle Toes story<br/>hero → concept → what we've built<br/>→ process → what's next → close"]
   scenes["Pinned scenes<br/>scene.js + keyboard nav"]
   shoe3d["One 3D shoe<br/>Three.js layer, posed by<br/>shoe-path.js + director"]
+  sprite["Sprite scene<br/>cyan figure + pattern wall<br/>(sprite-rig.js)"]
   model["Model<br/>/assets/models/shoe.glb<br/>(stand-in until it arrives)"]
   notes["Presenter mode<br/>press P"]
 
   visitor --> page --> story
   story --> scenes
+  story --> sprite --> shoe3d
   story --> shoe3d --> model
   story --> notes
   story --> hero
@@ -71,16 +73,16 @@ The home page is the team's presentation, in this order: **hero → concept → 
 - **Keyboard:** `src/core/keyboard-nav.js`. Arrow keys, space and Page Up/Down jump to the next stop, like slides.
 - **The sections, in order** (listed in `src/main.js`):
   - `tt-hero.js`: the name and one line; the 3D shoe spins below.
-  - `concept-movements.js`: "Stories! Movement!", then one scene per movement (`movement-scene.js`, from `src/data/story-movements.js`), with sound ripples (`sound-ripples.js`).
+  - `concept-movements.js`, on Veruzka's warm dark: "Stories! Movement!" in gradient type, then **one sprite scene**. A cyan pictogram figure (`src/components/sprite-rig.js`, one rig with joint angles, poses based on our bodystorm pictograms) does every movement in place. A wall of round badges behind it shows the same movement at low opacity, pulls back at the start and changes with a ripple from the centre. Rings at the feet show the sound (silent). Under the figure: the movement's name and a random "Yes, and…" offer that rolls in (from `src/data/story-movements.js`). One arrow-key stop per movement (`data-stop-at`).
   - `built-parts.js` → `builtShoeParts`: "Inside each shoe", where the 3D shoe breaks apart and its parts get labels.
   - `hero.js`: **Veruzka's original story, unchanged** (the FSR flies out, is drawn and explains itself), now the close-up inside "What we've built".
   - `built-parts.js` → `builtParts`: the MVP, its photos, and the next build.
   - `process.js`: the timeline, how we tracked movement (bodystorm frames, pose tracking, pictograms in `src/assets/bodystorm/`), Kimiko's critique, the bodystorm grid.
   - `forward.js`, `close.js`.
-- **The 3D shoe:** `src/three/shoe-stage.js` draws one shoe in a see-through layer over the page, and `src/three/shoe-director.js` poses it from the scroll, using the path in `src/data/shoe-path.js`. It spins in the hero, does each movement, breaks apart in "Inside each shoe", steps aside for Veruzka's story and the process, then comes back together for the close. It loads `/assets/models/shoe.glb` (`public/assets/models/`); until then a stand-in (the Sketch drawing on a card) follows the same path. The movement math is in `src/core/motions.js`, shared with the ripples. It only redraws when the pose changes.
+- **The 3D shoe:** `src/three/shoe-stage.js` draws one shoe in a see-through layer over the page, and `src/three/shoe-director.js` poses it from the scroll, using the path in `src/data/shoe-path.js`. It spins in the hero, shrinks into a **pair on the sprite's feet** (a mirrored copy for the other foot) and rides along with every movement, breaks apart in "Inside each shoe", steps aside for Veruzka's story and the process, then comes back together for the close. It loads `/assets/models/shoe.glb` (`public/assets/models/`); until then a stand-in (the Sketch drawing on a card) follows the same path. The sprite scene tells it where the feet are on screen each frame. It only redraws when something changes.
 - **Presenter mode:** `src/components/presenter-notes.js` + `src/data/presenter-notes.js`. Press P for the part, the speaker and the talking points.
 - **TODO stickers:** `src/components/todo-tag.js` marks every placeholder.
-- **Set aside:** the worlds scene is in `src/_archive/` (see its README).
+- **Set aside:** the worlds scene and the earlier seven movement scenes are in `src/_archive/` (see its README).
 - **Background for the team and agents:** `cassius-agents/`.
 
 ### Page shell

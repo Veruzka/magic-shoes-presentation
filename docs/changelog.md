@@ -2,6 +2,15 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-18 (later): the movement sprite scene
+- **From Cassius's motion-sprite prompt** (in `cassius-agents/`), using the Apple Watch screen recording as a technique reference only (the recording stays out of git).
+- **One sprite scene replaces the seven movement scenes** (archived): a cyan pictogram figure on Veruzka's warm dark does walk → run → spin → dancer's pose → side kick → feet to the sky → heel click in place. One rig, poses based on our bodystorm pictograms, blends between movements.
+- **Pattern wall:** round badges of the same movement at low opacity; pulls back at the start, changes with a ripple from the centre, drifts.
+- **The shoes:** the 3D shoe shrinks into a mirrored pair on the figure's feet, rides along, and lifts off into "Inside each shoe".
+- **Label:** the movement's name and the rolled "Yes, and…" offer. The sound for that offer shows in presenter mode (P). Gradient type on "Stories! Movement!".
+- **Our own scroll engine** (not GSAP), so the arrow-key fix and stops still work: one stop per movement.
+- **Checked:** build; a scripted run through the scene (wall 2.6× → 1×, all seven movements and offers, the feet move with each pose, no errors); frames 9 to 10 ms. Two long gaps in the hero were the test window being hidden, not the site. **Not checked by eye:** whether the shoes sit nicely on the feet (the stand-in card will look rough there).
+
 ## 2026-11-18: the Twinkle Toes presentation (branch `web-presentation-draft`)
 - **Everything is on the branch** `web-presentation-draft`. Nothing is on `main`. The branch was pushed to GitHub on 2026-11-18 (not merged, not deployed).
 - **Cassius' agents:** the website prompt, the keep-integrity ground rules and the project, Figma and MVP context files are in `cassius-agents/`.

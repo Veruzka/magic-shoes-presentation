@@ -348,9 +348,11 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 
 **Change the words:** each section's file in `src/sections/`. Rule: **one headline and at most one line per scene.**
 
-**Add a movement:** add an entry to `src/data/story-movements.js` (`id`, `name`, `motion`, and its `offers`). A new scene appears, and the 3D shoe does that motion.
+**Add a movement:** add an entry to `src/data/story-movements.js` (`id`, `name`, `motion`, and its `offers`). The sprite scene gets one more movement, the wall shows it, and there's one more arrow-key stop.
 - **Offers** are the improv prompts: each finishes "Yes, and…" (`offer`) and names the sound that makes it real (`sound`). One is picked at random per visit, and the line rolls to it like a slot machine.
-- The motions are `step`, `run`, `spin`, `pose`, `kick`, `sky` and `heelclick`, in `src/core/motions.js`. A new kind of motion = a new entry there with a `pose` and an `impact`.
+- The motions are `step`, `run`, `spin`, `pose`, `kick`, `sky` and `heelclick`, in `MOVES` in `src/components/sprite-rig.js`. A new kind of motion = a new entry there: a `pose(phase)` with joint angles (explained at the top of the file) and its `strikes` (when a foot sends out a sound ring).
+- **The sprite's look:** colours at the top of `src/styles/concept-movements.css` (`--tt-cyan`, `--tt-badge`); the scene's timing (wall pull-back, when the movements start and end) at the top of `src/sections/concept-movements.js`.
+- **The shoes on the feet:** `moves` in `src/data/shoe-path.js` (`pair`: when they shrink onto the feet and lift off) and `SHOE_ON_FOOT` in `src/three/shoe-stage.js` (how big they are on the figure).
 
 > **Example:** `{ id: 'stomp', group: 'basic', name: 'Stomp', motion: 'run', offers: [{ offer: 'a giant is coming.', sound: 'a deep boom, getting closer' }] },`
 
