@@ -3,11 +3,13 @@
 //
 // Each move is an improv prompt. The headline is the move; the line is a
 // "Yes, and…" offer that sets a situation, and the sound is what makes that
-// situation real (the goal of the embodied sound). A randomizer picks one offer
-// per visit and rolls to it like a slot machine as the scene arrives.
+// situation real (the goal of the embodied sound). Each move shows one offer,
+// chosen by `pick`; the roll spins past the spares and lands on it like a slot
+// machine. The spares stay here (with their story pictures) for later.
 //
 //   group   basic | playful | whimsy (for us; not shown on the page)
 //   name    the headline
+//   pick    which offer is shown (0, 1 or 2). Remove it to pick at random again.
 //   offers  the "Yes, and…" offers: `offer` finishes the sentence, `sound` is
 //           the sound that makes it real (shown as a small label)
 //   motion  how the figure moves; one of the movements in src/components/sprite-rig.js
@@ -21,6 +23,7 @@ export const movementGroups = {
 export const storyMovements = [
   {
     id: 'walk',
+    pick: 1, // the offer we show (0, 1 or 2); the others are spares
     group: 'basic',
     name: 'Walk',
     motion: 'step',
@@ -32,6 +35,7 @@ export const storyMovements = [
   },
   {
     id: 'run',
+    pick: 1, // the offer we show (0, 1 or 2); the others are spares
     group: 'basic',
     name: 'Run',
     motion: 'run',
@@ -44,6 +48,7 @@ export const storyMovements = [
   // TODO: more basic movements after the meeting with Kimney.
   {
     id: 'spin',
+    pick: 0, // the offer we show (0, 1 or 2); the others are spares
     group: 'playful',
     name: 'Spin',
     motion: 'spin',
@@ -55,6 +60,7 @@ export const storyMovements = [
   },
   {
     id: 'dancers-pose',
+    pick: 1, // the offer we show (0, 1 or 2); the others are spares
     group: 'whimsy',
     name: "Dancer's pose",
     motion: 'pose',
@@ -66,6 +72,7 @@ export const storyMovements = [
   },
   {
     id: 'side-kick',
+    pick: 0, // the offer we show (0, 1 or 2); the others are spares
     group: 'whimsy',
     name: 'Side kick',
     motion: 'kick',
@@ -77,6 +84,7 @@ export const storyMovements = [
   },
   {
     id: 'feet-to-sky',
+    pick: 1, // the offer we show (0, 1 or 2); the others are spares
     group: 'whimsy',
     name: 'Feet to the sky',
     motion: 'sky',
@@ -88,6 +96,7 @@ export const storyMovements = [
   },
   {
     id: 'heel-click',
+    pick: 2, // the offer we show (0, 1 or 2); the others are spares
     group: 'whimsy',
     name: 'Heel click',
     motion: 'heelclick',
