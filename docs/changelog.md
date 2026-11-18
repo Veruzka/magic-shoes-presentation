@@ -3,7 +3,7 @@
 One short entry per work session, newest first.
 
 ## 2026-11-18: the Twinkle Toes presentation (branch `web-presentation-draft`)
-- **Everything is on the branch** `web-presentation-draft`. Nothing is on `main`, and nothing is pushed yet.
+- **Everything is on the branch** `web-presentation-draft`. Nothing is on `main`. The branch was pushed to GitHub on 2026-11-18 (not merged, not deployed).
 - **Cassius' agents:** the website prompt, the keep-integrity ground rules and the project, Figma and MVP context files are in `cassius-agents/`.
 - **New story order:** hero → concept → what we've built → process → what's next → close. Veruzka's shoe story is kept as it was, as the FSR close-up inside "What we've built".
 - **Fewer words:** one headline and one line per scene.
