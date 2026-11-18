@@ -20,7 +20,7 @@ import '../styles/concept-movements.css';
 import { scene, calmMotion, slice, ease, lerp, clamp01 } from '../core/scene.js';
 import { storyMovements } from '../data/story-movements.js';
 import { todoTag } from '../components/todo-tag.js';
-import { STAND, MOVES, movementPose, blendPose, figurePaths, feetOf, spinScale, strikesAt, GROUND } from '../components/sprite-rig.js';
+import { STAND, MOVES, movementPose, blendPose, switchPose, lying, figurePaths, feetOf, spinScale, strikesAt, GROUND } from '../components/sprite-rig.js';
 import { STORY_PROPS, PROP_FOR_OFFER } from '../components/story-props.js';
 
 // The scene's timeline (share of the scene's scrolling, 0 → 1):
@@ -38,15 +38,8 @@ const COPY_DELAY = 0.3;
 const SYNC_SECONDS = 3.5;
 const SWITCH_SECONDS = 0.5; // how long a change of movement blends
 // Getting up from lying on the floor (feet to the sky), or lying down, goes
-// through a tucked sit. A straight blend swung both players' legs across the
-// middle, through each other. It takes a little longer, like a real sit-up.
+// through a tucked sit (switchPose in sprite-rig.js), and takes a little longer.
 const SWITCH_SECONDS_FLOOR = 1;
-const TUCK = { ...STAND, y: GROUND - 30, lean: 8, hA: 100, kA: -140, aA: 0, hB: 96, kB: -140, aB: 0, sA: 35, eA: -70, sB: 45, eB: -70 };
-const lying = (pose) => pose.lean < -45;
-function switchPose(from, to, t) {
-  if (!lying(from) && !lying(to)) return blendPose(from, to, ease(t));
-  return t < 0.5 ? blendPose(from, TUCK, ease(t * 2)) : blendPose(TUCK, to, ease(t * 2 - 1));
-}
 // How stiff each joint's spring is (higher = follows faster). Stiff enough that
 // the joints keep the real motion (lag of a few degrees), arms a little looser
 // so they trail softly. The spring is solved exactly, so a slow frame (a busy

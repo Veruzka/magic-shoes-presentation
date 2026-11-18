@@ -276,6 +276,16 @@ export function blendPose(a, b, t) {
   return out;
 }
 
+// Changing from one movement to another (t: 0 → 1). Getting up from lying on
+// the floor (feet to the sky), or lying down, goes through a tucked sit: a
+// straight blend swings the legs up through the middle of the scene.
+const TUCK = { ...STAND, y: GROUND - 30, lean: 8, hA: 100, kA: -140, aA: 0, hB: 96, kB: -140, aB: 0, sA: 35, eA: 70, sB: 45, eB: 70 };
+export const lying = (pose) => pose.lean < -45;
+export function switchPose(from, to, t) {
+  if (!lying(from) && !lying(to)) return blendPose(from, to, ease(t));
+  return t < 0.5 ? blendPose(from, TUCK, ease(t * 2)) : blendPose(TUCK, to, ease(t * 2 - 1));
+}
+
 // Works out every joint's position from the angles (forward kinematics).
 export function joints(pose) {
   const hip = { x: pose.x, y: pose.y };
