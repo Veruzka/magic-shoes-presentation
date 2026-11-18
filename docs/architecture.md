@@ -27,8 +27,17 @@ flowchart TD
   figma["Figma AI<br/>(made the images,<br/>once)"]
   devtools["Builder tools (tools/)<br/>screenshots, checks,<br/>image cut-outs, sound copies"]
   sounds["Sounds<br/>originals → web copies<br/>+ sounds.json (not playing yet)"]
+  story["Twinkle Toes story<br/>hero → concept → what we've built<br/>→ process → what's next → close"]
+  scenes["Pinned scenes<br/>scene.js + keyboard nav"]
+  shoe3d["One 3D shoe<br/>Three.js layer, posed by<br/>shoe-path.js + director"]
+  model["Model<br/>/assets/models/shoe.glb<br/>(stand-in until it arrives)"]
+  notes["Presenter mode<br/>press P"]
 
-  visitor --> page --> hero
+  visitor --> page --> story
+  story --> scenes
+  story --> shoe3d --> model
+  story --> notes
+  story --> hero
   visitor --> lab
   page --> pill
   lab --> pill
@@ -56,8 +65,26 @@ flowchart TD
 
 ## The parts
 
+### The Twinkle Toes story (branch `web-presentation-draft`)
+The home page is the team's presentation, in this order: **hero → concept → what we've built → process → what's next → close**. Each part is one or more full-screen **scenes** that stay pinned while you scroll.
+- **Scenes:** `src/core/scene.js` makes a pinned scene and reports its progress (0 → 1). Each scene has a name (`data-scene`), which the keyboard, the 3D shoe and presenter mode all use.
+- **Keyboard:** `src/core/keyboard-nav.js`. Arrow keys, space and Page Up/Down jump to the next stop, like slides.
+- **The sections, in order** (listed in `src/main.js`):
+  - `tt-hero.js`: the name and one line; the 3D shoe spins below.
+  - `concept-movements.js`: "Stories! Movement!", then one scene per movement (`movement-scene.js`, from `src/data/story-movements.js`), with sound ripples (`sound-ripples.js`).
+  - `built-parts.js` → `builtShoeParts`: "Inside each shoe", where the 3D shoe breaks apart and its parts get labels.
+  - `hero.js`: **Veruzka's original story, unchanged** (the FSR flies out, is drawn and explains itself), now the close-up inside "What we've built".
+  - `built-parts.js` → `builtParts`: the MVP, its photos, and the next build.
+  - `process.js`: the timeline, how we tracked movement (bodystorm frames, pose tracking, pictograms in `src/assets/bodystorm/`), Kimiko's critique, the bodystorm grid.
+  - `forward.js`, `close.js`.
+- **The 3D shoe:** `src/three/shoe-stage.js` draws one shoe in a see-through layer over the page, and `src/three/shoe-director.js` poses it from the scroll, using the path in `src/data/shoe-path.js`. It spins in the hero, does each movement, breaks apart in "Inside each shoe", steps aside for Veruzka's story and the process, then comes back together for the close. It loads `/assets/models/shoe.glb` (`public/assets/models/`); until then a stand-in (the Sketch drawing on a card) follows the same path. The movement math is in `src/core/motions.js`, shared with the ripples. It only redraws when the pose changes.
+- **Presenter mode:** `src/components/presenter-notes.js` + `src/data/presenter-notes.js`. Press P for the part, the speaker and the talking points.
+- **TODO stickers:** `src/components/todo-tag.js` marks every placeholder.
+- **Set aside:** the worlds scene is in `src/_archive/` (see its README).
+- **Background for the team and agents:** `cassius-agents/`.
+
 ### Page shell
-`index.html` is the empty page. `src/main.js` fills it: it adds the hero section, starts the scroll effects, and adds the prototype tools.
+`index.html` is the empty page. `src/main.js` fills it: it adds the sections in order, starts the scroll effects, the 3D shoe and the keyboard, and adds the prototype tools.
 
 ### Lab page (`/lab/`)
 The prototyping lab, a second page next to the story. `lab/index.html` is its empty page and `src/lab/main.js` fills it. It's being built one small piece at a time; the plan is in [lab-roadmap.md](lab-roadmap.md). Right now it has:
@@ -140,7 +167,7 @@ The untouched originals live in `sounds/`, sorted by category and role. Their sm
 - **Google Fonts** provides the Inter and Caveat typefaces.
 
 ## AI features
-**The app itself has no AI features.** Nothing calls an AI service while someone is using the site, so nothing costs money per visit.
+**Three.js 0.170.0** (free) draws the 3D shoe. **The app itself has no AI features.** Nothing calls an AI service while someone is using the site, so nothing costs money per visit.
 
 AI was used **once, while building**, to create the shoe images:
 

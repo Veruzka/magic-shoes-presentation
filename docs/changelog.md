@@ -2,6 +2,18 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-18: the Twinkle Toes presentation (branch `web-presentation-draft`)
+- **Everything is on the branch** `web-presentation-draft`. Nothing is on `main`, and nothing is pushed yet.
+- **Cassius' agents:** the website prompt, the keep-integrity ground rules and the project, Figma and MVP context files are in `cassius-agents/`.
+- **New story order:** hero → concept → what we've built → process → what's next → close. Veruzka's shoe story is kept as it was, as the FSR close-up inside "What we've built".
+- **Fewer words:** one headline and one line per scene.
+- **One 3D shoe (Three.js)** carries the story: it spins in the hero, does each movement (walk, run, spin, dancer's pose, side kick, feet to the sky, heel click), breaks apart with labels, and comes back together for the close. A stand-in is used until `shoe.glb` arrives.
+- **Process:** real bodystorm images (frame, pose tracking, pictogram) for the heel click, the side kick and the toe descent ring, from the synthesis Drive folder. Plus "What Kimiko pushed us on", from Cassius's notes on her critique.
+- **What's next:** shoe development and sound development.
+- **Presenter mode:** press P. **Keyboard:** arrows and space jump scene to scene.
+- **Worlds scene** set aside in `src/_archive/`.
+- **Checked:** `npm run build`; a scripted scroll through every scene (no errors, the shoe shows and hides where it should); `debug:stalls` per scene: no stalls (9 to 33 ms frames). **Not checked by eye yet.**
+
 ## 2026-11-17: the team presentation copy
 - **This repo is a copy** of Magic Shoes for the team to turn into a presentation: github.com/Veruzka/magic-shoes-presentation (public), with the full history and checkpoint tags.
 - **Published with GitHub Pages** on every push to `main`: https://veruzka.github.io/magic-shoes-presentation/. The steps are in `.github/workflows/pages.yml`.

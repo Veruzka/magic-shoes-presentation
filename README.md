@@ -60,10 +60,11 @@ Pushes to `main` deploy automatically through Vercel's GitHub integration. Never
 
 ## Twinkle Toes presentation draft (branch `web-presentation-draft`)
 
-On this branch the home page tells the Twinkle Toes story, in this order: hero (the shoe fanned out in four world colors) → the concept (movements, then the worlds) → what we've built (the shoe comes apart, the parts inside, the MVP) → the process (timeline + bodystorm grid) → moving forward → the close.
+On this branch the home page tells the Twinkle Toes story, in this order: hero → the concept (one scene per movement) → what we've built (the 3D shoe breaks apart, then Veruzka's FSR sketch breakdown, then the MVP) → the process (timeline, how we tracked movement, Kimiko's critique, the bodystorm grid) → what's next → the close. One 3D shoe carries the story; its model goes in `public/assets/models/shoe.glb`.
 
 - **Run it:** `npm install`, then `npm run dev`, and open http://localhost:5173.
 - **Present it like slides:** arrow keys, space or Page Up/Down jump from scene to scene. Home and End jump to the start and the end.
+- **Presenter mode:** press **P** for who speaks and the talking points.
 - **Placeholders:** every one has a yellow **TODO** sticker on the page and a `// TODO:` comment in the code (`grep -rn "TODO" src`).
 - **Background for agents and teammates:** [cassius-agents/](cassius-agents/).
 

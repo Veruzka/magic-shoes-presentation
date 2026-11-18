@@ -338,3 +338,31 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 - **Safe:** change freely.
 - **Careful:** fine to change the wording or numbers, but not the structure.
 - **Ask me:** the logic is fiddly, so tell me what you want and I'll change it.
+
+---
+
+## The Twinkle Toes story (branch `web-presentation-draft`)
+**What:** the presentation: hero → concept → what we've built → process → what's next → close.
+
+**Change the order or remove a part:** the `sections` list in `src/main.js`.
+
+**Change the words:** each section's file in `src/sections/`. Rule: **one headline and at most one line per scene.**
+
+**Add a movement:** add one line to `src/data/story-movements.js` (`id`, `name`, `line`, `motion`). A new scene appears, and the 3D shoe does that motion.
+- The motions are `step`, `run`, `spin`, `pose`, `kick`, `sky` and `heelclick`, in `src/core/motions.js`. A new kind of motion = a new entry there with a `pose` and an `impact`.
+
+> **Example:** `{ id: 'stomp', group: 'basic', name: 'Stomp', line: 'Stomp and the ground answers.', sound: 'a deep boom', motion: 'run' },`
+
+**Change what the 3D shoe does in a scene:** `src/data/shoe-path.js`. One entry per scene name. The fields are explained at the top of the file: where it sits (`ax`, `ay`), how big (`size`), spin (`turn`), toe up (`tilt`), hidden (`opacity`), broken apart (`explode`) and labels (`labels`).
+
+> **Example:** to make the hero shoe bigger, change `size: 0.6` to `size: 0.75` in `hero`.
+
+**Add the real 3D model:** put `shoe.glb` in `public/assets/models/`. That folder's README says how the parts must be named.
+
+**Change the parts and their labels:** `src/data/shoe-parts.js` (`name`; `point` = where the part sits on the drawing).
+
+**Presenter mode (press P):** speakers and talking points are in `src/data/presenter-notes.js`.
+
+**Keyboard stops:** each scene's `stops` in its `scene({ … })` call.
+
+**Bring back the worlds scene:** see `src/_archive/README.md`.
