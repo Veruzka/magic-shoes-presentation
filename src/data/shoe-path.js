@@ -52,14 +52,14 @@ export const shoePath = {
   // "Stories! Movement!": resting low and small under the headline.
   concept: (p) => ({ ay: -0.6, size: 0.34, y: 0.04 * Math.sin(p * Math.PI) }),
 
-  // The movements: big in the middle while the wall pulls back, then it shrinks
-  // and splits into a pair on the sprite's feet, rides along with every move,
-  // and lifts off at the end, back to one big shoe for "Inside each shoe".
+  // The movements: big in the middle, then it hands over to a shoe on each of
+  // the two players' four feet, rides along with every move, and lifts off at
+  // the end, back to one big shoe for "Inside each shoe".
   moves: (p, el) => ({
     ay: 0.05,
     size: 0.62,
-    turn: 0.12 * ease(slice(p, 0, 0.12)),
-    pair: ease(slice(p, 0.1, 0.24)) * (1 - ease(slice(p, 0.9, 0.98))),
+    turn: 0.12 * ease(slice(p, 0, 0.1)),
+    pair: ease(slice(p, 0.03, 0.15)) * (1 - ease(slice(p, 0.9, 0.98))),
     feet: el?.__feet ?? null,
   }),
 

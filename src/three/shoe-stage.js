@@ -67,15 +67,45 @@ export function shoeStage() {
   yawGroup.add(tiltGroup);
   scene.add(root);
 
-  // The other shoe of the pair (the far foot): a mirrored copy that only shows
-  // while the shoes ride on the sprite's feet in the concept (pose.pair > 0).
-  const root2 = new THREE.Group();
-  const yaw2 = new THREE.Group();
-  const tilt2 = new THREE.Group();
-  root2.add(yaw2);
-  yaw2.add(tilt2);
-  root2.visible = false;
-  scene.add(root2);
+  // The shoes on the figures' feet in the concept (two players, a pair each).
+  // They only show while pose.pair > 0. Until the .glb arrives, each one is a
+  // simple solid shoe shape (not the flat card), so it still reads as a shoe
+  // from the front and the side; with the model, each is a copy of it.
+  const FEET = 4;
+  const footMaterials = [];
+  const footShoes = Array.from({ length: FEET }, () => {
+    const r = new THREE.Group();
+    const yaw = new THREE.Group();
+    const tilt = new THREE.Group();
+    r.add(yaw);
+    yaw.add(tilt);
+    r.visible = false;
+    scene.add(r);
+    return { root: r, yaw, tilt };
+  });
+  let fadeMain = () => {}; // fades the big shoe out as the small ones take over
+
+  // A solid stand-in shoe, 1 unit long, toe toward -x: a sole and a rounded upper.
+  function standInShoe() {
+    const upper = new THREE.Shape();
+    upper.moveTo(0.48, -0.15);
+    upper.lineTo(-0.42, -0.15);
+    upper.quadraticCurveTo(-0.52, -0.14, -0.5, -0.05);
+    upper.quadraticCurveTo(-0.46, 0.04, -0.2, 0.08);
+    upper.quadraticCurveTo(0.05, 0.12, 0.16, 0.22);
+    upper.lineTo(0.44, 0.22);
+    upper.quadraticCurveTo(0.52, 0.1, 0.48, -0.15);
+    const upperMat = new THREE.MeshStandardMaterial({ color: 0xefe6d6, roughness: 0.75, transparent: true });
+    const soleMat = new THREE.MeshStandardMaterial({ color: 0xfbfaf8, roughness: 0.9, transparent: true });
+    footMaterials.push(upperMat, soleMat);
+    const upperGeo = new THREE.ExtrudeGeometry(upper, { depth: 0.34, bevelEnabled: true, bevelSize: 0.03, bevelThickness: 0.04, bevelSegments: 3, curveSegments: 10 });
+    upperGeo.translate(0, 0, -0.17);
+    const sole = new THREE.Mesh(new THREE.BoxGeometry(1.04, 0.08, 0.42), soleMat);
+    sole.position.y = -0.19;
+    const shoe = new THREE.Group();
+    shoe.add(new THREE.Mesh(upperGeo, upperMat), sole);
+    return shoe;
+  }
 
   // Each part: its object, where it sits when whole, which way it flies out, and its label.
   let parts = [];
@@ -101,9 +131,18 @@ export function shoeStage() {
     const cardMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.05, side: THREE.DoubleSide });
     const card = new THREE.Mesh(new THREE.PlaneGeometry(1, SKETCH_RATIO), cardMaterial);
     tiltGroup.add(card);
-    tilt2.add(card.clone());
+    const sharedShoe = standInShoe();
+    footShoes.forEach((f) => f.tilt.add(sharedShoe.clone()));
+    let explodeFade = 1;
+    let pairFade = 1;
+    const applyFade = () => (cardMaterial.opacity = explodeFade * pairFade);
     fadeWhole = (explode) => {
-      cardMaterial.opacity = 1 - 0.65 * explode;
+      explodeFade = 1 - 0.65 * explode;
+      applyFade();
+    };
+    fadeMain = (shown) => {
+      pairFade = shown;
+      applyFade();
     };
 
     parts = shoeParts.map((data) => {
@@ -131,9 +170,19 @@ export function shoeStage() {
     model.scale.setScalar(scale);
     model.position.copy(center).multiplyScalar(-scale);
     tiltGroup.add(model);
-    const twin = model.clone(true); // the other foot: the same shoe, mirrored
-    twin.scale.z *= -1;
-    tilt2.add(twin);
+    footShoes.forEach((f, i) => {
+      const twin = model.clone(true);
+      if (i % 2 === 0) twin.scale.z *= -1; // far feet get the mirrored (other-foot) shoe
+      twin.traverse((o) => {
+        if (o.material) {
+          o.material = o.material.clone();
+          o.material.transparent = true;
+          footMaterials.push(o.material);
+        }
+      });
+      f.tilt.add(twin);
+    });
+    fadeMain = (shown) => (root.visible = shown > 0.02);
     parts = shoeParts
       .map((data) => {
         const object = model.getObjectByName(data.id);
@@ -196,19 +245,30 @@ export function shoeStage() {
       yaw: pose.yaw + pose.turn,
       tilt: pose.tilt,
     };
-    // On the sprite's feet: each shoe slides from centre stage onto one foot.
+    // On the figures' feet: the big shoe hands over to one small shoe per foot.
+    // Each slides from centre stage onto its foot, seen the way the camera sees
+    // that foot: from the side (toe the way the figure faces) or from the front.
     const feet = pose.pair > 0.001 && pose.feet ? pose.feet() : null;
-    const onFoot = (foot) => ({
-      x: ((foot.x / window.innerWidth) * 2 - 1) * (viewW / 2),
-      y: (1 - (foot.y / window.innerHeight) * 2) * (viewH / 2),
-      scale: (foot.length / window.innerHeight) * viewH * SHOE_ON_FOOT,
-      pitch: 0,
-      yaw: foot.flipped ? 0 : 0.5, // toe pointing the way the figure faces
-      tilt: foot.flipped ? 180 - foot.angle : foot.angle,
+    const onFoot = (foot) => {
+      const front = foot.view === 'front';
+      return {
+        x: ((foot.x / window.innerWidth) * 2 - 1) * (viewW / 2),
+        y: (1 - (foot.y / window.innerHeight) * 2) * (viewH / 2),
+        scale: (foot.length / window.innerHeight) * viewH * SHOE_ON_FOOT,
+        pitch: front ? 14 : 4,
+        yaw: front ? (foot.flipped ? 0.2 : 0.3) : foot.flipped ? 0 : 0.5,
+        tilt: front ? 0 : foot.flipped ? 180 - foot.angle : foot.angle,
+      };
+    };
+    const handover = feet ? ease(Math.min(pose.pair * 2.5, 1)) : 0;
+    place(root, yawGroup, tiltGroup, single);
+    fadeMain(1 - handover);
+    footMaterials.forEach((m) => (m.opacity = handover));
+    footShoes.forEach((f, i) => {
+      const foot = feet?.[i];
+      f.root.visible = Boolean(foot) && handover > 0.01;
+      if (f.root.visible) place(f.root, f.yaw, f.tilt, mix(single, onFoot(foot), pose.pair));
     });
-    place(root, yawGroup, tiltGroup, feet ? mix(single, onFoot(feet[1]), pose.pair) : single);
-    root2.visible = Boolean(feet);
-    if (feet) place(root2, yaw2, tilt2, mix(single, onFoot(feet[0]), pose.pair));
 
     const apart = ease(pose.explode);
     fadeWhole(apart);
