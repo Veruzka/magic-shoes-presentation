@@ -1,0 +1,307 @@
+/* "The process" (src/sections/process.js): the five steps, then the bodystorm grid.
+   Only opacity and transform change while you scroll; everything else is fixed here. */
+.tt-process {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* ---- Scene 1: the five steps ---- */
+.tt-process__inner {
+  width: min(1100px, 100% - 2 * 32px);
+  height: 100%;
+  box-sizing: border-box;
+  padding: 9vh 0 7vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 3vh;
+}
+
+.tt-process__headline {
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+}
+
+/* All five steps sit on top of each other in one slot; only one shows at a time. */
+.tt-process__slot {
+  display: grid;
+  align-items: center;
+  min-height: 0;
+}
+
+.tt-process__step {
+  grid-area: 1 / 1;
+  max-width: 30ch;
+  will-change: opacity, transform;
+}
+
+.tt-process__number {
+  font-family: var(--font-callout);
+  font-size: 0.95rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 0.8rem;
+}
+
+.tt-process__text {
+  font-family: var(--font-note);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+/* Step 4: the bodystorm facts as small pills. */
+.tt-process__facts {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 60ch;
+}
+
+.tt-process__facts li {
+  font-family: var(--font-callout);
+  font-size: 1rem;
+  padding: 4px 12px;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-pill);
+  color: var(--color-ink);
+}
+
+.tt-process__takeaway {
+  font-family: var(--font-note);
+  font-weight: 300;
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  line-height: 1.4;
+  margin: 1.2rem 0 0;
+  max-width: 40ch;
+}
+
+/* Step 5: the two groups side by side. */
+.tt-process__groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 40px;
+  margin: 1.4rem 0 0;
+}
+
+.tt-process__groups dt {
+  font-family: var(--font-callout);
+  font-size: 0.95rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.tt-process__groups dd {
+  font-family: var(--font-note);
+  font-weight: 300;
+  font-size: clamp(1rem, 1.6vw, 1.3rem);
+  margin: 0.2rem 0 0;
+}
+
+/* The line with five dots along the bottom. */
+.tt-process__rail {
+  position: relative;
+}
+
+.tt-process__track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 6px;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-ink) 18%, transparent);
+}
+
+.tt-process__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.tt-process__stops {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.tt-process__stop {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+
+.tt-process__dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  box-shadow: 0 0 0 4px var(--color-bg);
+  position: relative;
+}
+
+.tt-process__stop-label {
+  font-family: var(--font-callout);
+  font-size: 0.95rem;
+  color: var(--color-ink);
+}
+
+.tt-process__stop-label b {
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+/* ---- Scene 2: the bodystorm grid ---- */
+.tt-grid__inner {
+  width: min(1200px, 100% - 2 * 32px);
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  align-items: center;
+  gap: 48px;
+}
+
+.tt-grid__headline {
+  font-size: clamp(2.2rem, 4.2vw, 4rem);
+}
+
+.tt-grid__caption {
+  opacity: 0;
+  max-width: 22ch;
+}
+
+.tt-grid__figure {
+  margin: 0;
+  /* Room around the square for the corner names and end words. */
+  padding: 34px 24px;
+}
+
+.tt-grid__square {
+  position: relative;
+  width: min(70vh, 640px, 52vw);
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--color-ink) 12%, transparent);
+  border-radius: 6px;
+}
+
+/* The two axes cross in the middle and draw in from there. */
+.tt-grid__axis {
+  position: absolute;
+  background: var(--color-ink);
+}
+
+.tt-grid__axis--x {
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  transform: scaleX(0);
+}
+
+.tt-grid__axis--y {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  transform: scaleY(0);
+}
+
+/* Small words at the ends of the axes. */
+.tt-grid__end {
+  position: absolute;
+  font-family: var(--font-callout);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.tt-grid__end--left {
+  left: 8px;
+  top: calc(50% - 1.6em);
+}
+
+.tt-grid__end--right {
+  right: 8px;
+  top: calc(50% - 1.6em);
+}
+
+.tt-grid__end--top {
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+}
+
+.tt-grid__end--bottom {
+  left: 50%;
+  top: calc(100% + 8px);
+  transform: translateX(-50%);
+}
+
+/* The four corner names, just outside the square. */
+.tt-grid__quadrant {
+  position: absolute;
+  font-family: var(--font-note);
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--color-text);
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.tt-grid__quadrant--top-left { left: 0; bottom: calc(100% + 6px); }
+.tt-grid__quadrant--top-right { right: 0; bottom: calc(100% + 6px); }
+.tt-grid__quadrant--bottom-left { left: 0; top: calc(100% + 6px); }
+.tt-grid__quadrant--bottom-right { right: 0; top: calc(100% + 6px); }
+
+/* One gesture: a dot on its spot, with a tiny label beside it. The outer span
+   holds the position; the inner one is what drops in. */
+.tt-grid__gesture {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.tt-grid__drop {
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.tt-grid__gesture--left .tt-grid__drop {
+  left: auto;
+  right: -5px;
+  flex-direction: row-reverse;
+}
+
+.tt-grid__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 1.5px solid var(--color-ink);
+  box-sizing: border-box;
+  flex: none;
+}
+
+.tt-grid__label {
+  font-family: var(--font-callout);
+  font-size: 0.72rem;
+  line-height: 1;
+  color: var(--color-ink);
+}
