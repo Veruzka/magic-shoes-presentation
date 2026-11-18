@@ -12,9 +12,27 @@ import { soleMoves } from './shoes/sole-moves.js';
 import { optionSwitcher, switcherPanel } from './components/option-switcher.js';
 import { infoButton } from './components/info-panel.js';
 import { pageSwitch } from './components/page-switch.js';
+import { startKeyboardNav } from './core/keyboard-nav.js';
+import { ttHero } from './sections/tt-hero.js';
+import { conceptMovements } from './sections/concept-movements.js';
+import { conceptWorlds } from './sections/concept-worlds.js';
+import { builtParts } from './sections/built-parts.js';
+import { process as processSection } from './sections/process.js';
+import { forward } from './sections/forward.js';
+import { close } from './sections/close.js';
 
 // Add new sections here, in page order. Each one returns a DOM element.
-const sections = [hero];
+// The Twinkle Toes story: concept first, then what we've built, then the process.
+const sections = [
+  ttHero, // the shoe fanned out in the four world colors
+  conceptMovements, // "Stories! Movement!" + one scene per movement
+  conceptWorlds, // Sky, Lava, Forest, Water, with the double stomp between them
+  hero, // "What we've built" starts with the existing story: the shoe comes apart, the FSR explains itself
+  builtParts, // the parts inside each shoe, the MVP, what's next, takeaways
+  processSection, // the timeline and the bodystorm grid
+  forward,
+  close,
+];
 
 const app = document.querySelector('#app');
 sections.forEach((section) => app.append(section()));
@@ -26,6 +44,9 @@ const parallax = createParallax();
 // chapter 3 turns it and half of it becomes a labelled sketch, chapter 4 slides it
 // into the paper, fully drawn and flat, with texts on the left.
 const heroSection = app.querySelector('.hero');
+// The keyboard navigation treats the hero as one scene with a stop per chapter.
+heroSection.dataset.scene = 'built-inside';
+heroSection.dataset.stops = '5';
 const shoeOpening = watchScrollProgress(heroSection, (progress) => {
   heroSection.dataset.progress = progress.toFixed(3); // handy when debugging the motion
   const chapter = chapterProgress(progress, hasExitChapter(heroSection));
@@ -72,6 +93,9 @@ const styleLab = switcherPanel(
   }),
 );
 document.body.append(styleLab);
+
+// Arrow keys, space and Page Up/Down jump scene to scene, like slides.
+startKeyboardNav();
 
 // The "i" button (bottom-right): shows how the app is built, read from docs/.
 document.body.append(infoButton());
