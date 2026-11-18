@@ -84,7 +84,9 @@ export function startShoeDirector(stage) {
     frame = null;
     const seconds = lastTime === null ? 1 / 60 : Math.min((time - lastTime) / 1000, 0.25);
     lastTime = time;
-    const k = reduceMotion.matches ? 1 : 1 - Math.exp(-seconds / SETTLE);
+    // Keyboard jumps already scroll smoothly: follow exactly (see keyboard-nav.js).
+    const exact = reduceMotion.matches || document.documentElement.dataset.keyScrolling;
+    const k = exact ? 1 : 1 - Math.exp(-seconds / SETTLE);
     let moving = false;
     const next = { ...target };
     for (const key of Object.keys(REST)) {

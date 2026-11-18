@@ -18,7 +18,17 @@ function allStops() {
   return stops.sort((a, b) => a - b);
 }
 
+let clearFlag = null;
+function stopKeyScrolling() {
+  clearTimeout(clearFlag);
+  delete document.documentElement.dataset.keyScrolling;
+}
+
 export function startKeyboardNav() {
+  window.addEventListener('scrollend', stopKeyScrolling);
+  // A mouse wheel or touch scroll takes over: back to the usual glide.
+  window.addEventListener('wheel', stopKeyScrolling, { passive: true });
+  window.addEventListener('touchstart', stopKeyScrolling, { passive: true });
   window.addEventListener('keydown', (event) => {
     if (event.metaKey || event.ctrlKey || event.altKey) return;
     const tag = event.target.tagName;
@@ -37,6 +47,11 @@ export function startKeyboardNav() {
     else target = [...stops].reverse().find((s) => s < here - 4) ?? 0;
 
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // While the browser smooth-scrolls, the scenes and the 3D shoe follow the
+    // scroll exactly instead of gliding behind it (that double smoothing jittered).
+    document.documentElement.dataset.keyScrolling = '1';
+    clearTimeout(clearFlag);
+    clearFlag = setTimeout(stopKeyScrolling, 1500); // in case 'scrollend' never comes
     window.scrollTo({ top: target, behavior: calm ? 'auto' : 'smooth' });
   });
 }

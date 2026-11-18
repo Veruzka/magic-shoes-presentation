@@ -11,6 +11,8 @@
 //           behind and then race ahead.
 //   maxLag  it never trails the real scroll by more than this share of the scroll.
 // Visitors who prefer reduced motion get no smoothing, so nothing lags their scroll.
+// Neither do keyboard jumps (src/core/keyboard-nav.js): the browser already scrolls
+// those smoothly, and gliding on top made the motion trail and jitter.
 
 export function watchScrollProgress(element, onProgress, { settle = 0.1, maxLag = 0.15 } = {}) {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -31,7 +33,7 @@ export function watchScrollProgress(element, onProgress, { settle = 0.1, maxLag 
     frame = null;
     const seconds = lastTime === null ? 1 / 60 : Math.min((time - lastTime) / 1000, 0.25);
     lastTime = time;
-    if (reduceMotion.matches) current = target;
+    if (reduceMotion.matches || document.documentElement.dataset.keyScrolling) current = target;
     else current += (target - current) * (1 - Math.exp(-seconds / settle));
     // Never trail too far behind.
     if (target - current > maxLag) current = target - maxLag;
