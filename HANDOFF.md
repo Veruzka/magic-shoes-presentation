@@ -37,7 +37,7 @@ Everything is pushed to `web-presentation-draft`.
 - **All scenes exist and run in order**, with arrow-key stops (one per scene, one per movement) and presenter mode.
 - **The movement scene** (`src/sections/concept-movements.js`):
   - Two stick-figure players. Player 2 copies player 1 a beat late and falls into sync.
-  - Seven moves. Walk, run, spin and feet to the sky are hand-animated. The heel click is our **real tracked bodystorm motion**. The side kick and dancer's pose use real tracked peak poses (`src/data/bodystorm-motion.json`).
+  - Seven moves. Walk, run, spin, feet to the sky and the heel click are hand-animated (the tracked heel-click loop came from a front-on video and bent the knees backwards side-on; it's kept in the data). The side kick and dancer's pose use real tracked peak poses (`src/data/bodystorm-motion.json`).
   - **One "Yes, and…" offer per move**, set with `pick` in `src/data/story-movements.js`, plus its story picture (`src/components/story-props.js`). The spare offers and pictures are kept for later.
 - **Just fixed:** the players moved erratically while paused, from an unstable spring. The 3D shoes snapped round during the spin. Both are fixed and pass a simulation at 60, 30 and 20 fps, **but haven't been looked at on screen yet.**
 - **3D shoe:** a stand-in until the real model is exported (see below).
