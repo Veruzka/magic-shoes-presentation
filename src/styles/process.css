@@ -1,4 +1,5 @@
-/* "The process" (src/sections/process.js): the five steps, then the bodystorm grid.
+/* "The process" (src/sections/process.js): the five steps, how we tracked
+   movement, Kimiko's critique, then the bodystorm grid.
    Only opacity and transform change while you scroll; everything else is fixed here. */
 .tt-process {
   background: var(--color-bg);
@@ -29,78 +30,14 @@
 
 .tt-process__step {
   grid-area: 1 / 1;
-  max-width: 30ch;
-  will-change: opacity, transform;
-}
-
-.tt-process__number {
-  font-family: var(--font-callout);
-  font-size: 0.95rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-  margin: 0 0 0.8rem;
-}
-
-.tt-process__text {
-  font-family: var(--font-note);
-  font-weight: 400;
-  font-size: clamp(1.6rem, 3vw, 2.6rem);
-  line-height: 1.2;
-  letter-spacing: -0.015em;
+  max-width: 20ch;
   margin: 0;
-}
-
-/* Step 4: the bodystorm facts as small pills. */
-.tt-process__facts {
-  list-style: none;
-  padding: 0;
-  margin: 1.2rem 0 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  max-width: 60ch;
-}
-
-.tt-process__facts li {
-  font-family: var(--font-callout);
-  font-size: 1rem;
-  padding: 4px 12px;
-  border: 1px solid var(--color-accent);
-  border-radius: var(--radius-pill);
-  color: var(--color-ink);
-}
-
-.tt-process__takeaway {
   font-family: var(--font-note);
-  font-weight: 300;
-  font-size: clamp(1rem, 1.6vw, 1.3rem);
-  line-height: 1.4;
-  margin: 1.2rem 0 0;
-  max-width: 40ch;
-}
-
-/* Step 5: the two groups side by side. */
-.tt-process__groups {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px 40px;
-  margin: 1.4rem 0 0;
-}
-
-.tt-process__groups dt {
-  font-family: var(--font-callout);
-  font-size: 0.95rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-
-.tt-process__groups dd {
-  font-family: var(--font-note);
-  font-weight: 300;
-  font-size: clamp(1rem, 1.6vw, 1.3rem);
-  margin: 0.2rem 0 0;
+  font-weight: 500;
+  font-size: clamp(2rem, 4.6vw, 4.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  will-change: opacity, transform;
 }
 
 /* The line with five dots along the bottom. */
@@ -151,16 +88,205 @@
 
 .tt-process__stop-label {
   font-family: var(--font-callout);
-  font-size: 0.95rem;
+  font-weight: 600;
+  font-size: 1.1rem;
   color: var(--color-ink);
 }
 
-.tt-process__stop-label b {
+/* ---- Scene 2: how we tracked movement ---- */
+/* Headline on the left, the 3x3 picture table on the right. Every picture is
+   sized from the screen height so all three rows fit on a 1280x800 screen. */
+.tt-tracked__stage {
+  --tt-panel-w: min(calc((100vh - 150px) / 3 * 0.75), 200px);
+}
+
+.tt-tracked__inner {
+  width: min(1240px, 100% - 2 * 32px);
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto;
+  align-items: center;
+  gap: 40px;
+}
+
+.tt-tracked__headline {
+  font-size: clamp(2.2rem, 4.2vw, 4rem);
+}
+
+.tt-tracked__line {
+  max-width: 20ch;
+}
+
+.tt-tracked__table {
+  display: grid;
+  gap: 10px;
+}
+
+/* One row: name, picture, arrow, picture, arrow, picture. */
+.tt-tracked__row {
+  display: grid;
+  grid-template-columns: 9.5rem repeat(2, var(--tt-panel-w) 22px) var(--tt-panel-w);
+  align-items: center;
+  column-gap: 8px;
+}
+
+.tt-tracked__colhead {
+  font-family: var(--font-callout);
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.tt-tracked__name {
+  margin: 0;
+  font-family: var(--font-note);
+  font-weight: 500;
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  line-height: 1.2;
+  opacity: 0;
+}
+
+/* Each picture sits in a soft cream box (visible before the picture arrives). */
+.tt-tracked__panel {
+  margin: 0;
+  width: var(--tt-panel-w);
+  aspect-ratio: 3 / 4;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.tt-tracked__panel img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* Pictograms have a see-through background, so show them whole. */
+.tt-tracked__panel--pictogram img {
+  object-fit: contain;
+  padding: 6%;
+  box-sizing: border-box;
+}
+
+.tt-tracked__arrow {
+  font-family: var(--font-callout);
+  font-size: 1.2rem;
+  color: var(--color-muted);
+  text-align: center;
+  opacity: 0;
+}
+
+/* Narrow screens: headline on top, row names above their pictures. */
+@media (max-width: 960px) {
+  .tt-tracked__stage {
+    --tt-panel-w: min(calc((100vh - 300px) / 3 * 0.75), calc((100vw - 64px - 60px) / 3));
+  }
+
+  .tt-tracked__inner {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .tt-tracked__line {
+    margin-top: 0.4rem;
+  }
+
+  .tt-tracked__row {
+    grid-template-columns: repeat(2, var(--tt-panel-w) 22px) var(--tt-panel-w);
+    column-gap: 4px;
+  }
+
+  .tt-tracked__row--heads > span:first-child {
+    display: none;
+  }
+
+  .tt-tracked__name {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---- Scene 3: what Kimiko pushed us on ---- */
+.tt-critique__inner {
+  width: min(1200px, 100% - 2 * 32px);
+  display: grid;
+  gap: 6vh;
+}
+
+.tt-critique__headline {
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+}
+
+.tt-critique__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.tt-critique__card {
+  padding: 28px 28px 32px;
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* Her words: italic, like a spoken quote. */
+.tt-critique__quote {
+  margin: 0;
+  font-family: var(--font-note);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.3rem, 2.1vw, 1.9rem);
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+/* Our answer: solid and plain, under a thin line. */
+.tt-critique__answer {
+  margin: 22px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid color-mix(in srgb, var(--color-ink) 22%, transparent);
+  font-family: var(--font-note);
   font-weight: 600;
+  font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+  line-height: 1.25;
+  color: var(--color-ink);
+  opacity: 0;
+}
+
+.tt-critique__arrow {
+  font-family: var(--font-callout);
+  color: var(--color-muted);
   margin-right: 4px;
 }
 
-/* ---- Scene 2: the bodystorm grid ---- */
+@media (max-width: 860px) {
+  .tt-critique__inner {
+    gap: 20px;
+  }
+
+  .tt-critique__cards {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .tt-critique__card {
+    padding: 16px 20px;
+  }
+
+  .tt-critique__answer {
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+}
+
+/* ---- Scene 4: the bodystorm grid ---- */
 .tt-grid__inner {
   width: min(1200px, 100% - 2 * 32px);
   display: grid;
