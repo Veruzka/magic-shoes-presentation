@@ -2,6 +2,11 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-18 (evening): "Once upon a step" opening (Veruzka, branch `veruzka-opening-scene`)
+- **New title:** the first and last screens now say "Once upon a step" instead of "Twinkle Toes". The browser tab title and Liz's Medium link still say Twinkle Toes.
+- **Hero TODO sticker removed:** the name is decided. The stickers in the other scenes stay as reminders.
+- **Coming next:** the hero shoe floats instead of spinning, and a swaying wildflower field goes behind it (planned with the illustrator, motion-director and motion-reviewer agents).
+
 ## 2026-11-18 (later afternoon): arrow-key stops (Liz, branch `liz-animation-fixes`)
 - **Blank slides (fixed):** the MVP, "How it came together" and "Four shoes, sound effects" put their first arrow-key stop before anything had faded in, so the right arrow landed on a blank screen and the content flashed past on the next press. The MVP now stops on its headline, then with the data flow lit; the other two stop with everything shown (`data-stop-at` in `built-parts.js`).
 - **Veruzka's FSR breakdown skipped (fixed):** it only plays with the Sketch shoe, and a fresh browser started on Photo, so her section shrank to one screen. The site now starts on the Sketch (`startShoe` in `src/shoes/index.js`); a pick in the Style Lab is still remembered.

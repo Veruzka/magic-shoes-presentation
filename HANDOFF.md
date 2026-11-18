@@ -46,7 +46,7 @@ Everything is pushed to `web-presentation-draft`.
 1. **Look at the paused movement scene by eye** (step with the arrow keys, wait a few seconds on each move). Confirm it's calm, and that the story pictures and the four stand-in shoes on the feet look right.
 2. **Run the full anti-slop audit.** It was started and stopped before it finished, so no report exists yet. Ask your agent to use `anti-slop-reviewer` on the whole site. **Run no other browser checks at the same time:** they all drive the same Chrome and confuse each other.
 3. **Fill in the TODO tags** (they show on the page as stickers):
-   - the name: Twinkle Toes or Music Sampling Shoes (`src/sections/tt-hero.js`)
+   - ~~the name~~: done, the opening and closing title is "Once upon a step" (2026-11-18)
    - the speaker for each part (`src/data/presenter-notes.js`)
    - the MVP demo video and the three takeaways (`src/sections/built-parts.js`)
    - the timeline and owners for next steps (`src/sections/forward.js`)
