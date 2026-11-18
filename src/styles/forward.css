@@ -1,0 +1,52 @@
+/* "Moving forward" (src/sections/forward.js): headline on the left, three
+   numbered points on the right. Only opacity and transform change on scroll. */
+.tt-forward__stage {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.tt-forward__inner {
+  width: min(1100px, 100% - 2 * 32px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 64px;
+}
+
+.tt-forward__headline {
+  font-size: clamp(2.4rem, 5vw, 4.8rem);
+  max-width: 9ch;
+}
+
+.tt-forward__points {
+  list-style: none;
+  counter-reset: forward;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 28px;
+}
+
+.tt-forward__point {
+  counter-increment: forward;
+  position: relative;
+  padding: 18px 0 0 52px;
+  border-top: 1px solid color-mix(in srgb, var(--color-ink) 18%, transparent);
+  font-family: var(--font-note);
+  font-weight: 300;
+  font-size: clamp(1.05rem, 1.7vw, 1.4rem);
+  line-height: 1.4;
+  opacity: 0;
+}
+
+/* The number in front of each point. */
+.tt-forward__point::before {
+  content: '0' counter(forward);
+  position: absolute;
+  left: 0;
+  top: 20px;
+  font-family: var(--font-callout);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-muted);
+}
