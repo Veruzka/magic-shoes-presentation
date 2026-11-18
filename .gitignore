@@ -4,3 +4,6 @@ dist
 .vercel
 *.local
 shots
+
+# Reference screen recordings (large; kept out of git)
+Screen Recording*.mov
