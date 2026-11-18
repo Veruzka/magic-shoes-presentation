@@ -1,13 +1,28 @@
-/* Section 1, "The concept" (src/sections/concept-movements.js): the intro
-   screen and the wrapper around the movement scenes. Each movement scene's own
-   look is in src/components/movement-scene.css. */
+/* Section 1, "The concept" (src/sections/concept-movements.js), on Veruzka's
+   warm near-black (--color-note) with an electric cyan figure. */
 .tt-moves {
-  background: var(--color-bg);
-  color: var(--color-text);
-  overflow-x: clip; /* nothing a moving shoe does can make the page scroll sideways */
+  --tt-dark: var(--color-note); /* #2f2a25, from base.css */
+  --tt-cyan: #2fd3ff; /* the sprite */
+  --tt-cyan-deep: #2f7dff;
+  --tt-badge: rgb(255 255 255 / 0.05); /* the wall's circles, a touch lighter than the background */
+  background: var(--tt-dark);
+  color: var(--color-bg);
+  overflow-x: clip; /* nothing that moves can make the page scroll sideways */
 }
 
-/* The intro: centered, huge, lots of empty space. */
+.tt-moves .scene__stage {
+  background: var(--tt-dark);
+}
+
+/* Gradient type: on the headline only, like the reference. */
+.tt-gradient {
+  background: linear-gradient(90deg, var(--tt-cyan-deep), var(--tt-cyan) 55%, #7dffc4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- The intro ---------- */
 .tt-moves__intro-text {
   width: min(1100px, 100% - 48px);
   text-align: center;
@@ -16,6 +31,11 @@
 
 .tt-moves__intro-text .tt-line {
   margin-inline: auto;
+  color: rgb(251 250 248 / 0.75);
+}
+
+.tt-moves__intro-text .todo-tag {
+  margin-top: 1.2rem;
 }
 
 /* "Stories! / Movement!" on two lines, bigger than the usual headline. */
@@ -26,4 +46,120 @@
 
 .tt-moves__title span {
   display: block;
+}
+
+/* ---------- The sprite scene ---------- */
+/* The wall of round badges: bigger than the screen, centred, pulled back by the script. */
+.tt-sprite__wall {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  grid-template-columns: repeat(12, 116px);
+  grid-auto-rows: 116px;
+  gap: 16px;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  color: var(--tt-cyan);
+}
+
+.tt-sprite__badge {
+  border-radius: 50%;
+  background: var(--tt-badge);
+  display: grid;
+  place-items: center;
+}
+
+/* The badge pictograms: low opacity, so the wall is texture, not competition. */
+.tt-sprite__badge svg {
+  width: 62%;
+  height: 62%;
+  opacity: 0.2;
+}
+
+/* The figure and its label, in the middle, over a soft dark pool so it reads on the wall. */
+.tt-sprite__center {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tt-sprite__center::before {
+  content: '';
+  position: absolute;
+  inset: -8% -30% -4%;
+  background: radial-gradient(closest-side, var(--tt-dark) 55%, rgb(47 42 37 / 0));
+  z-index: -1;
+}
+
+.tt-sprite__figure {
+  width: min(46vh, 420px);
+  height: auto;
+  overflow: visible;
+  opacity: 0;
+}
+
+/* Flat, bold, rounded: the far limbs, the torso, the near limbs, the head. */
+.tt-sprite__body path {
+  fill: none;
+  stroke: var(--tt-cyan);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tt-sprite__far {
+  stroke-width: 12;
+  opacity: 0.8;
+}
+
+.tt-sprite__torso {
+  stroke-width: 19;
+}
+
+.tt-sprite__near {
+  stroke-width: 12;
+}
+
+.tt-sprite__head {
+  fill: var(--tt-cyan);
+}
+
+/* Sound, shown: a cyan ring spreads from a foot on each step, stomp and kick. */
+.tt-sprite__ring {
+  fill: none;
+  stroke: var(--tt-cyan);
+  stroke-width: 2.5;
+  opacity: 0;
+}
+
+/* The label: the movement's name, then the rolled "Yes, and…" offer. */
+.tt-sprite__label {
+  text-align: center;
+  opacity: 0;
+}
+
+.tt-sprite__name {
+  margin: 0;
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-stretch: 88%;
+  font-size: clamp(2rem, 4.2vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-bg);
+}
+
+.tt-sprite__offer {
+  margin: 0.6rem auto 0;
+  max-width: 40ch;
+  color: rgb(251 250 248 / 0.8);
+}
+
+.tt-sprite__roll {
+  display: inline-block;
+  font-weight: 500;
+  color: var(--tt-cyan);
+  will-change: transform;
 }

@@ -10,7 +10,7 @@
 //   name    the headline
 //   offers  the "Yes, and…" offers: `offer` finishes the sentence, `sound` is
 //           the sound that makes it real (shown as a small label)
-//   motion  how the shoe moves; one of the motions in src/core/motions.js
+//   motion  how the figure moves; one of the movements in src/components/sprite-rig.js
 //           (step, run, spin, pose, kick, sky, heelclick)
 export const movementGroups = {
   basic: 'Basic movement',
