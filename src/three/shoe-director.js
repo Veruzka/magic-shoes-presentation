@@ -9,7 +9,7 @@
 // instead of jumping (no jolts from mouse-wheel notches), and stops redrawing
 // once it has arrived. Reduced motion: no gliding, no movement; the shoe keeps
 // each scene's resting pose and only fades, comes apart and shows its labels.
-import { REST, shoePath, movement } from '../data/shoe-path.js';
+import { REST, shoePath } from '../data/shoe-path.js';
 import { clamp01, ease } from '../core/scene.js';
 
 const SETTLE = 0.1; // seconds; how quickly it catches up with the scroll
@@ -24,17 +24,16 @@ function progressOf(el) {
 function pathFor(el) {
   const name = el.dataset.scene;
   if (shoePath[name]) return shoePath[name];
-  if (name.startsWith('move-')) return movement(el.dataset.motion);
   return () => ({ opacity: 0, explode: 1 }); // unknown scenes: shoe off stage
 }
 
 // A scene's pose at p, with the anchor turned into a screen position.
 function poseAt(el, p, calm) {
   const path = pathFor(el);
-  let pose = { ...REST, ...path(p) };
+  let pose = { ...REST, ...path(p, el) };
   if (calm) {
-    const rest = { ...REST, ...path(0) };
-    pose = { ...rest, opacity: pose.opacity, explode: pose.explode, labels: pose.labels };
+    const rest = { ...REST, ...path(0, el) };
+    pose = { ...rest, opacity: pose.opacity, explode: pose.explode, labels: pose.labels, pair: pose.pair };
   }
   if (pose.anchor) {
     const box = el.querySelector(pose.anchor)?.getBoundingClientRect();
@@ -111,6 +110,10 @@ export function startShoeDirector(stage) {
     if (frame === null) frame = requestAnimationFrame(step);
   }
 
+  // The concept's sprite moves its feet every frame: redraw so the shoes stay on them.
+  window.addEventListener('shoe-refresh', () => {
+    if (current && frame === null) stage.render(current);
+  });
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
   // Start once the sections are laid out.

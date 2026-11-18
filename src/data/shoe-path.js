@@ -1,7 +1,7 @@
 // The 3D shoe's path through the story: what it does in each scene.
 // Each entry is keyed by a scene's name (its data-scene) and turns that scene's
-// progress p (0 → 1) into a pose. Movement scenes (move-walk, move-run…) all
-// use `movement` below, which reads the motion from src/core/motions.js.
+// progress p (0 → 1) into a pose. In the concept's movement scene (`moves`)
+// the shoes ride on the sprite's feet.
 //
 // A pose (every field optional; missing ones come from REST):
 //   anchor   a CSS selector inside the scene; the shoe centres on that box
@@ -15,11 +15,14 @@
 //   opacity  0 = hidden
 //   explode  0 = whole, 1 = broken apart into its parts
 //   labels   0 → 1: the part labels appear one after another
+//   pair     0 → 1: the shoe becomes a pair on the sprite's feet (concept scene)
+//   feet     a function giving the sprite's feet on screen (set by the moves scene)
+//
+// A path function gets (p, sceneElement).
 //
 // Between two scenes, the shoe glides from the end of one pose to the start of
 // the next, so the hand-offs are continuous.
 import { slice, ease } from '../core/scene.js';
-import { motionFor } from '../core/motions.js';
 
 export const REST = {
   anchor: null,
@@ -35,19 +38,12 @@ export const REST = {
   opacity: 1,
   explode: 0,
   labels: 0,
+  pair: 0,
+  feet: null,
 };
 
 // Off stage: hidden, still in pieces (so it can come back together at the end).
 const away = () => ({ opacity: 0, explode: 1, size: 0.5 });
-
-// A movement scene: the shoe faces right (away from the text) and does the move.
-export function movement(motionName) {
-  const motion = motionFor(motionName);
-  return (p) => {
-    const m = motion.pose(p);
-    return { anchor: '.tt-move__visual', size: 0.5, yaw: 0.5 + 0.08, x: m.x, y: m.y, tilt: m.rot, turn: m.turn };
-  };
-}
 
 export const shoePath = {
   // Hero: one full 3D spin under the title.
@@ -55,6 +51,17 @@ export const shoePath = {
 
   // "Stories! Movement!": resting low and small under the headline.
   concept: (p) => ({ ay: -0.6, size: 0.34, y: 0.04 * Math.sin(p * Math.PI) }),
+
+  // The movements: big in the middle while the wall pulls back, then it shrinks
+  // and splits into a pair on the sprite's feet, rides along with every move,
+  // and lifts off at the end, back to one big shoe for "Inside each shoe".
+  moves: (p, el) => ({
+    ay: 0.05,
+    size: 0.62,
+    turn: 0.12 * ease(slice(p, 0, 0.12)),
+    pair: ease(slice(p, 0.1, 0.24)) * (1 - ease(slice(p, 0.9, 0.98))),
+    feet: el?.__feet ?? null,
+  }),
 
   // What we've built: it breaks apart, then each part gets its label.
   parts: (p) => ({

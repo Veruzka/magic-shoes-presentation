@@ -20,6 +20,21 @@ const CAMERA_DISTANCE = 8;
 const FOV = 30; // degrees, top to bottom
 const SKETCH_RATIO = 846 / 1356; // height / length of the Sketch drawing
 const EXPLODE_DISTANCE = 0.55; // how far parts travel when fully apart, in shoe lengths
+const SHOE_ON_FOOT = 1.9; // how long a shoe is on the sprite, compared with its foot
+
+const turnsBetween = (a, b) => b - a - Math.round(b - a); // the short way round
+
+// Blends two placements (used to slide a shoe from centre stage onto a foot).
+function mix(a, b, t) {
+  return {
+    x: a.x + (b.x - a.x) * t,
+    y: a.y + (b.y - a.y) * t,
+    scale: a.scale + (b.scale - a.scale) * t,
+    pitch: a.pitch + (b.pitch - a.pitch) * t,
+    yaw: a.yaw + turnsBetween(a.yaw, b.yaw) * t,
+    tilt: a.tilt + (b.tilt - a.tilt) * t,
+  };
+}
 
 export function shoeStage() {
   const element = document.createElement('div');
@@ -52,6 +67,16 @@ export function shoeStage() {
   yawGroup.add(tiltGroup);
   scene.add(root);
 
+  // The other shoe of the pair (the far foot): a mirrored copy that only shows
+  // while the shoes ride on the sprite's feet in the concept (pose.pair > 0).
+  const root2 = new THREE.Group();
+  const yaw2 = new THREE.Group();
+  const tilt2 = new THREE.Group();
+  root2.add(yaw2);
+  yaw2.add(tilt2);
+  root2.visible = false;
+  scene.add(root2);
+
   // Each part: its object, where it sits when whole, which way it flies out, and its label.
   let parts = [];
   let fadeWhole = () => {}; // the stand-in card fades back as the parts fly out
@@ -76,6 +101,7 @@ export function shoeStage() {
     const cardMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.05, side: THREE.DoubleSide });
     const card = new THREE.Mesh(new THREE.PlaneGeometry(1, SKETCH_RATIO), cardMaterial);
     tiltGroup.add(card);
+    tilt2.add(card.clone());
     fadeWhole = (explode) => {
       cardMaterial.opacity = 1 - 0.65 * explode;
     };
@@ -105,6 +131,9 @@ export function shoeStage() {
     model.scale.setScalar(scale);
     model.position.copy(center).multiplyScalar(-scale);
     tiltGroup.add(model);
+    const twin = model.clone(true); // the other foot: the same shoe, mirrored
+    twin.scale.z *= -1;
+    tilt2.add(twin);
     parts = shoeParts
       .map((data) => {
         const object = model.getObjectByName(data.id);
@@ -142,6 +171,14 @@ export function shoeStage() {
 
   const point = new THREE.Vector3();
 
+  function place(r, yaw, tilt, at) {
+    r.position.set(at.x, at.y, 0);
+    r.scale.setScalar(at.scale);
+    r.rotation.x = THREE.MathUtils.degToRad(at.pitch);
+    yaw.rotation.y = at.yaw * Math.PI * 2;
+    tilt.rotation.z = -THREE.MathUtils.degToRad(((at.tilt + 540) % 360) - 180); // the toe is on the left of the drawing
+  }
+
   // Puts the shoe in a pose and draws one picture.
   function render(pose) {
     lastPose = pose;
@@ -151,11 +188,27 @@ export function shoeStage() {
     const viewH = 2 * CAMERA_DISTANCE * Math.tan(THREE.MathUtils.degToRad(FOV / 2));
     const viewW = viewH * camera.aspect;
     const length = pose.size * viewH;
-    root.position.set((pose.ax * viewW) / 2 + pose.x * length, (pose.ay * viewH) / 2 + pose.y * length, 0);
-    root.scale.setScalar(length);
-    root.rotation.x = THREE.MathUtils.degToRad(pose.pitch);
-    yawGroup.rotation.y = (pose.yaw + pose.turn) * Math.PI * 2;
-    tiltGroup.rotation.z = -THREE.MathUtils.degToRad(pose.tilt); // the toe is on the left of the drawing
+    const single = {
+      x: (pose.ax * viewW) / 2 + pose.x * length,
+      y: (pose.ay * viewH) / 2 + pose.y * length,
+      scale: length,
+      pitch: pose.pitch,
+      yaw: pose.yaw + pose.turn,
+      tilt: pose.tilt,
+    };
+    // On the sprite's feet: each shoe slides from centre stage onto one foot.
+    const feet = pose.pair > 0.001 && pose.feet ? pose.feet() : null;
+    const onFoot = (foot) => ({
+      x: ((foot.x / window.innerWidth) * 2 - 1) * (viewW / 2),
+      y: (1 - (foot.y / window.innerHeight) * 2) * (viewH / 2),
+      scale: (foot.length / window.innerHeight) * viewH * SHOE_ON_FOOT,
+      pitch: 0,
+      yaw: foot.flipped ? 0 : 0.5, // toe pointing the way the figure faces
+      tilt: foot.flipped ? 180 - foot.angle : foot.angle,
+    });
+    place(root, yawGroup, tiltGroup, feet ? mix(single, onFoot(feet[1]), pose.pair) : single);
+    root2.visible = Boolean(feet);
+    if (feet) place(root2, yaw2, tilt2, mix(single, onFoot(feet[0]), pose.pair));
 
     const apart = ease(pose.explode);
     fadeWhole(apart);
@@ -171,7 +224,7 @@ export function shoeStage() {
     // Labels: each one appears in turn, pinned next to its part on screen.
     const n = parts.length;
     parts.forEach((part, i) => {
-      const shown = apart > 0.5 ? ease(slice(pose.labels, i / n, (i + 0.7) / n)) : 0;
+      const shown = apart > 0.5 && !feet ? ease(slice(pose.labels, i / n, (i + 0.7) / n)) : 0;
       part.label.style.opacity = String(shown);
       if (!shown) return;
       part.object.getWorldPosition(point).project(camera);
