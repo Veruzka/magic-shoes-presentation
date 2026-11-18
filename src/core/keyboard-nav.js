@@ -1,6 +1,7 @@
 // Drive the page like slides: arrow keys, space and Page Up/Down jump to the
 // next or previous "stop". Every element with data-scene is a scene; a scene
-// with data-stops="3" has three stops spread evenly through its scrolling.
+// with data-stops="3" has three stops spread evenly through its scrolling, or
+// data-stop-at="0,0.2,0.5,1" for exact ones.
 // Home and End jump to the very start and end.
 const NEXT = new Set(['ArrowDown', 'ArrowRight', 'PageDown', ' ']);
 const PREV = new Set(['ArrowUp', 'ArrowLeft', 'PageUp']);
@@ -10,6 +11,11 @@ function allStops() {
   document.querySelectorAll('[data-scene]').forEach((el) => {
     const top = el.getBoundingClientRect().top + window.scrollY;
     const distance = Math.max(el.offsetHeight - window.innerHeight, 0);
+    // data-stop-at="0,0.2,0.5,1": exact stops (share of the scene's scrolling).
+    if (el.dataset.stopAt) {
+      el.dataset.stopAt.split(',').forEach((f) => stops.push(Math.round(top + distance * Number(f))));
+      return;
+    }
     const count = Math.max(Number(el.dataset.stops) || 1, 1);
     for (let k = 0; k < count; k += 1) {
       stops.push(Math.round(top + (count === 1 ? 0 : (distance * k) / (count - 1))));
