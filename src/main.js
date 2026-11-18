@@ -7,7 +7,7 @@ import { watchScrollProgress } from './core/scroll-progress.js';
 import { hero, showBackground, showShoe, setShoeOpening, setSoleMove, setTransition, setReveal, setSettle, hasExitChapter } from './sections/hero.js';
 import { chapterProgress } from './sections/hero-timeline.js';
 import { backgrounds } from './backgrounds/index.js';
-import { shoes } from './shoes/index.js';
+import { shoes, startShoe } from './shoes/index.js';
 import { soleMoves } from './shoes/sole-moves.js';
 import { optionSwitcher, switcherPanel } from './components/option-switcher.js';
 import { infoButton } from './components/info-panel.js';
@@ -18,6 +18,7 @@ import { startShoeDirector } from './three/shoe-director.js';
 import { startPresenterNotes } from './components/presenter-notes.js';
 import { ttHero } from './sections/tt-hero.js';
 import { conceptMovements } from './sections/concept-movements.js';
+import { mvpDoes } from './sections/mvp-does.js';
 import { builtShoeParts, builtParts } from './sections/built-parts.js';
 import { process as processSection } from './sections/process.js';
 import { forward } from './sections/forward.js';
@@ -28,6 +29,7 @@ import { close } from './sections/close.js';
 const sections = [
   ttHero, // the name, one line, and the 3D shoe doing a full spin
   conceptMovements, // "Stories! Movement!" + one scene per movement
+  mvpDoes, // what the MVP does: walk and run, spin, whimsy moves (one arrow stop each)
   builtShoeParts, // "What we've built": the 3D shoe breaks apart, each part labeled
   hero, // then Veruzka's sketch breakdown: the FSR flies out, is drawn and explains itself
   builtParts, // the MVP, photos, what's next, takeaways
@@ -76,7 +78,7 @@ const styleLab = switcherPanel(
   optionSwitcher({
     title: 'Shoe',
     options: shoes,
-    current: loadChoice('shoe', shoes),
+    current: loadChoice('shoe', shoes, startShoe), // the Sketch (see src/shoes/index.js)
     onPick(shoe) {
       showShoe(heroSection, shoe);
       saveChoice('shoe', shoe);

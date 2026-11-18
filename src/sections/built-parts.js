@@ -99,6 +99,9 @@ const flow = [
 
 function mvpScene() {
   const { section, stage, onProgress } = scene({ name: 'mvp', length: 1.5, stops: 2 });
+  // Arrow-key stops: once the headline is in (not the very start, which is
+  // blank), then with the whole data flow lit.
+  section.dataset.stopAt = '0.12,1';
   stage.innerHTML = `
     <div class="tt-built__frame tt-built__mvp">
       <div class="tt-built__mvp-top">
@@ -162,6 +165,9 @@ const photos = [
 
 function mediaScene() {
   const { section, stage, onProgress } = scene({ name: 'mvp-media', length: 0.8, stops: 1 });
+  // Arrow-key stop at the end, with every tile shown. At the start nothing has
+  // faded in yet, so the slide was blank and the tiles flashed past on the next press.
+  section.dataset.stopAt = '1';
   stage.innerHTML = `
     <div class="tt-built__frame tt-built__media-frame">
       <div class="tt-built__media-grid">
@@ -206,6 +212,8 @@ function mediaScene() {
 // ---------------------------------------------------------------------------
 function nextBuildScene() {
   const { section, stage, onProgress } = scene({ name: 'next-build', length: 0.8, stops: 1 });
+  // Arrow-key stop at the end, with the takeaways shown (same reason as mvp-media).
+  section.dataset.stopAt = '1';
   stage.innerHTML = `
     <div class="tt-built__frame tt-built__next">
       <div class="tt-built__takeaways">
