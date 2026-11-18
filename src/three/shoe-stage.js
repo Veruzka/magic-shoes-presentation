@@ -256,8 +256,9 @@ export function shoeStage() {
         y: (1 - (foot.y / window.innerHeight) * 2) * (viewH / 2),
         scale: (foot.length / window.innerHeight) * viewH * SHOE_ON_FOOT,
         pitch: front ? 14 : 4,
-        yaw: front ? (foot.flipped ? 0.2 : 0.3) : foot.flipped ? 0 : 0.5,
-        tilt: front ? 0 : foot.flipped ? 180 - foot.angle : foot.angle,
+        // Side view: the toe points the way the player faces, and turns smoothly with the spin.
+        yaw: front ? (foot.facing < 0 ? 0.2 : 0.3) : (foot.facing < 0 ? 0 : 0.5) + (foot.spin ?? 0),
+        tilt: front ? 0 : foot.angle,
       };
     };
     const handover = feet ? ease(Math.min(pose.pair * 2.5, 1)) : 0;

@@ -37,8 +37,11 @@ const FIGURE_SCALE = 1.15;
 const COPY_DELAY = 0.3;
 const SYNC_SECONDS = 3.5;
 const SWITCH_SECONDS = 0.5; // how long a change of movement blends
-// How stiff each joint's spring is (higher = follows faster). Arms are looser.
-const SPRING = { lean: 16, y: 22, x: 22, hA: 26, hB: 26, kA: 24, kB: 24, aA: 18, aB: 18, sA: 11, sB: 11, eA: 9, eB: 9 };
+// How stiff each joint's spring is (higher = follows faster). Stiff enough that
+// the joints keep the real motion (lag of a few degrees), arms a little looser
+// so they trail softly. The spring is solved exactly, so a slow frame (a busy
+// laptop, the big TV) can't make it fling the limbs around.
+const SPRING = { lean: 40, y: 50, x: 50, hA: 55, hB: 55, kA: 50, kB: 50, aA: 45, aB: 45, sA: 32, sB: 32, eA: 28, eB: 28 };
 // The moment of each loop that shows the movement best (reduced motion).
 const KEY_PHASE = { step: 0.25, run: 0.25, spin: 0.12, pose: 0.5, kick: 0.5, sky: 0.4, heelclick: 0.25 };
 
@@ -113,10 +116,14 @@ function makePlayer(svg, { side, className }) {
           vel[k] = 0;
           return;
         }
+        // Critically damped spring, solved exactly for this frame's time step
+        // (stable for any frame rate, never overshoots).
         const w = SPRING[k];
-        const a = w * w * (target[k] - pose[k]) - 2 * w * vel[k];
-        vel[k] += a * dt;
-        next[k] = pose[k] + vel[k] * dt;
+        const d = pose[k] - target[k];
+        const c = vel[k] + w * d;
+        const e = Math.exp(-w * dt);
+        next[k] = target[k] + (d + c * dt) * e;
+        vel[k] = (vel[k] - w * c * dt) * e;
       });
       next.spin = target.spin; // spinning isn't sprung (it wraps around)
       pose = next;
@@ -225,8 +232,9 @@ function spriteScene() {
         x: m.a * gx + m.c * gy + m.e,
         y: m.b * gx + m.d * gy + m.f,
         length: f.length * FIGURE_SCALE * m.a,
-        angle: f.facing > 0 ? f.angle : 180 - f.angle,
-        flipped: f.facing > 0 ? f.flipped : !f.flipped,
+        angle: f.angle, // the foot's angle in the figure's own drawing (toe forward = 0)
+        facing: f.facing, // which way the player faces on screen
+        spin: f.spin * f.facing, // how far round the spin is (0 → 1), mirrored for player 2
         view,
       };
     });

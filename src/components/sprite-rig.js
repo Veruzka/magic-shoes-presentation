@@ -247,7 +247,9 @@ export function feetOf(pose) {
   const j = joints(pose);
   const s = spinScale(pose);
   return [j.legA, j.legB].map((leg) => {
-    const dx = (leg.toe.x - leg.ankle.x) * s;
+    // The angle is measured in the figure's own drawing, before the spin squash,
+    // so it stays steady while spinning (the 3D shoe turns with `spin` instead).
+    const dx = leg.toe.x - leg.ankle.x;
     const dy = leg.toe.y - leg.ankle.y;
     return {
       x: ((leg.ankle.x + leg.toe.x) / 2) * s,
@@ -255,6 +257,7 @@ export function feetOf(pose) {
       length: LEN.foot,
       angle: (-Math.atan2(dy, dx) * 180) / Math.PI,
       flipped: s < 0,
+      spin: pose.spin ?? 0,
     };
   });
 }
