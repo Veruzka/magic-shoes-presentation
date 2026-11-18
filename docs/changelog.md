@@ -2,6 +2,13 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-18 (later afternoon): arrow-key stops (Liz, branch `liz-animation-fixes`)
+- **Blank slides (fixed):** the MVP, "How it came together" and "Four shoes, sound effects" put their first arrow-key stop before anything had faded in, so the right arrow landed on a blank screen and the content flashed past on the next press. The MVP now stops on its headline, then with the data flow lit; the other two stop with everything shown (`data-stop-at` in `built-parts.js`).
+- **Veruzka's FSR breakdown skipped (fixed):** it only plays with the Sketch shoe, and a fresh browser started on Photo, so her section shrank to one screen. The site now starts on the Sketch (`startShoe` in `src/shoes/index.js`); a pick in the Style Lab is still remembered.
+- **What's next overlap (fixed):** the returning shoe pieces covered "Shoe development"; they now gather under the headline.
+- **Kept on purpose:** the Style Lab panel and "Start prototyping" button stay on every slide (Liz's call).
+- **Checked:** a fresh-browser arrow-key run through all 44 stops, with screenshots of each.
+
 ## 2026-11-18 (afternoon): animation fixes (Liz, branch `liz-animation-fixes`)
 - **Legs through each other (fixed):** switching into or out of feet to the sky blended straight between lying down and standing, so both players' legs and shoes swung across the middle and through each other. They now lie down and get up through a tucked sit (one second instead of half a second).
 - **Shoes snapping between views (fixed):** going to or from the heel click flipped the four shoes from the side view to the front view in one frame. They now turn over half a second.
