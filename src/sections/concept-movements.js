@@ -53,7 +53,7 @@ function switchPose(from, to, t) {
 // laptop, the big TV) can't make it fling the limbs around.
 const SPRING = { lean: 40, y: 50, x: 50, hA: 55, hB: 55, kA: 50, kB: 50, aA: 45, aB: 45, sA: 32, sB: 32, eA: 28, eB: 28 };
 // The moment of each loop that shows the movement best (reduced motion).
-const KEY_PHASE = { step: 0.25, run: 0.25, spin: 0.12, pose: 0.5, kick: 0.5, sky: 0.4, heelclick: 0.25 };
+const KEY_PHASE = { step: 0.25, run: 0.25, spin: 0.12, pose: 0.5, kick: 0.5, sky: 0.4, heelclick: 0.53 };
 
 export function conceptMovements() {
   const wrapper = document.createElement('div');

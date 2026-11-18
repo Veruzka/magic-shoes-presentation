@@ -68,15 +68,14 @@ function framesOf(clip) {
       pose.aA = limit(pose.aA, -35, 35);
       pose.aB = limit(pose.aB, -35, 35);
     });
-    if (clip.float !== undefined || clip === motion.heelclick) {
-      const float = clip.float ?? 25;
+    if (clip.float !== undefined) {
+      const float = clip.float;
       all.forEach((pose) => {
         const gap = GROUND - lowestFoot(pose); // + = feet above the ground
         const jump = Math.max(gap - float, 0);
         pose.y += gap - jump;
       });
     }
-    if (clip === motion.heelclick) all = jumpArms(all);
     loopFrames.set(clip, all);
   }
   return loopFrames.get(clip);
@@ -99,35 +98,48 @@ function recorded(clip, f) {
   return pose;
 }
 
-// Arms for a jump: they swing back as the knees bend into the crouch and up
-// while the feet are off the ground (the heel click itself). Worked out for
-// every frame of the loop, then smoothed over about a tenth of a second each
-// way, so the arms move like arms (and start rising just before take-off).
-const ARM_KEYS = ['sA', 'sB', 'eA', 'eB'];
-function jumpArms(frames) {
-  const raw = frames.map((pose) => {
-    const air = Math.max(GROUND - lowestFoot(pose), 0); // how high the feet are off the ground
-    const up = ease(clamp01(air / 20)); // 0 on the ground → 1 high in the air
-    const bend = Math.max(-pose.kA, -pose.kB); // the more bent knee, in degrees
-    const back = ease(clamp01((bend - 15) / 60)) * (1 - up); // 0 standing → 1 deep crouch
-    return {
-      sA: -8 - 40 * back + 150 * up,
-      sB: 6 - 40 * back + 140 * up,
-      eA: 14 + 20 * back - 4 * up,
-      eB: 16 + 20 * back - 6 * up,
-    };
-  });
-  const n = frames.length;
-  const reach = 4; // frames each way (at 20 a second)
-  const weights = Array.from({ length: reach * 2 + 1 }, (_, i) => Math.exp(-((i - reach) ** 2) / (2 * 2 * 2)));
-  const total = weights.reduce((a, b) => a + b, 0);
-  return frames.map((pose, i) => {
-    const out = { ...pose };
-    ARM_KEYS.forEach((key) => {
-      out[key] = weights.reduce((sum, w, k) => sum + w * raw[(i + k - reach + n) % n][key], 0) / total;
-    });
-    return out;
-  });
+// The heel click, hand-animated from a side view (the tracked video was filmed
+// from the front, so its knees bent backwards in this side-on figure).
+// Keyframes through one loop: stand, crouch with the arms back, push off with
+// the arms sweeping up, click the heels high in the air with the arms spread
+// up and out, land soft, stand. Per key:
+//   h/k   hips and knees (A far, B near)    lean  torso    s/e  shoulders, elbows
+//   rise  how far the hips are above standing, in the air
+//   air   0 on the ground (feet kept flat on the floor) → 1 in the air (toes pointed)
+const STAND_KEY = { hA: 0, kA: -4, hB: 0, kB: -4, lean: 2, sA: -8, eA: 14, sB: 6, eB: 16, rise: 0, air: 0 };
+const HEEL_CLICK_KEYS = [
+  [0, STAND_KEY],
+  [0.14, STAND_KEY],
+  [0.32, { hA: 55, kA: -100, hB: 50, kB: -95, lean: 28, sA: -50, eA: 25, sB: -45, eB: 25, rise: 0, air: 0 }], // crouch, arms back
+  [0.42, { hA: 10, kA: -10, hB: 5, kB: -8, lean: 8, sA: 120, eA: 20, sB: 105, eB: 20, rise: 12, air: 0.7 }], // push off, arms up
+  [0.52, { hA: 18, kA: -100, hB: 24, kB: -102, lean: 4, sA: 150, eA: 10, sB: 125, eB: 12, rise: 28, air: 1 }], // heels click
+  [0.6, { hA: 20, kA: -96, hB: 26, kB: -98, lean: 4, sA: 155, eA: 8, sB: 130, eB: 10, rise: 26, air: 1 }], // still up
+  [0.7, { hA: 12, kA: -15, hB: 8, kB: -12, lean: 6, sA: 55, eA: 25, sB: 45, eB: 25, rise: 6, air: 0.4 }], // legs reach for the floor
+  [0.78, { hA: 35, kA: -60, hB: 32, kB: -58, lean: 16, sA: 25, eA: 30, sB: 15, eB: 30, rise: 0, air: 0 }], // land soft
+  [0.92, STAND_KEY],
+];
+const HEEL_KEYS = Object.keys(STAND_KEY);
+function heelClick(f) {
+  const keys = HEEL_CLICK_KEYS;
+  const n = keys.length;
+  let i = n - 1;
+  while (keys[i][0] > f) i -= 1;
+  const t0 = keys[i][0];
+  const t1 = i + 1 < n ? keys[i + 1][0] : 1;
+  const u = (f - t0) / (t1 - t0);
+  const at = (j) => keys[(j + n) % n][1];
+  const v = {};
+  HEEL_KEYS.forEach((key) => (v[key] = catmull(at(i - 1)[key], at(i)[key], at(i + 1)[key], at(i + 2)[key], u)));
+  const air = clamp01(v.air);
+  // Feet: flat on the floor on the ground, toes pointed in the air.
+  // Knees never bend backwards (the smooth curve can overshoot straight a little).
+  const pose = { ...STAND, lean: v.lean, hA: v.hA, kA: Math.min(v.kA, 0), hB: v.hB, kB: Math.min(v.kB, 0), sA: v.sA, eA: v.eA, sB: v.sB, eB: v.eB };
+  pose.aA = lerp(-(v.hA + v.kA), -25, air);
+  pose.aB = lerp(-(v.hB + v.kB), -25, air);
+  // Height: on the ground, the lowest foot touches the floor; in the air, the hips rise.
+  const onFloor = GROUND - lowestFoot({ ...pose, y: 0 });
+  pose.y = lerp(onFloor, -v.rise, air);
+  return pose;
 }
 
 // Each movement: pose(phase) for one loop, plus `strikes`: the moments in the
@@ -243,15 +255,12 @@ export const MOVES = {
     loops: 1,
   },
   heelclick: {
-    // Heel-click jump (P-20): the real tracked loop from our video, filmed from the front.
-    // The arms aren't the tracked ones: from the front-on video they windmilled
-    // almost a full turn in half a second. They follow the jump instead: back as
-    // the body crouches, up as it leaves the ground, down again on landing.
-    pose: (f) => recorded(motion.heelclick, f),
-    strikes: [[motion.heelclick.strike, 'both']],
-    seconds: framesOf(motion.heelclick).length / motion.heelclick.fps,
-    // The figure is drawn side-on, so the shoes are too: front-view shoes were
-    // narrower than the drawn feet, and the feet poked out of them.
+    // Heel-click jump (P-20), hand-animated side-on (see heelClick above). The
+    // tracked loop from our front-on video is still in bodystorm-motion.json
+    // and can be played with recorded(motion.heelclick, f).
+    pose: heelClick,
+    strikes: [[0.53, 'both']], // the click
+    seconds: 2.2,
     view: 'side',
   },
 };
