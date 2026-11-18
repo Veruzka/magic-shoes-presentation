@@ -2,6 +2,11 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-18 (late night): QA fixes
+- **Erratic players while paused (fixed):** the springy joints were worked out step by step, which blows up when a frame takes long (a busy laptop, the big TV): limbs flung around. Now the spring is solved exactly, so any frame rate is safe, and it's stiffer, so the joints keep the real motion (they lagged up to about 100° before).
+- **Shoes snapping in the spin (fixed):** the 3D shoes flipped 180° in one frame six times every 5 seconds. They now turn smoothly with the spin.
+- **Checked:** a simulation of every move at 60, 30 and 20 frames a second: no blowups, and the feet move only as far as the motion itself.
+
 ## 2026-11-18 (night): two players, real motion, the story behind them
 - **Two players:** player 1 (cyan) leads, player 2 (Veruzka's sand) copies a beat late and falls into sync; the sound rings grow as they sync (copy and heighten). Each wears a pair: four shoes.
 - **Real bodystorm motion:** the heel click is our tracked video loop (P-20, clip 3, cleaned, smoothed, looped). The side kick (P-09c) and dancer's pose (P-08a) use the tracked peak pose from the high-resolution stills, timed by hand; the video tracking had lost the feet there (the people were cut off at the bottom of the frame). The dancer's raised knee comes from the pictogram (the tracker was unsure). Walk, run, spin and feet to the sky stay hand-animated. Source: `crops_pose.json` and `windows_5fps.json` in the synthesis Drive folder.
