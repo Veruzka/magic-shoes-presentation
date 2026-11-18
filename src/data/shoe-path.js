@@ -83,8 +83,9 @@ export const shoePath = {
   critique: away,
   grid: away,
 
-  // What's next: the pieces drift back in at the end…
-  forward: (p) => ({ ay: 0.42, size: 0.42, explode: 1, opacity: ease(slice(p, 0.7, 1)) }),
+  // What's next: the pieces drift back in at the end, in the empty space under
+  // the headline (centred above, they covered the "Shoe development" step)…
+  forward: (p) => ({ ax: -0.49, ay: -0.5, size: 0.36, explode: 1, opacity: ease(slice(p, 0.7, 1)) }),
   // …and land whole for the close.
   close: () => ({ ay: 0.42, size: 0.42 }),
 };
