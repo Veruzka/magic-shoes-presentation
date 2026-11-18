@@ -47,14 +47,37 @@ const TAU = Math.PI * 2;
 // so the figure doesn't freeze for a frame every time the loop comes round.
 // Ankles and elbows are kept in a natural range (the tracker can wobble there).
 const limit = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+// Feet on the ground: the tracked hip height doesn't match the rig's legs (the
+// video was filmed from the front), so standing frames floated about 25 units
+// up and the crouch sank below the ground. Each frame is moved so its lowest
+// foot touches the ground, except for any height above `float`, which is the
+// real jump and is kept.
 const loopFrames = new WeakMap();
+function lowestFoot(pose) {
+  const j = joints(pose);
+  return Math.max(j.legA.ankle.y, j.legA.toe.y, j.legB.ankle.y, j.legB.toe.y);
+}
 function framesOf(clip) {
   if (!loopFrames.has(clip)) {
-    const all = clip.frames.map((frame) => ({ ...STAND, ...frame }));
+    let all = clip.frames.map((frame) => ({ ...STAND, ...frame }));
     const first = all[0];
     const last = all[all.length - 1];
     const closed = all.length > 2 && KEYS.every((key) => first[key] === last[key]);
-    loopFrames.set(clip, closed ? all.slice(0, -1) : all);
+    if (closed) all = all.slice(0, -1);
+    all.forEach((pose) => {
+      pose.aA = limit(pose.aA, -35, 35);
+      pose.aB = limit(pose.aB, -35, 35);
+    });
+    if (clip.float !== undefined || clip === motion.heelclick) {
+      const float = clip.float ?? 25;
+      all.forEach((pose) => {
+        const gap = GROUND - lowestFoot(pose); // + = feet above the ground
+        const jump = Math.max(gap - float, 0);
+        pose.y += gap - jump;
+      });
+    }
+    if (clip === motion.heelclick) all = jumpArms(all);
+    loopFrames.set(clip, all);
   }
   return loopFrames.get(clip);
 }
@@ -74,6 +97,37 @@ function recorded(clip, f) {
   pose.eA = limit(pose.eA, -140, 140);
   pose.eB = limit(pose.eB, -140, 140);
   return pose;
+}
+
+// Arms for a jump: they swing back as the knees bend into the crouch and up
+// while the feet are off the ground (the heel click itself). Worked out for
+// every frame of the loop, then smoothed over about a tenth of a second each
+// way, so the arms move like arms (and start rising just before take-off).
+const ARM_KEYS = ['sA', 'sB', 'eA', 'eB'];
+function jumpArms(frames) {
+  const raw = frames.map((pose) => {
+    const air = Math.max(GROUND - lowestFoot(pose), 0); // how high the feet are off the ground
+    const up = ease(clamp01(air / 20)); // 0 on the ground → 1 high in the air
+    const bend = Math.max(-pose.kA, -pose.kB); // the more bent knee, in degrees
+    const back = ease(clamp01((bend - 15) / 60)) * (1 - up); // 0 standing → 1 deep crouch
+    return {
+      sA: -8 - 40 * back + 150 * up,
+      sB: 6 - 40 * back + 140 * up,
+      eA: 14 + 20 * back - 4 * up,
+      eB: 16 + 20 * back - 6 * up,
+    };
+  });
+  const n = frames.length;
+  const reach = 4; // frames each way (at 20 a second)
+  const weights = Array.from({ length: reach * 2 + 1 }, (_, i) => Math.exp(-((i - reach) ** 2) / (2 * 2 * 2)));
+  const total = weights.reduce((a, b) => a + b, 0);
+  return frames.map((pose, i) => {
+    const out = { ...pose };
+    ARM_KEYS.forEach((key) => {
+      out[key] = weights.reduce((sum, w, k) => sum + w * raw[(i + k - reach + n) % n][key], 0) / total;
+    });
+    return out;
+  });
 }
 
 // Each movement: pose(phase) for one loop, plus `strikes`: the moments in the
@@ -190,10 +244,15 @@ export const MOVES = {
   },
   heelclick: {
     // Heel-click jump (P-20): the real tracked loop from our video, filmed from the front.
+    // The arms aren't the tracked ones: from the front-on video they windmilled
+    // almost a full turn in half a second. They follow the jump instead: back as
+    // the body crouches, up as it leaves the ground, down again on landing.
     pose: (f) => recorded(motion.heelclick, f),
     strikes: [[motion.heelclick.strike, 'both']],
     seconds: framesOf(motion.heelclick).length / motion.heelclick.fps,
-    view: 'front',
+    // The figure is drawn side-on, so the shoes are too: front-view shoes were
+    // narrower than the drawn feet, and the feet poked out of them.
+    view: 'side',
   },
 };
 
