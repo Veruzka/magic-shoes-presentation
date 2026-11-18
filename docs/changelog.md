@@ -2,6 +2,12 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-18 (afternoon): animation fixes (Liz, branch `liz-animation-fixes`)
+- **Legs through each other (fixed):** switching into or out of feet to the sky blended straight between lying down and standing, so both players' legs and shoes swung across the middle and through each other. They now lie down and get up through a tucked sit (one second instead of half a second).
+- **Shoes snapping between views (fixed):** going to or from the heel click flipped the four shoes from the side view to the front view in one frame. They now turn over half a second.
+- **Heel click hitch (fixed):** the tracked loop's last frame repeated its first, so the players froze for 1/20 s every loop. That frame plays once now, and the tracked frames are joined with a smooth curve instead of straight lines.
+- **Checked:** build; a scripted arrow-key run through all seven movements (the shoes stay on the feet every frame; the view turn has no jumps); frame-by-frame screenshots of lying down and getting up. **Not checked by eye on a real screen** at full speed.
+
 ## 2026-11-18 (late night): QA fixes
 - **Erratic players while paused (fixed):** the springy joints were worked out step by step, which blows up when a frame takes long (a busy laptop, the big TV): limbs flung around. Now the spring is solved exactly, so any frame rate is safe, and it's stiffer, so the joints keep the real motion (they lagged up to about 100° before).
 - **Shoes snapping in the spin (fixed):** the 3D shoes flipped 180° in one frame six times every 5 seconds. They now turn smoothly with the spin.
