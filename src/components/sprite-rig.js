@@ -19,7 +19,7 @@
 // The figure faces right. Angles are in degrees:
 //   lean      torso lean (+ forward, -90 = lying on its back)
 //   sA, sB    shoulders, relative to the torso (0 = arm hangs down, + forward)
-//   eA, eB    elbows (- bends the forearm forward and up)
+//   eA, eB    elbows (+ bends the forearm forward and up, like a real elbow; - would bend it backwards)
 //   hA, hB    hips, measured from straight down (+ = leg swings forward)
 //   kA, kB    knees (- bends the shin back)
 //   aA, aB    ankles (+ toe up)
@@ -32,7 +32,7 @@ import motion from '../data/bodystorm-motion.json';
 const LEN = { torso: 58, neck: 9, head: 14, upper: 31, fore: 29, thigh: 44, shin: 42, foot: 17 };
 export const GROUND = LEN.thigh + LEN.shin; // where the soles are when standing
 
-export const STAND = { x: 0, y: 0, lean: 0, sA: -8, eA: -12, sB: 8, eB: -12, hA: 0, kA: 0, aA: 0, hB: 0, kB: 0, aB: 0, spin: 0 };
+export const STAND = { x: 0, y: 0, lean: 0, sA: -8, eA: 12, sB: 8, eB: 12, hA: 0, kA: 0, aA: 0, hB: 0, kB: 0, aB: 0, spin: 0 };
 const KEYS = Object.keys(STAND);
 
 const rad = (d) => (d * Math.PI) / 180;
@@ -90,10 +90,12 @@ export const MOVES = {
         hB: -22 * Math.sin(w),
         kA: -6 - 30 * Math.max(0, Math.cos(w)),
         kB: -6 - 30 * Math.max(0, -Math.cos(w)),
-        sA: -22 * Math.sin(w),
-        sB: 22 * Math.sin(w),
-        eA: -18,
-        eB: -18,
+        // Each arm swings opposite its leg, a little more forward than back, and
+        // the elbow bends a little more as the arm comes forward.
+        sA: 4 - 22 * Math.sin(w),
+        sB: 4 + 22 * Math.sin(w),
+        eA: 16 + 14 * Math.max(0, -Math.sin(w)),
+        eB: 16 + 14 * Math.max(0, Math.sin(w)),
       };
     },
     strikes: [[0.25, 'A'], [0.75, 'B']],
@@ -110,10 +112,12 @@ export const MOVES = {
         hB: -44 * Math.sin(w),
         kA: -20 - 75 * Math.max(0, Math.cos(w)),
         kB: -20 - 75 * Math.max(0, -Math.cos(w)),
-        sA: -55 * Math.sin(w),
-        sB: 55 * Math.sin(w),
-        eA: -85,
-        eB: -85,
+        // Elbows bent about 90°, forearms forward; each arm drives opposite its
+        // leg, the hand coming up to about chin height in front.
+        sA: 2 - 45 * Math.sin(w),
+        sB: 2 + 45 * Math.sin(w),
+        eA: 80 + 8 * Math.max(0, -Math.sin(w)),
+        eB: 80 + 8 * Math.max(0, Math.sin(w)),
       };
     },
     strikes: [[0.25, 'A'], [0.75, 'B']],
@@ -125,10 +129,11 @@ export const MOVES = {
       y: -4 * Math.sin(f * Math.PI),
       hB: 28,
       kB: -75,
-      sA: 55,
-      eA: -105,
-      sB: 55,
-      eB: -105,
+      // Arms pulled in, hands at the chest, like a skater's spin.
+      sA: 35,
+      eA: 100,
+      sB: 35,
+      eB: 100,
       spin: f,
     }),
     strikes: [[0.5, 'both']],
