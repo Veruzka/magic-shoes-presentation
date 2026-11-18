@@ -13,6 +13,7 @@ export function startPresenterNotes() {
     <p class="presenter-notes__part"></p>
     <p class="presenter-notes__speaker"></p>
     <ul class="presenter-notes__points"></ul>
+    <p class="presenter-notes__sound"></p>
     <p class="presenter-notes__hint">P to hide</p>
   `;
   document.body.append(card);
@@ -23,6 +24,9 @@ export function startPresenterNotes() {
     const scenes = [...document.querySelectorAll('[data-scene]')];
     const here = scenes.findLast((el) => el.getBoundingClientRect().top <= window.innerHeight / 2) ?? scenes[0];
     const note = presenterNotes.find((n) => n.scenes.includes(here?.dataset.scene));
+    // The movement scene says which sound goes with the current "Yes, and…" offer.
+    const sound = card.querySelector('.presenter-notes__sound');
+    sound.textContent = here?.dataset.sound ? `Sound: ${here.dataset.sound}` : '';
     if (!note || note === shown) return;
     shown = note;
     card.querySelector('.presenter-notes__part').textContent = note.part;

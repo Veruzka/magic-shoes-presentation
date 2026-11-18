@@ -43,6 +43,17 @@
   padding-left: 18px;
 }
 
+.presenter-notes__sound {
+  margin-top: 8px !important;
+  font-family: var(--font-callout);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.presenter-notes__sound:empty {
+  display: none;
+}
+
 .presenter-notes__hint {
   margin-top: 8px !important;
   font-family: var(--font-callout);
