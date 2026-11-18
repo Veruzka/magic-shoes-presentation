@@ -47,7 +47,7 @@ function conceptIntro() {
         <span>Stories!</span>
         <span>Movement!</span>
       </h2>
-      <p class="tt-line">Every move makes a sound.</p>
+      <p class="tt-line">You make a move. The sound says yes, and. Your partner takes it from there.</p>
     </div>
   `;
 

@@ -9,7 +9,7 @@ export const presenterNotes = [
     part: 'Opening',
     scenes: ['hero'],
     speaker: 'TODO: speaker',
-    points: ['Twinkle Toes: shoes that turn your movement into sound.', 'Two players, four shoes, stories they make up together.'],
+    points: ['TUI as improv: the shoe is a scene partner, and sound gives each move a body.', 'The goal: two people start to play in spaces not built for play.'],
   },
   {
     part: 'The concept',
