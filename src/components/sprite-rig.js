@@ -8,6 +8,14 @@
 //   drawFigure(svgGroup, pose);                // updates the figure
 //   const feet = feetOf(pose);                 // where each foot is (for the shoes)
 //
+// Three whimsy moves use our real bodystorm motion (src/data/bodystorm-motion.json):
+// the heel click is the tracked video loop; the side kick and dancer's pose use
+// the tracked peak pose from the high-resolution still, timed by hand around it.
+// Walk, run, spin and feet to the sky are hand-animated.
+//
+// Each movement also has `seconds` (how long one loop takes in real time) and
+// `view` ('side' or 'front': which way the camera sees the feet, for the 3D shoes).
+//
 // The figure faces right. Angles are in degrees:
 //   lean      torso lean (+ forward, -90 = lying on its back)
 //   sA, sB    shoulders, relative to the torso (0 = arm hangs down, + forward)
@@ -18,7 +26,8 @@
 //   x, y      where the hips are, in figure units (+y = down)
 //   spin      turns around the vertical axis (1 = one full turn)
 // A = the far side (drawn first), B = the near side.
-import { lerp } from '../core/scene.js';
+import { lerp, ease, slice } from '../core/scene.js';
+import motion from '../data/bodystorm-motion.json';
 
 const LEN = { torso: 58, neck: 9, head: 14, upper: 31, fore: 29, thigh: 44, shin: 42, foot: 17 };
 export const GROUND = LEN.thigh + LEN.shin; // where the soles are when standing
@@ -31,6 +40,23 @@ const down = (deg, len) => ({ x: Math.sin(rad(deg)) * len, y: Math.cos(rad(deg))
 const add = (p, v) => ({ x: p.x + v.x, y: p.y + v.y });
 const clamp01 = (n) => Math.min(Math.max(n, 0), 1);
 const TAU = Math.PI * 2;
+
+// Plays a recorded loop: the frame at this point of the loop, blended with the next.
+// Ankles and elbows are kept in a natural range (the tracker can wobble there).
+const limit = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+function recorded(clip, f) {
+  const frames = clip.frames;
+  const x = f * frames.length;
+  const i = Math.floor(x) % frames.length;
+  const a = { ...STAND, ...frames[i] };
+  const b = { ...STAND, ...frames[(i + 1) % frames.length] };
+  const pose = blendPose(a, b, x - Math.floor(x));
+  pose.aA = limit(pose.aA, -35, 35);
+  pose.aB = limit(pose.aB, -35, 35);
+  pose.eA = limit(pose.eA, -140, 140);
+  pose.eB = limit(pose.eB, -140, 140);
+  return pose;
+}
 
 // Each movement: pose(phase) for one loop, plus `strikes`: the moments in the
 // loop (0 → 1) when a foot makes its sound ('A', 'B' or 'both'), for the rings.
@@ -53,6 +79,7 @@ export const MOVES = {
       };
     },
     strikes: [[0.25, 'A'], [0.75, 'B']],
+    seconds: 1.15,
   },
   run: {
     pose: (f) => {
@@ -72,6 +99,7 @@ export const MOVES = {
       };
     },
     strikes: [[0.25, 'A'], [0.75, 'B']],
+    seconds: 0.7,
   },
   spin: {
     pose: (f) => ({
@@ -86,41 +114,34 @@ export const MOVES = {
       spin: f,
     }),
     strikes: [[0.5, 'both']],
+    seconds: 1.6,
   },
   pose: {
-    // Dancer's pose (P-08a): one foot down, the other knee raised, arms out wide.
-    pose: (f) => ({
-      ...STAND,
-      lean: -6 + 3 * Math.sin(f * TAU),
-      hB: 72,
-      kB: -28,
-      aB: 18,
-      hA: -2,
-      sA: -95,
-      eA: 0,
-      sB: 95,
-      eB: 0,
-    }),
-    strikes: [[0.0, 'A']],
+    // Dancer's pose (P-08a): rise into the real peak pose, hold it, sway a little, come down.
+    pose: (f) => {
+      const peak = { ...STAND, ...motion.peaks.pose.pose };
+      const up = ease(slice(f, 0, 0.22)) * (1 - ease(slice(f, 0.82, 1)));
+      const held = blendPose(STAND, peak, up);
+      held.lean += 2 * Math.sin(f * TAU * 2) * up; // a balancing sway
+      held.sB += 4 * Math.sin(f * TAU * 2 + 1) * up;
+      return held;
+    },
+    strikes: [[0.22, 'A']],
+    seconds: 3.4,
+    loops: 1,
   },
   kick: {
-    // Side kick, sole out (P-09c): chamber the knee, snap the leg straight out, back.
+    // Side kick, sole out (P-09c): chamber the knee, snap out to the real peak pose, hold, return.
     pose: (f) => {
-      const out = 0.5 - 0.5 * Math.cos(f * TAU); // 0 → 1 → 0
-      return {
-        ...STAND,
-        lean: lerp(-4, -22, out),
-        hA: -4,
-        hB: lerp(45, 95, out),
-        kB: lerp(-105, 0, out),
-        aB: lerp(0, -15, out),
-        sA: -25,
-        eA: -20,
-        sB: -10,
-        eB: -25,
-      };
+      const peak = { ...STAND, ...motion.peaks.kick.pose };
+      const chamber = { ...STAND, lean: -4, hB: 55, kB: -110, sA: -20, sB: -10 };
+      if (f < 0.3) return blendPose(STAND, chamber, ease(f / 0.3));
+      if (f < 0.42) return blendPose(chamber, peak, ease(slice(f, 0.3, 0.42)));
+      if (f < 0.62) return peak;
+      return blendPose(peak, STAND, ease(slice(f, 0.62, 1)));
     },
-    strikes: [[0.5, 'B']],
+    strikes: [[0.42, 'B']],
+    seconds: 2.2,
   },
   sky: {
     // Feet to the sky (P-03): lying on its back, soles up, held like a lens.
@@ -141,26 +162,15 @@ export const MOVES = {
       eB: 0,
     }),
     strikes: [[0.5, 'both']],
+    seconds: 3.2,
+    loops: 1,
   },
   heelclick: {
-    // Heel-click jump (P-20): up, the inner heels meet mid-air, land.
-    pose: (f) => {
-      const up = Math.sin(Math.PI * f);
-      return {
-        ...STAND,
-        y: -48 * up,
-        lean: 4,
-        hA: 18 * up,
-        kA: -78 * up,
-        hB: -8 * up,
-        kB: -62 * up,
-        sA: -30,
-        eA: -20,
-        sB: lerp(10, 150, up),
-        eB: -10,
-      };
-    },
-    strikes: [[0.5, 'both'], [0.98, 'both']],
+    // Heel-click jump (P-20): the real tracked loop from our video, filmed from the front.
+    pose: (f) => recorded(motion.heelclick, f),
+    strikes: [[motion.heelclick.strike, 'both']],
+    seconds: motion.heelclick.frames.length / motion.heelclick.fps,
+    view: 'front',
   },
 };
 
