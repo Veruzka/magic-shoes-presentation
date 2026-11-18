@@ -6,6 +6,7 @@ One short entry per work session, newest first.
 - **Blank slides (fixed):** the MVP, "How it came together" and "Four shoes, sound effects" put their first arrow-key stop before anything had faded in, so the right arrow landed on a blank screen and the content flashed past on the next press. The MVP now stops on its headline, then with the data flow lit; the other two stop with everything shown (`data-stop-at` in `built-parts.js`).
 - **Veruzka's FSR breakdown skipped (fixed):** it only plays with the Sketch shoe, and a fresh browser started on Photo, so her section shrank to one screen. The site now starts on the Sketch (`startShoe` in `src/shoes/index.js`); a pick in the Style Lab is still remembered.
 - **What's next overlap (fixed):** the returning shoe pieces covered "Shoe development"; they now gather under the headline.
+- **New slide, "What the MVP does" (Liz):** right after the movement scene, before "Inside each shoe". Walk and run ("Every step makes a sound."), Spin ("Spin around to change the sounds."), Whimsy moves ("Unexpected and whimsical movements have their own sounds to be discovered."). One arrow-key stop per item; a figure on the right does each one. Picked from three directions (cards, one at a time, move and sound strip): one at a time, no box behind the figure, no label above it.
 - **Kept on purpose:** the Style Lab panel and "Start prototyping" button stay on every slide (Liz's call).
 - **Checked:** a fresh-browser arrow-key run through all 44 stops, with screenshots of each.
 

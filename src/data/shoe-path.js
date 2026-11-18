@@ -63,6 +63,10 @@ export const shoePath = {
     feet: el?.__feet ?? null,
   }),
 
+  // What the MVP does: the figure has the stage; the shoe waits off screen,
+  // whole, where "Inside each shoe" picks it up.
+  'mvp-does': () => ({ ax: 0.12, ay: -0.05, size: 0.62, opacity: 0 }),
+
   // What we've built: it breaks apart, then each part gets its label.
   parts: (p) => ({
     ax: 0.12,
