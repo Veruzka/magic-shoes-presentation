@@ -1,21 +1,20 @@
-/* "Moving forward" (src/sections/forward.js): headline on the left, three
-   numbered points on the right. Only opacity and transform change on scroll. */
+/* "What's next" (src/sections/forward.js): headline on the left, two big
+   numbered steps on the right. Only opacity and transform change on scroll. */
 .tt-forward__stage {
   background: var(--color-bg);
   color: var(--color-text);
 }
 
 .tt-forward__inner {
-  width: min(1100px, 100% - 2 * 32px);
+  width: min(1200px, 100% - 2 * 32px);
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1.3fr;
   align-items: center;
-  gap: 64px;
+  gap: 24px 64px;
 }
 
 .tt-forward__headline {
-  font-size: clamp(2.4rem, 5vw, 4.8rem);
-  max-width: 9ch;
+  font-size: clamp(2.6rem, 5.5vw, 5.2rem);
 }
 
 .tt-forward__points {
@@ -24,29 +23,61 @@
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 28px;
+  gap: 40px;
 }
 
 .tt-forward__point {
   counter-increment: forward;
   position: relative;
-  padding: 18px 0 0 52px;
+  padding: 22px 0 0 68px;
   border-top: 1px solid color-mix(in srgb, var(--color-ink) 18%, transparent);
-  font-family: var(--font-note);
-  font-weight: 300;
-  font-size: clamp(1.05rem, 1.7vw, 1.4rem);
-  line-height: 1.4;
   opacity: 0;
+  will-change: opacity, transform;
 }
 
-/* The number in front of each point. */
+/* The big number in front of each step. */
 .tt-forward__point::before {
   content: '0' counter(forward);
   position: absolute;
   left: 0;
-  top: 20px;
+  top: 26px;
   font-family: var(--font-callout);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.6rem;
   color: var(--color-muted);
+}
+
+.tt-forward__title {
+  margin: 0;
+  font-family: var(--font-note);
+  font-weight: 600;
+  font-size: clamp(1.8rem, 3.4vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.tt-forward__sub {
+  margin: 10px 0 0;
+  font-family: var(--font-note);
+  font-weight: 300;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  line-height: 1.4;
+  max-width: 34ch;
+}
+
+/* The TODO sticker sits under the steps, on the right. */
+.tt-forward__todo {
+  grid-column: 2;
+  margin: 0;
+  opacity: 0;
+}
+
+@media (max-width: 800px) {
+  .tt-forward__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .tt-forward__todo {
+    grid-column: 1;
+  }
 }

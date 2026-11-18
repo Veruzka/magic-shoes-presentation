@@ -3,6 +3,9 @@
 // fades in by how much of it has come into view: a quarter showing = faint,
 // all of it showing = fully there. Scrolling back up fades it out again.
 //
+// The text sits in the lower part of the screen on purpose: the top-centre
+// (about 45% of the height) stays empty for the floating 3D shoe.
+//
 //   page.append(close());
 import '../styles/close.css';
 import { scene } from '../core/scene.js';

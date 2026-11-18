@@ -1,21 +1,27 @@
-/* The ending (src/sections/close.js): a plain, centred full screen on the
-   slightly darker cream. Only its opacity changes, as it scrolls into view. */
+/* The ending (src/sections/close.js): a plain full screen on the slightly
+   darker cream. The text block sits at the bottom, centred, so the top-centre
+   ~45% of the screen stays empty for the floating 3D shoe. Only its opacity
+   changes, as it scrolls into view. */
 .tt-close__stage {
   background: var(--color-surface);
   color: var(--color-text);
+  place-items: end center; /* push the text block to the bottom */
 }
 
 .tt-close__inner {
   width: min(900px, 100% - 2 * 32px);
+  max-height: 55vh; /* never climb into the shoe's space */
+  box-sizing: border-box;
+  padding-bottom: 7vh;
   text-align: center;
   display: grid;
   justify-items: center;
-  gap: 28px;
+  gap: clamp(10px, 2.2vh, 22px);
   opacity: 0;
 }
 
 .tt-close__headline {
-  font-size: clamp(3rem, 8vw, 7rem);
+  font-size: clamp(2.8rem, 7vw, 6rem);
 }
 
 .tt-close__team {
