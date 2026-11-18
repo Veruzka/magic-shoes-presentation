@@ -189,6 +189,7 @@ function spriteScene() {
   let story = null; // { layer, prop, born }
   const leaving = []; // story layers fading out
   let feetNow = [];
+  let front = 0; // 0 → 1: how far the 3D shoes have turned from the side view to the front view
 
   function startMovement(i) {
     if (i === index) return;
@@ -236,6 +237,7 @@ function spriteScene() {
         facing: f.facing, // which way the player faces on screen
         spin: f.spin * f.facing, // how far round the spin is (0 → 1), mirrored for player 2
         view,
+        front: ease(front), // the shoes turn between the side and front views instead of snapping
       };
     });
   };
@@ -255,6 +257,10 @@ function spriteScene() {
     const spec = MOVES[motion];
     moveTime += dt;
     phase += dt / (spec.seconds ?? 1.5);
+    // The 3D shoes' view (side or front) turns over the same time the figures blend.
+    const wantFront = spec.view === 'front' && !before ? 1 : 0;
+    const turnStep = dt / SWITCH_SECONDS;
+    front = calm ? wantFront : front + Math.min(Math.max(wantFront - front, -turnStep), turnStep);
 
     // Player 2 copies player 1 a beat late, then falls into sync.
     const sync = calm ? 1 : ease(clamp01(moveTime / SYNC_SECONDS));
