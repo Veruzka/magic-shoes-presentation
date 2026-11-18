@@ -1,5 +1,6 @@
 /* One movement scene (src/components/movement-scene.js): text on the left,
-   the shoe doing the movement on the right, lit like a product on cream. */
+   the 3D shoe does the movement on the right (it centres itself on
+   .tt-move__visual), with the sound rings behind it. */
 .tt-move {
   --move-shoe-width: min(36vw, 500px);
   background: var(--color-bg);
@@ -19,25 +20,11 @@
   min-width: 0;
 }
 
-/* "Makes: soft footsteps": a small technical caption under the line. */
-.tt-move__makes {
-  font-family: var(--font-callout);
-  font-size: 0.95rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-  margin: 1.6rem 0 0;
-}
-
-.tt-move__makes span {
-  color: var(--color-text);
-}
-
 .tt-move__text .todo-tag {
   margin-top: 1.2rem;
 }
 
-/* The shoe's area. Everything inside is stacked in the middle. */
+/* The shoe's area: the 3D shoe centres on this box. */
 .tt-move__visual {
   position: relative;
   height: min(70vh, 560px);
@@ -57,33 +44,6 @@
 .tt-move__ripples .sound-ripples {
   width: calc(var(--move-shoe-width) * 0.85);
   height: calc(var(--move-shoe-width) * 0.85);
-}
-
-/* The shoe itself: mirrored so the toe points right, away from the text. */
-.tt-move__shoe {
-  width: var(--move-shoe-width);
-  will-change: transform;
-}
-
-.tt-move__shoe img {
-  display: block;
-  width: 100%;
-  height: auto;
-  scale: -1 1;
-}
-
-/* A soft oval shadow on the "floor", so the shoe reads as lit like a product.
-   The script shrinks and fades it when the shoe leaves the ground. */
-.tt-move__shadow {
-  position: absolute;
-  left: 50%;
-  top: calc(50% + var(--move-shoe-width) * 0.27);
-  width: calc(var(--move-shoe-width) * 0.8);
-  height: calc(var(--move-shoe-width) * 0.07);
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgb(110 90 60 / 0.28), rgb(110 90 60 / 0));
-  transform: translateX(-50%);
-  pointer-events: none;
 }
 
 /* Narrow screens: stack the text above the shoe. */

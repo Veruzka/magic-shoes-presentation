@@ -1,18 +1,11 @@
-/* Twinkle Toes hero (src/sections/tt-hero.js): huge name on top, a fan of
-   four world-colored shoes below it, on the cream page color. */
-.tt-hero {
-  /* Size of one shoe card. It shrinks on short or narrow screens so the
-     text and the open fan both fit on a laptop. The image is 1356 x 846. */
-  --tt-hero-shoe-w: min(34vw, 50vh, 460px);
-  --tt-hero-shoe-h: calc(var(--tt-hero-shoe-w) * 846 / 1356);
-}
-
+/* Twinkle Toes hero (src/sections/tt-hero.js): huge name on top; the 3D shoe
+   spins in the space below it, on the cream page color. */
 .tt-hero .scene__stage {
   background: var(--color-bg);
   color: var(--color-text);
 }
 
-/* Text on top, fan underneath, both centered. */
+/* Text on top, centered; the lower part of the screen is left for the shoe. */
 .tt-hero__layout {
   position: absolute;
   inset: 0;
@@ -43,52 +36,4 @@
 .tt-hero__line {
   max-width: 40ch;
   color: var(--color-muted);
-}
-
-/* The fan takes the rest of the screen. All four cards sit in the same spot. */
-.tt-hero__fan {
-  position: relative;
-  flex: 1;
-  width: 100%;
-  display: grid;
-  place-items: center;
-}
-
-.tt-hero__card {
-  grid-area: 1 / 1;
-  position: relative;
-  width: var(--tt-hero-shoe-w);
-  height: var(--tt-hero-shoe-h);
-  /* The shared turning point: near the heel (the heel is on the right). */
-  transform-origin: 86% 72%;
-  will-change: transform;
-}
-
-.tt-hero__shoe {
-  display: block;
-  width: 100%;
-  height: auto;
-  user-select: none;
-}
-
-/* World name, just in front of the toe (the toe is on the left). */
-.tt-hero__label {
-  position: absolute;
-  right: calc(100% + 0.4rem);
-  top: 58%;
-  font-family: var(--font-callout);
-  font-size: 0.95rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--tt-hero-ink);
-  white-space: nowrap;
-  opacity: 0;
-  transform-origin: right center;
-}
-
-/* Narrow screens: hide the names so the fan never runs off the side. */
-@media (max-width: 640px) {
-  .tt-hero__label {
-    display: none;
-  }
 }

@@ -13,9 +13,11 @@ import { optionSwitcher, switcherPanel } from './components/option-switcher.js';
 import { infoButton } from './components/info-panel.js';
 import { pageSwitch } from './components/page-switch.js';
 import { startKeyboardNav } from './core/keyboard-nav.js';
+import { shoeStage } from './three/shoe-stage.js';
+import { startShoeDirector } from './three/shoe-director.js';
 import { ttHero } from './sections/tt-hero.js';
 import { conceptMovements } from './sections/concept-movements.js';
-import { builtParts } from './sections/built-parts.js';
+import { builtShoeParts, builtParts } from './sections/built-parts.js';
 import { process as processSection } from './sections/process.js';
 import { forward } from './sections/forward.js';
 import { close } from './sections/close.js';
@@ -23,10 +25,11 @@ import { close } from './sections/close.js';
 // Add new sections here, in page order. Each one returns a DOM element.
 // The Twinkle Toes story: concept first, then what we've built, then the process.
 const sections = [
-  ttHero, // the shoe fanned out in the four world colors
+  ttHero, // the name, one line, and the 3D shoe doing a full spin
   conceptMovements, // "Stories! Movement!" + one scene per movement
-  hero, // "What we've built" starts with the existing story: the shoe comes apart, the FSR explains itself
-  builtParts, // the parts inside each shoe, the MVP, what's next, takeaways
+  builtShoeParts, // "What we've built": the 3D shoe breaks apart, each part labeled
+  hero, // then Veruzka's sketch breakdown: the FSR flies out, is drawn and explains itself
+  builtParts, // the MVP, photos, what's next, takeaways
   processSection, // the timeline and the bodystorm grid
   forward,
   close,
@@ -94,6 +97,11 @@ document.body.append(styleLab);
 
 // Arrow keys, space and Page Up/Down jump scene to scene, like slides.
 startKeyboardNav();
+
+// The one 3D shoe that travels through the story (path: src/data/shoe-path.js).
+const shoe = shoeStage();
+document.body.append(shoe.element);
+startShoeDirector(shoe);
 
 // The "i" button (bottom-right): shows how the app is built, read from docs/.
 document.body.append(infoButton());

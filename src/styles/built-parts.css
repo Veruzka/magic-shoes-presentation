@@ -22,85 +22,11 @@
 }
 
 /* ---------- 1. Inside each shoe ---------- */
-.tt-built__parts-row {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
-  gap: clamp(48px, 7vw, 110px); /* room for the leader lines to run across */
-  align-items: center;
-}
-
-.tt-built__shoe-box {
-  display: flex;
-  justify-content: center;
-}
-
-/* Sized by width only (never object-fit), so the image box is the drawing itself
-   and the label points land on the right spots. */
-.tt-built__shoe {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-width: min(100%, calc((100vh - 300px) * 1356 / 846));
-}
-
-.tt-built__labels {
-  position: relative; /* the label positions are measured from here */
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(0.6rem, 1.8vh, 1.1rem);
-}
-
-.tt-built__label {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.tt-built__label-name {
-  font-family: var(--font-callout);
-  font-size: var(--text-callout);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-ink);
-}
-
-.tt-built__label-note {
-  font-family: var(--font-note);
-  font-size: 0.82rem;
-  font-weight: 300;
-  line-height: 1.35;
-}
-
-.tt-built__labels-todo {
-  margin-top: 0.4rem;
-}
-
-.tt-built__leaders {
-  position: absolute;
-  inset: 0;
-  width: 100%;
+/* Headline at the top left; the 3D shoe and its labels fill the rest. */
+.tt-built__parts {
   height: 100%;
-  overflow: visible;
-  pointer-events: none;
-  color: var(--color-ink);
-}
-
-.tt-built__leaders path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1;
-  stroke-dasharray: 1;
-}
-
-.tt-built__leaders circle {
-  fill: var(--color-bg);
-  stroke: currentColor;
-  stroke-width: 1.25;
+  justify-content: flex-start;
+  padding-top: 9vh;
 }
 
 /* ---------- 2. The MVP ---------- */
@@ -315,14 +241,9 @@
     width: calc(100% - 32px);
   }
 
-  .tt-built__parts-row,
   .tt-built__mvp-top,
   .tt-built__next {
     grid-template-columns: 1fr;
-  }
-
-  .tt-built__leaders {
-    display: none;
   }
 
   .tt-built__flow {

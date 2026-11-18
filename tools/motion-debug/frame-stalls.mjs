@@ -28,6 +28,7 @@ const SUSPECTS = [
   ['no sketch (chapter 3)', '.fsr-flight__drawing{display:none!important}'],
   ['no callouts (chapter 3)', '.callouts{display:none!important}'],
   ['no 3D turn (chapter 3)', '.fsr-flight__door{transform:none!important}'],
+  ['no 3D shoe (Twinkle Toes)', '.shoe-stage{display:none!important}'],
 ];
 
 async function measure(name, css) {

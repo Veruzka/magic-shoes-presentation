@@ -1,0 +1,54 @@
+/* The 3D shoe layer (src/three/shoe-stage.js): fixed over the page, clicks
+   pass straight through. Below the floating buttons (z-index 100+). */
+.shoe-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.shoe-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.shoe-stage__labels {
+  position: absolute;
+  inset: 0;
+}
+
+/* One part label: a dot on the part, its name beside it. Technical, like the lab. */
+.shoe-stage__label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.shoe-stage__dot {
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  margin-top: -4.5px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  box-shadow: 0 0 0 3px var(--color-bg);
+}
+
+.shoe-stage__name {
+  font-family: var(--font-callout);
+  font-size: clamp(0.95rem, 1.3vw, 1.25rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  background: rgb(251 250 248 / 0.85);
+  padding: 2px 8px;
+  border-radius: 4px;
+  translate: 6px -50%;
+}

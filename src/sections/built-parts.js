@@ -1,31 +1,37 @@
 // "What we've built", part 2: picks up after the shoe comes apart (hero.js).
 // Four pinned scenes, one after the other, all driven by scrolling:
 //
-//   parts       the sketch shoe, with its six parts labeled one at a time
+//   parts       the 3D shoe breaks apart, its six parts labeled one at a time
 //   mvp         the MVP: the move table, then the data flow lighting up step by step
 //   mvp-media   photos of the MVP build, plus a slot for the demo video
 //   next-build  what we're building next, and our takeaways
 //
-//   page.append(builtParts());
+//   page.append(builtShoeParts());  // the parts scene
+//   page.append(builtParts());      // the MVP, photos, next build
 //
 // Everything moves only with the scroll (no timers, no loops). Visitors who
 // prefer reduced motion get plain fades with no movement.
 import '../styles/built-parts.css';
 import { scene, calmMotion, slice, ease } from '../core/scene.js';
-import { shoeParts } from '../data/shoe-parts.js';
 import { todoTag } from '../components/todo-tag.js';
-import shoeUrl from '../assets/shoe-sketch.png';
 import breadboard1Url from '../assets/mvp/breadboard-1.jpg';
 import breadboard2Url from '../assets/mvp/breadboard-2.jpg';
 import samplerUrl from '../assets/mvp/sampler-app.png';
 import tinkercadUrl from '../assets/mvp/tinkercad-circuit.png';
 
-const SVG = 'http://www.w3.org/2000/svg';
+// The shoe breaking apart comes first, then Veruzka's sketch breakdown
+// (hero.js), then the rest, so they're two separate pieces of the page.
+export function builtShoeParts() {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'tt-built';
+  wrapper.append(partsScene());
+  return wrapper;
+}
 
 export function builtParts() {
   const wrapper = document.createElement('div');
   wrapper.className = 'tt-built';
-  wrapper.append(partsScene(), mvpScene(), mediaScene(), nextBuildScene());
+  wrapper.append(mvpScene(), mediaScene(), nextBuildScene());
   return wrapper;
 }
 
@@ -51,120 +57,31 @@ function header({ eyebrow, headline, line }) {
 }
 
 // ---------------------------------------------------------------------------
-// 1. Inside each shoe: the six parts, labeled one at a time.
+// 1. Inside each shoe: the 3D shoe breaks apart and each part gets a label.
+//    The shoe and labels are drawn by src/three/shoe-stage.js (see `parts` in
+//    src/data/shoe-path.js); this scene holds the headline and leaves room.
 // ---------------------------------------------------------------------------
 function partsScene() {
   const { section, stage, onProgress } = scene({ name: 'parts', length: 2, stops: 3 });
   stage.innerHTML = `
     <div class="tt-built__frame tt-built__parts">
-      <div class="tt-built__parts-row">
-        <div class="tt-built__shoe-box">
-          <img class="tt-built__shoe" src="${shoeUrl}" alt="Sketch of the Twinkle Toes shoe" width="1356" height="846">
-        </div>
-        <ul class="tt-built__labels"></ul>
-        <svg class="tt-built__leaders" aria-hidden="true"></svg>
-      </div>
+      <div class="tt-built__parts-todo"></div>
     </div>
   `;
   const frame = stage.querySelector('.tt-built__parts');
-  const head = header({ eyebrow: "What we've built", headline: 'Inside each shoe' });
+  const head = header({ headline: 'Inside each shoe' });
   frame.prepend(head);
 
-  const row = stage.querySelector('.tt-built__parts-row');
-  const shoe = stage.querySelector('.tt-built__shoe');
-  const list = stage.querySelector('.tt-built__labels');
-  const svg = stage.querySelector('.tt-built__leaders');
-
-  // The labels sit in the column from top to bottom in the order of their
-  // point's height on the shoe, so the leader lines don't cross much.
-  // They still appear in the data's order (the FSR first).
-  const columnOrder = [...shoeParts].sort((a, b) => a.point.y - b.point.y);
-  const items = shoeParts.map((part) => {
-    const label = document.createElement('li');
-    label.className = 'tt-built__label';
-    label.innerHTML = `
-      <span class="tt-built__label-name">${part.name}</span>
-      <span class="tt-built__label-note">${part.note}</span>
-    `;
-    // A part that isn't final yet gets a TODO sticker next to its name.
-    if (part.todo) label.querySelector('.tt-built__label-name').append(' ', todoTag(part.todo));
-
-    const path = document.createElementNS(SVG, 'path');
-    path.setAttribute('pathLength', '1'); // so "how much is drawn" is simply 0 → 1
-    const dot = document.createElementNS(SVG, 'circle');
-    dot.setAttribute('r', '3.5');
-    svg.append(path, dot);
-    return { part, label, path, dot };
-  });
-  columnOrder.forEach((part) => list.append(items.find((item) => item.part === part).label));
-
   // TODO: confirm the per-shoe parts with engineering once the final hardware is decided.
-  const note = document.createElement('li');
-  note.className = 'tt-built__labels-todo';
+  const note = stage.querySelector('.tt-built__parts-todo');
   note.append(todoTag('confirm per-shoe parts with engineering'));
-  list.append(note);
 
-  // Draws every leader line from its part's point on the shoe to its label.
-  // Measured from the shoe image's real box each time, so it stays right on resize.
-  function placeLines() {
-    const rowBox = row.getBoundingClientRect();
-    const shoeBox = shoe.getBoundingClientRect();
-    if (!shoeBox.width) return; // not on the page yet
-    const shoeRight = shoeBox.right - rowBox.left;
-    items.forEach(({ part, label, path, dot }) => {
-      const point = {
-        x: shoeBox.left - rowBox.left + part.point.x * shoeBox.width,
-        y: shoeBox.top - rowBox.top + part.point.y * shoeBox.height,
-      };
-      // offsetLeft/Top ignore the label's little slide-in, so the line end stays put.
-      const name = label.querySelector('.tt-built__label-name');
-      const end = {
-        x: list.offsetLeft + label.offsetLeft - 14,
-        y: list.offsetTop + label.offsetTop + name.offsetHeight / 2,
-      };
-      // A slant from the point to just past the shoe, then straight across to the label.
-      const knee = { x: Math.max(shoeRight + 12, point.x + 20), y: end.y };
-      path.setAttribute('d', `M${point.x},${point.y} L${knee.x},${knee.y} L${end.x},${end.y}`);
-      dot.setAttribute('cx', point.x);
-      dot.setAttribute('cy', point.y);
-    });
-  }
-
-  // Scroll timeline (p: 0 → 1):
-  //   0.00 to 0.12  header and shoe fade in
-  //   0.14 to 0.92  the six parts, one after the other (line draws, then the label)
-  const first = 0.14;
-  const each = (0.92 - first) / items.length;
-  let lastP = 0;
   function update(p) {
-    lastP = p;
     reveal(head, slice(p, 0, 0.1));
-    reveal(shoe, slice(p, 0.02, 0.12), 16);
     note.style.opacity = slice(p, 0.05, 0.12);
-    placeLines();
-
-    const calm = calmMotion();
-    items.forEach(({ label, path, dot }, i) => {
-      const start = first + i * each;
-      const t = slice(p, start, start + each * 0.8);
-      const drawn = calm ? (t > 0 ? 1 : 0) : slice(t, 0, 0.6); // the line draws first…
-      const text = slice(t, 0.45, 1); // …and the label fades in as it lands
-      // Once the next part starts, earlier ones step back a little.
-      const current = p < first + (i + 1) * each || i === items.length - 1;
-      const dim = current ? 1 : 0.55;
-      path.style.strokeDashoffset = 1 - drawn;
-      path.style.opacity = (calm ? text : drawn > 0 ? 1 : 0) * dim;
-      dot.style.opacity = (calm ? text : slice(t, 0, 0.15)) * dim;
-      label.style.opacity = ease(text) * dim;
-      label.style.transform = calm ? 'none' : `translateX(${(1 - ease(text)) * 12}px)`;
-    });
   }
-
   update(0);
   onProgress(update);
-  // Not a loop: only re-measure when the window size changes or the image arrives.
-  window.addEventListener('resize', () => update(lastP));
-  shoe.addEventListener('load', () => update(lastP));
   return section;
 }
 
