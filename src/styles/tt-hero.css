@@ -29,10 +29,6 @@
   line-height: 0.95;
 }
 
-.tt-hero__todo {
-  margin-top: 0.9rem;
-}
-
 .tt-hero__line {
   max-width: 40ch;
   color: var(--color-muted);
