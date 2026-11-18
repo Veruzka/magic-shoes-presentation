@@ -41,16 +41,34 @@ const add = (p, v) => ({ x: p.x + v.x, y: p.y + v.y });
 const clamp01 = (n) => Math.min(Math.max(n, 0), 1);
 const TAU = Math.PI * 2;
 
-// Plays a recorded loop: the frame at this point of the loop, blended with the next.
+// Plays a recorded loop: a smooth curve through the frames around this point of
+// the loop (Catmull-Rom), so the motion has no corners between video frames.
+// If the clip's last frame repeats its first (a closed loop), it's played once,
+// so the figure doesn't freeze for a frame every time the loop comes round.
 // Ankles and elbows are kept in a natural range (the tracker can wobble there).
 const limit = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+const loopFrames = new WeakMap();
+function framesOf(clip) {
+  if (!loopFrames.has(clip)) {
+    const all = clip.frames.map((frame) => ({ ...STAND, ...frame }));
+    const first = all[0];
+    const last = all[all.length - 1];
+    const closed = all.length > 2 && KEYS.every((key) => first[key] === last[key]);
+    loopFrames.set(clip, closed ? all.slice(0, -1) : all);
+  }
+  return loopFrames.get(clip);
+}
+const catmull = (p0, p1, p2, p3, t) =>
+  0.5 * (2 * p1 + (p2 - p0) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (3 * p1 - p0 - 3 * p2 + p3) * t * t * t);
 function recorded(clip, f) {
-  const frames = clip.frames;
-  const x = f * frames.length;
-  const i = Math.floor(x) % frames.length;
-  const a = { ...STAND, ...frames[i] };
-  const b = { ...STAND, ...frames[(i + 1) % frames.length] };
-  const pose = blendPose(a, b, x - Math.floor(x));
+  const frames = framesOf(clip);
+  const n = frames.length;
+  const x = f * n;
+  const i = Math.floor(x) % n;
+  const t = x - Math.floor(x);
+  const [p0, p1, p2, p3] = [-1, 0, 1, 2].map((d) => frames[(i + d + n) % n]);
+  const pose = {};
+  KEYS.forEach((key) => (pose[key] = catmull(p0[key], p1[key], p2[key], p3[key], t)));
   pose.aA = limit(pose.aA, -35, 35);
   pose.aB = limit(pose.aB, -35, 35);
   pose.eA = limit(pose.eA, -140, 140);
@@ -169,7 +187,7 @@ export const MOVES = {
     // Heel-click jump (P-20): the real tracked loop from our video, filmed from the front.
     pose: (f) => recorded(motion.heelclick, f),
     strikes: [[motion.heelclick.strike, 'both']],
-    seconds: motion.heelclick.frames.length / motion.heelclick.fps,
+    seconds: framesOf(motion.heelclick).length / motion.heelclick.fps,
     view: 'front',
   },
 };
