@@ -24,7 +24,7 @@ export function close() {
 
   stage.innerHTML = `
     <div class="tt-close__inner">
-      <h2 class="tt-headline tt-close__headline">Twinkle Toes</h2>
+      <h2 class="tt-headline tt-close__headline">Once upon a step</h2>
       <ul class="tt-close__team">
         ${team.map((name) => `<li>${name}</li>`).join('')}
       </ul>

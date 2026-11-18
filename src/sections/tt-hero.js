@@ -14,7 +14,7 @@ export function ttHero() {
   stage.innerHTML = `
     <div class="tt-hero__layout">
       <div class="tt-hero__text">
-        <h1 class="tt-headline tt-hero__name">Twinkle Toes</h1>
+        <h1 class="tt-headline tt-hero__name">Once upon a step</h1>
         <div class="tt-hero__todo"></div>
         <p class="tt-line tt-hero__line">Improv for your feet: sound that turns any space into a stage for play.</p>
       </div>
