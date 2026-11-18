@@ -7,7 +7,7 @@ import { watchScrollProgress } from './core/scroll-progress.js';
 import { hero, showBackground, showShoe, setShoeOpening, setSoleMove, setTransition, setReveal, setSettle, hasExitChapter } from './sections/hero.js';
 import { chapterProgress } from './sections/hero-timeline.js';
 import { backgrounds } from './backgrounds/index.js';
-import { shoes } from './shoes/index.js';
+import { shoes, startShoe } from './shoes/index.js';
 import { soleMoves } from './shoes/sole-moves.js';
 import { optionSwitcher, switcherPanel } from './components/option-switcher.js';
 import { infoButton } from './components/info-panel.js';
@@ -76,7 +76,7 @@ const styleLab = switcherPanel(
   optionSwitcher({
     title: 'Shoe',
     options: shoes,
-    current: loadChoice('shoe', shoes),
+    current: loadChoice('shoe', shoes, startShoe), // the Sketch (see src/shoes/index.js)
     onPick(shoe) {
       showShoe(heroSection, shoe);
       saveChoice('shoe', shoe);

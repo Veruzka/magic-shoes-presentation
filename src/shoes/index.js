@@ -15,7 +15,11 @@ import { sketchMidsole } from './sketch-midsole.js';
 import { sketchLabels, labelTiming } from './sketch-labels.js';
 import { fsrTransition } from './fsr-transition.js';
 
-// The first one is shown until you pick another with the switcher.
+// The one shown until you pick another with the switcher (in a browser that
+// remembers no pick yet). The Sketch, because only the Sketch plays Veruzka's
+// FSR breakdown in "What we've built".
+export const startShoe = 'sketch';
+
 export const shoes = [
   {
     id: 'photo',
