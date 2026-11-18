@@ -348,10 +348,11 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 
 **Change the words:** each section's file in `src/sections/`. Rule: **one headline and at most one line per scene.**
 
-**Add a movement:** add one line to `src/data/story-movements.js` (`id`, `name`, `line`, `motion`). A new scene appears, and the 3D shoe does that motion.
+**Add a movement:** add an entry to `src/data/story-movements.js` (`id`, `name`, `motion`, and its `offers`). A new scene appears, and the 3D shoe does that motion.
+- **Offers** are the improv prompts: each finishes "Yes, and…" (`offer`) and names the sound that makes it real (`sound`). One is picked at random per visit, and the line rolls to it like a slot machine.
 - The motions are `step`, `run`, `spin`, `pose`, `kick`, `sky` and `heelclick`, in `src/core/motions.js`. A new kind of motion = a new entry there with a `pose` and an `impact`.
 
-> **Example:** `{ id: 'stomp', group: 'basic', name: 'Stomp', line: 'Stomp and the ground answers.', sound: 'a deep boom', motion: 'run' },`
+> **Example:** `{ id: 'stomp', group: 'basic', name: 'Stomp', motion: 'run', offers: [{ offer: 'a giant is coming.', sound: 'a deep boom, getting closer' }] },`
 
 **Change what the 3D shoe does in a scene:** `src/data/shoe-path.js`. One entry per scene name. The fields are explained at the top of the file: where it sits (`ax`, `ay`), how big (`size`), spin (`turn`), toe up (`tilt`), hidden (`opacity`), broken apart (`explode`) and labels (`labels`).
 

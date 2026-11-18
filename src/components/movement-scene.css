@@ -20,6 +20,29 @@
   min-width: 0;
 }
 
+/* "Yes, and… there's something behind you." The offer rolls like a slot
+   machine as the scene arrives (src/components/movement-scene.js). */
+.tt-move__roll {
+  display: inline-block;
+  font-weight: 500;
+  will-change: transform;
+}
+
+/* "Sound: your footsteps echo, one beat late": a small technical label. */
+.tt-move__sound {
+  font-family: var(--font-callout);
+  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 1.2rem 0 0;
+  opacity: 0;
+}
+
+.tt-move__sound span {
+  color: var(--color-text);
+}
+
 .tt-move__text .todo-tag {
   margin-top: 1.2rem;
 }

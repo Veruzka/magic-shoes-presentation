@@ -15,7 +15,7 @@ export const presenterNotes = [
     part: 'The concept',
     scenes: ['concept', 'move-walk', 'move-run', 'move-spin', 'move-dancers-pose', 'move-side-kick', 'move-feet-to-sky', 'move-heel-click'],
     speaker: 'TODO: speaker',
-    points: ['Everyday moves first: walk, run.', 'Then whimsy from our bodystorm: dancer\'s pose, side kick, feet to the sky.', 'Heel click ends the session: back home.'],
+    points: ['Each move is an improv prompt: "Yes, and…" sets a situation, the sound makes it real.', 'The offer is random, like improv: no two sessions play the same.', 'Everyday moves first, then whimsy from our bodystorm. Heel click: back home.'],
   },
   {
     part: "What we've built",
