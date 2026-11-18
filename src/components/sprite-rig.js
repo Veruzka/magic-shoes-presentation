@@ -19,7 +19,7 @@
 // The figure faces right. Angles are in degrees:
 //   lean      torso lean (+ forward, -90 = lying on its back)
 //   sA, sB    shoulders, relative to the torso (0 = arm hangs down, + forward)
-//   eA, eB    elbows (- bends the forearm forward and up)
+//   eA, eB    elbows (+ bends the forearm forward and up, like a real elbow; - would bend it backwards)
 //   hA, hB    hips, measured from straight down (+ = leg swings forward)
 //   kA, kB    knees (- bends the shin back)
 //   aA, aB    ankles (+ toe up)
@@ -32,7 +32,7 @@ import motion from '../data/bodystorm-motion.json';
 const LEN = { torso: 58, neck: 9, head: 14, upper: 31, fore: 29, thigh: 44, shin: 42, foot: 17 };
 export const GROUND = LEN.thigh + LEN.shin; // where the soles are when standing
 
-export const STAND = { x: 0, y: 0, lean: 0, sA: -8, eA: -12, sB: 8, eB: -12, hA: 0, kA: 0, aA: 0, hB: 0, kB: 0, aB: 0, spin: 0 };
+export const STAND = { x: 0, y: 0, lean: 0, sA: -8, eA: 12, sB: 8, eB: 12, hA: 0, kA: 0, aA: 0, hB: 0, kB: 0, aB: 0, spin: 0 };
 const KEYS = Object.keys(STAND);
 
 const rad = (d) => (d * Math.PI) / 180;
@@ -41,20 +41,104 @@ const add = (p, v) => ({ x: p.x + v.x, y: p.y + v.y });
 const clamp01 = (n) => Math.min(Math.max(n, 0), 1);
 const TAU = Math.PI * 2;
 
-// Plays a recorded loop: the frame at this point of the loop, blended with the next.
+// Plays a recorded loop: a smooth curve through the frames around this point of
+// the loop (Catmull-Rom), so the motion has no corners between video frames.
+// If the clip's last frame repeats its first (a closed loop), it's played once,
+// so the figure doesn't freeze for a frame every time the loop comes round.
 // Ankles and elbows are kept in a natural range (the tracker can wobble there).
 const limit = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+// Feet on the ground: the tracked hip height doesn't match the rig's legs (the
+// video was filmed from the front), so standing frames floated about 25 units
+// up and the crouch sank below the ground. Each frame is moved so its lowest
+// foot touches the ground, except for any height above `float`, which is the
+// real jump and is kept.
+const loopFrames = new WeakMap();
+function lowestFoot(pose) {
+  const j = joints(pose);
+  return Math.max(j.legA.ankle.y, j.legA.toe.y, j.legB.ankle.y, j.legB.toe.y);
+}
+function framesOf(clip) {
+  if (!loopFrames.has(clip)) {
+    let all = clip.frames.map((frame) => ({ ...STAND, ...frame }));
+    const first = all[0];
+    const last = all[all.length - 1];
+    const closed = all.length > 2 && KEYS.every((key) => first[key] === last[key]);
+    if (closed) all = all.slice(0, -1);
+    all.forEach((pose) => {
+      pose.aA = limit(pose.aA, -35, 35);
+      pose.aB = limit(pose.aB, -35, 35);
+    });
+    if (clip.float !== undefined) {
+      const float = clip.float;
+      all.forEach((pose) => {
+        const gap = GROUND - lowestFoot(pose); // + = feet above the ground
+        const jump = Math.max(gap - float, 0);
+        pose.y += gap - jump;
+      });
+    }
+    loopFrames.set(clip, all);
+  }
+  return loopFrames.get(clip);
+}
+const catmull = (p0, p1, p2, p3, t) =>
+  0.5 * (2 * p1 + (p2 - p0) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (3 * p1 - p0 - 3 * p2 + p3) * t * t * t);
 function recorded(clip, f) {
-  const frames = clip.frames;
-  const x = f * frames.length;
-  const i = Math.floor(x) % frames.length;
-  const a = { ...STAND, ...frames[i] };
-  const b = { ...STAND, ...frames[(i + 1) % frames.length] };
-  const pose = blendPose(a, b, x - Math.floor(x));
+  const frames = framesOf(clip);
+  const n = frames.length;
+  const x = f * n;
+  const i = Math.floor(x) % n;
+  const t = x - Math.floor(x);
+  const [p0, p1, p2, p3] = [-1, 0, 1, 2].map((d) => frames[(i + d + n) % n]);
+  const pose = {};
+  KEYS.forEach((key) => (pose[key] = catmull(p0[key], p1[key], p2[key], p3[key], t)));
   pose.aA = limit(pose.aA, -35, 35);
   pose.aB = limit(pose.aB, -35, 35);
   pose.eA = limit(pose.eA, -140, 140);
   pose.eB = limit(pose.eB, -140, 140);
+  return pose;
+}
+
+// The heel click, hand-animated from a side view (the tracked video was filmed
+// from the front, so its knees bent backwards in this side-on figure).
+// Keyframes through one loop: stand, crouch with the arms back, push off with
+// the arms sweeping up, click the heels high in the air with the arms spread
+// up and out, land soft, stand. Per key:
+//   h/k   hips and knees (A far, B near)    lean  torso    s/e  shoulders, elbows
+//   rise  how far the hips are above standing, in the air
+//   air   0 on the ground (feet kept flat on the floor) → 1 in the air (toes pointed)
+const STAND_KEY = { hA: 0, kA: -4, hB: 0, kB: -4, lean: 2, sA: -8, eA: 14, sB: 6, eB: 16, rise: 0, air: 0 };
+const HEEL_CLICK_KEYS = [
+  [0, STAND_KEY],
+  [0.14, STAND_KEY],
+  [0.32, { hA: 55, kA: -100, hB: 50, kB: -95, lean: 28, sA: -50, eA: 25, sB: -45, eB: 25, rise: 0, air: 0 }], // crouch, arms back
+  [0.42, { hA: 10, kA: -10, hB: 5, kB: -8, lean: 8, sA: 120, eA: 20, sB: 105, eB: 20, rise: 12, air: 0.7 }], // push off, arms up
+  [0.52, { hA: 18, kA: -100, hB: 24, kB: -102, lean: 4, sA: 150, eA: 10, sB: 125, eB: 12, rise: 28, air: 1 }], // heels click
+  [0.6, { hA: 20, kA: -96, hB: 26, kB: -98, lean: 4, sA: 155, eA: 8, sB: 130, eB: 10, rise: 26, air: 1 }], // still up
+  [0.7, { hA: 12, kA: -15, hB: 8, kB: -12, lean: 6, sA: 55, eA: 25, sB: 45, eB: 25, rise: 6, air: 0.4 }], // legs reach for the floor
+  [0.78, { hA: 35, kA: -60, hB: 32, kB: -58, lean: 16, sA: 25, eA: 30, sB: 15, eB: 30, rise: 0, air: 0 }], // land soft
+  [0.92, STAND_KEY],
+];
+const HEEL_KEYS = Object.keys(STAND_KEY);
+function heelClick(f) {
+  const keys = HEEL_CLICK_KEYS;
+  const n = keys.length;
+  let i = n - 1;
+  while (keys[i][0] > f) i -= 1;
+  const t0 = keys[i][0];
+  const t1 = i + 1 < n ? keys[i + 1][0] : 1;
+  const u = (f - t0) / (t1 - t0);
+  const at = (j) => keys[(j + n) % n][1];
+  const v = {};
+  HEEL_KEYS.forEach((key) => (v[key] = catmull(at(i - 1)[key], at(i)[key], at(i + 1)[key], at(i + 2)[key], u)));
+  const air = clamp01(v.air);
+  // Feet: flat on the floor on the ground, toes pointed in the air.
+  // Knees never bend backwards (the smooth curve can overshoot straight a little).
+  const pose = { ...STAND, lean: v.lean, hA: v.hA, kA: Math.min(v.kA, 0), hB: v.hB, kB: Math.min(v.kB, 0), sA: v.sA, eA: v.eA, sB: v.sB, eB: v.eB };
+  pose.aA = lerp(-(v.hA + v.kA), -25, air);
+  pose.aB = lerp(-(v.hB + v.kB), -25, air);
+  // Height: on the ground, the lowest foot touches the floor; in the air, the hips rise.
+  const onFloor = GROUND - lowestFoot({ ...pose, y: 0 });
+  pose.y = lerp(onFloor, -v.rise, air);
   return pose;
 }
 
@@ -72,10 +156,12 @@ export const MOVES = {
         hB: -22 * Math.sin(w),
         kA: -6 - 30 * Math.max(0, Math.cos(w)),
         kB: -6 - 30 * Math.max(0, -Math.cos(w)),
-        sA: -22 * Math.sin(w),
-        sB: 22 * Math.sin(w),
-        eA: -18,
-        eB: -18,
+        // Each arm swings opposite its leg, a little more forward than back, and
+        // the elbow bends a little more as the arm comes forward.
+        sA: 4 - 22 * Math.sin(w),
+        sB: 4 + 22 * Math.sin(w),
+        eA: 16 + 14 * Math.max(0, -Math.sin(w)),
+        eB: 16 + 14 * Math.max(0, Math.sin(w)),
       };
     },
     strikes: [[0.25, 'A'], [0.75, 'B']],
@@ -92,10 +178,12 @@ export const MOVES = {
         hB: -44 * Math.sin(w),
         kA: -20 - 75 * Math.max(0, Math.cos(w)),
         kB: -20 - 75 * Math.max(0, -Math.cos(w)),
-        sA: -55 * Math.sin(w),
-        sB: 55 * Math.sin(w),
-        eA: -85,
-        eB: -85,
+        // Elbows bent about 90°, forearms forward; each arm drives opposite its
+        // leg, the hand coming up to about chin height in front.
+        sA: 2 - 45 * Math.sin(w),
+        sB: 2 + 45 * Math.sin(w),
+        eA: 80 + 8 * Math.max(0, -Math.sin(w)),
+        eB: 80 + 8 * Math.max(0, Math.sin(w)),
       };
     },
     strikes: [[0.25, 'A'], [0.75, 'B']],
@@ -107,10 +195,11 @@ export const MOVES = {
       y: -4 * Math.sin(f * Math.PI),
       hB: 28,
       kB: -75,
-      sA: 55,
-      eA: -105,
-      sB: 55,
-      eB: -105,
+      // Arms pulled in, hands at the chest, like a skater's spin.
+      sA: 35,
+      eA: 100,
+      sB: 35,
+      eB: 100,
       spin: f,
     }),
     strikes: [[0.5, 'both']],
@@ -166,11 +255,13 @@ export const MOVES = {
     loops: 1,
   },
   heelclick: {
-    // Heel-click jump (P-20): the real tracked loop from our video, filmed from the front.
-    pose: (f) => recorded(motion.heelclick, f),
-    strikes: [[motion.heelclick.strike, 'both']],
-    seconds: motion.heelclick.frames.length / motion.heelclick.fps,
-    view: 'front',
+    // Heel-click jump (P-20), hand-animated side-on (see heelClick above). The
+    // tracked loop from our front-on video is still in bodystorm-motion.json
+    // and can be played with recorded(motion.heelclick, f).
+    pose: heelClick,
+    strikes: [[0.53, 'both']], // the click
+    seconds: 2.2,
+    view: 'side',
   },
 };
 

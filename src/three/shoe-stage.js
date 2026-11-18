@@ -249,17 +249,19 @@ export function shoeStage() {
     // Each slides from centre stage onto its foot, seen the way the camera sees
     // that foot: from the side (toe the way the figure faces) or from the front.
     const feet = pose.pair > 0.001 && pose.feet ? pose.feet() : null;
+    // `foot.front` (0 → 1) turns the shoe between the two views, so a change of
+    // movement turns it instead of snapping it round.
     const onFoot = (foot) => {
-      const front = foot.view === 'front';
-      return {
+      const front = foot.front ?? (foot.view === 'front' ? 1 : 0);
+      const at = {
         x: ((foot.x / window.innerWidth) * 2 - 1) * (viewW / 2),
         y: (1 - (foot.y / window.innerHeight) * 2) * (viewH / 2),
         scale: (foot.length / window.innerHeight) * viewH * SHOE_ON_FOOT,
-        pitch: front ? 14 : 4,
-        // Side view: the toe points the way the player faces, and turns smoothly with the spin.
-        yaw: front ? (foot.facing < 0 ? 0.2 : 0.3) : (foot.facing < 0 ? 0 : 0.5) + (foot.spin ?? 0),
-        tilt: front ? 0 : foot.angle,
       };
+      // Side view: the toe points the way the player faces, and turns smoothly with the spin.
+      const side = { ...at, pitch: 4, yaw: (foot.facing < 0 ? 0 : 0.5) + (foot.spin ?? 0), tilt: foot.angle };
+      const ahead = { ...at, pitch: 14, yaw: foot.facing < 0 ? 0.2 : 0.3, tilt: 0 };
+      return mix(side, ahead, front);
     };
     const handover = feet ? ease(Math.min(pose.pair * 2.5, 1)) : 0;
     place(root, yawGroup, tiltGroup, single);

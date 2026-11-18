@@ -37,13 +37,23 @@ const FIGURE_SCALE = 1.15;
 const COPY_DELAY = 0.3;
 const SYNC_SECONDS = 3.5;
 const SWITCH_SECONDS = 0.5; // how long a change of movement blends
+// Getting up from lying on the floor (feet to the sky), or lying down, goes
+// through a tucked sit. A straight blend swung both players' legs across the
+// middle, through each other. It takes a little longer, like a real sit-up.
+const SWITCH_SECONDS_FLOOR = 1;
+const TUCK = { ...STAND, y: GROUND - 30, lean: 8, hA: 100, kA: -140, aA: 0, hB: 96, kB: -140, aB: 0, sA: 35, eA: -70, sB: 45, eB: -70 };
+const lying = (pose) => pose.lean < -45;
+function switchPose(from, to, t) {
+  if (!lying(from) && !lying(to)) return blendPose(from, to, ease(t));
+  return t < 0.5 ? blendPose(from, TUCK, ease(t * 2)) : blendPose(TUCK, to, ease(t * 2 - 1));
+}
 // How stiff each joint's spring is (higher = follows faster). Stiff enough that
 // the joints keep the real motion (lag of a few degrees), arms a little looser
 // so they trail softly. The spring is solved exactly, so a slow frame (a busy
 // laptop, the big TV) can't make it fling the limbs around.
 const SPRING = { lean: 40, y: 50, x: 50, hA: 55, hB: 55, kA: 50, kB: 50, aA: 45, aB: 45, sA: 32, sB: 32, eA: 28, eB: 28 };
 // The moment of each loop that shows the movement best (reduced motion).
-const KEY_PHASE = { step: 0.25, run: 0.25, spin: 0.12, pose: 0.5, kick: 0.5, sky: 0.4, heelclick: 0.25 };
+const KEY_PHASE = { step: 0.25, run: 0.25, spin: 0.12, pose: 0.5, kick: 0.5, sky: 0.4, heelclick: 0.53 };
 
 export function conceptMovements() {
   const wrapper = document.createElement('div');
@@ -189,6 +199,8 @@ function spriteScene() {
   let story = null; // { layer, prop, born }
   const leaving = []; // story layers fading out
   let feetNow = [];
+  let front = 0; // 0 → 1: how far the 3D shoes have turned from the side view to the front view
+  let switchSeconds = SWITCH_SECONDS; // how long the current change of movement blends
 
   function startMovement(i) {
     if (i === index) return;
@@ -197,6 +209,8 @@ function spriteScene() {
     moveTime = 0;
     phase = 0;
     const move = moves[i];
+    const toFloor = lying(movementPose(motionOf(move), 0));
+    switchSeconds = toFloor || fromTargets.some(lying) ? SWITCH_SECONDS_FLOOR : SWITCH_SECONDS;
     nameEl.textContent = move.name;
     section.dataset.sound = move.offers?.[picks[i]]?.sound ?? ''; // shown in presenter mode
     // The offer's story: fade the old one out, build the new one.
@@ -236,6 +250,7 @@ function spriteScene() {
         facing: f.facing, // which way the player faces on screen
         spin: f.spin * f.facing, // how far round the spin is (0 → 1), mirrored for player 2
         view,
+        front: ease(front), // the shoes turn between the side and front views instead of snapping
       };
     });
   };
@@ -255,6 +270,10 @@ function spriteScene() {
     const spec = MOVES[motion];
     moveTime += dt;
     phase += dt / (spec.seconds ?? 1.5);
+    // The 3D shoes' view (side or front) turns over the same time the figures blend.
+    const wantFront = spec.view === 'front' && !before ? 1 : 0;
+    const turnStep = dt / SWITCH_SECONDS;
+    front = calm ? wantFront : front + Math.min(Math.max(wantFront - front, -turnStep), turnStep);
 
     // Player 2 copies player 1 a beat late, then falls into sync.
     const sync = calm ? 1 : ease(clamp01(moveTime / SYNC_SECONDS));
@@ -264,12 +283,12 @@ function spriteScene() {
     // Before the movements (and after them): standing, breathing a little.
     const idle = { ...STAND, lean: 1.5 * Math.sin(moveTime * 1.6), y: Math.sin(moveTime * 3.2) * 1 };
     const after = p > MOVES_END ? ease(slice(p, MOVES_END, MOVES_END + 0.05)) : 0;
-    const blendIn = ease(clamp01(moveTime / SWITCH_SECONDS));
+    const blendIn = clamp01(moveTime / switchSeconds);
 
     feetNow = [];
     players.forEach((pl, k) => {
       let target = before ? idle : movementPose(motion, phases[k]);
-      if (!before && fromTargets && blendIn < 1) target = blendPose(fromTargets[k], target, blendIn);
+      if (!before && fromTargets && blendIn < 1) target = switchPose(fromTargets[k], target, blendIn);
       if (after) target = blendPose(target, idle, after);
       pl.follow(target, dt, calm);
       const level = before || after ? { A: 0, B: 0 } : strikesAt(motion, phases[k]);
