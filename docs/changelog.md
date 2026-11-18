@@ -12,6 +12,8 @@ One short entry per work session, newest first.
 - **What's next:** shoe development and sound development.
 - **Presenter mode:** press P. **Keyboard:** arrows and space jump scene to scene.
 - **Worlds scene** set aside in `src/_archive/`.
+- **Arrow-key jitter fixed:** the browser's smooth scroll and our scroll glide were stacked, so text, ripples and the shoe trailed the page (by up to a quarter of a scene) and kept moving after it stopped. During a keyboard jump they now follow the scroll exactly (`data-key-scrolling` on the page, set by `keyboard-nav.js`, read by `scroll-progress.js` and the 3D shoe). The mouse wheel keeps its glide. Measured with a scripted arrow-key run: lag went from 0.26 to one frame, no stalls.
+- **Movements are improv prompts:** "Yes, and…" offers picked at random and rolled in like a slot machine, with the sound that makes each one real.
 - **Checked:** `npm run build`; a scripted scroll through every scene (no errors, the shoe shows and hides where it should); `debug:stalls` per scene: no stalls (9 to 33 ms frames). **Not checked by eye yet.**
 
 ## 2026-11-17: the team presentation copy
