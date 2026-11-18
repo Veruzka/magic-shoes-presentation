@@ -39,7 +39,7 @@ export function ttHero() {
       <div class="tt-hero__text">
         <h1 class="tt-headline tt-hero__name">Twinkle Toes</h1>
         <div class="tt-hero__todo"></div>
-        <p class="tt-line tt-hero__line">Shoes that turn your movement into sound, so two people can play their way through imagined worlds.</p>
+        <p class="tt-line tt-hero__line">Shoes that turn your movement into sound.</p>
       </div>
       <div class="tt-hero__fan" aria-hidden="true"></div>
     </div>

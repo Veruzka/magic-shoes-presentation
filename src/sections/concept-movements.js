@@ -43,12 +43,11 @@ function conceptIntro() {
   });
   stage.innerHTML = `
     <div class="tt-moves__intro-text">
-      <p class="tt-eyebrow">The concept</p>
       <h2 class="tt-headline tt-moves__title">
         <span>Stories!</span>
         <span>Movement!</span>
       </h2>
-      <p class="tt-line">Every move you make becomes a sound. Two players, one story they make up together.</p>
+      <p class="tt-line">Every move makes a sound.</p>
     </div>
   `;
 

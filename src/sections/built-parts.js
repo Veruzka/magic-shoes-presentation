@@ -37,12 +37,13 @@ function reveal(el, t, rise = 24) {
   el.style.transform = calmMotion() ? 'none' : `translateY(${(1 - shown) * rise}px)`;
 }
 
-// The small header used by every scene: eyebrow, headline, optional line.
+// The small header used by every scene: a headline and at most one line.
+// (`eyebrow` is optional and unused for now: one headline per scene.)
 function header({ eyebrow, headline, line }) {
   const el = document.createElement('header');
   el.className = 'tt-built__header';
   el.innerHTML = `
-    <p class="tt-eyebrow">${eyebrow}</p>
+    ${eyebrow ? `<p class="tt-eyebrow">${eyebrow}</p>` : ''}
     <h2 class="tt-headline tt-built__headline">${headline}</h2>
     ${line ? `<p class="tt-line">${line}</p>` : ''}
   `;
@@ -170,14 +171,6 @@ function partsScene() {
 // ---------------------------------------------------------------------------
 // 2. The MVP: the move table, then the data flow.
 // ---------------------------------------------------------------------------
-const moves = [
-  { move: 'Stand on your shoe', left: 'Drums in', right: 'Vocals in' },
-  { move: 'Lift your foot', both: 'Part drops out' },
-  { move: 'Tip toes', left: 'Bass in', right: 'Melody in' },
-  { move: 'Shake', both: 'Echo' },
-  { move: 'Both stomp within 0.25 s', both: 'Swap parts' },
-];
-
 const flow = [
   { name: 'FSR + gyro' },
   { name: 'Minima', rate: '50x a second' },
@@ -192,29 +185,7 @@ function mvpScene() {
   stage.innerHTML = `
     <div class="tt-built__frame tt-built__mvp">
       <div class="tt-built__mvp-top">
-        <div class="tt-built__mvp-intro">
-          <p class="tt-built__credit">Inspired by Kanye West's Stem Player.</p>
-        </div>
-        <div class="tt-built__moves" role="table" aria-label="What each move does">
-          <div class="tt-built__move tt-built__move--head" role="row">
-            <span role="columnheader">Move</span>
-            <span role="columnheader">Left shoe</span>
-            <span role="columnheader">Right shoe</span>
-          </div>
-          ${moves
-            .map(
-              (row) => `
-            <div class="tt-built__move" role="row">
-              <span role="cell" class="tt-built__move-name">${row.move}</span>
-              ${
-                row.both
-                  ? `<span role="cell" class="tt-built__move-both">${row.both}</span>`
-                  : `<span role="cell">${row.left}</span><span role="cell">${row.right}</span>`
-              }
-            </div>`,
-            )
-            .join('')}
-        </div>
+        <div class="tt-built__mvp-intro"></div>
       </div>
       <ol class="tt-built__flow" aria-label="How the data travels">
         ${flow
@@ -233,29 +204,21 @@ function mvpScene() {
   `;
   const intro = stage.querySelector('.tt-built__mvp-intro');
   const head = header({
-    eyebrow: 'The MVP',
     headline: 'Music Sampling Shoes',
-    line: 'Two players, one shoe each, remixing one song split into four parts.',
+    line: 'Two players remix one song with their feet. It worked.',
   });
   intro.prepend(head);
-  const credit = stage.querySelector('.tt-built__credit');
-  const rows = [...stage.querySelectorAll('.tt-built__move')];
   const steps = [...stage.querySelectorAll('.tt-built__flow-step')];
   const arrows = [...stage.querySelectorAll('.tt-built__flow-arrow')];
 
   // Scroll timeline (p: 0 → 1):
   //   0.00 to 0.10  header
-  //   0.08 to 0.42  table rows, one by one (heading row first), then the credit
-  //   0.50 to 0.95  the data flow lights up step by step, left to right
+  //   0.20 to 0.90  the data flow lights up step by step, left to right
   function update(p) {
     reveal(head, slice(p, 0, 0.1));
-    const rowEach = 0.34 / rows.length;
-    rows.forEach((row, i) => reveal(row, slice(p, 0.08 + i * rowEach, 0.08 + (i + 1) * rowEach), 14));
-    reveal(credit, slice(p, 0.4, 0.46), 10);
-
-    const stepEach = 0.45 / steps.length;
+    const stepEach = 0.7 / steps.length;
     steps.forEach((step, i) => {
-      const t = slice(p, 0.5 + i * stepEach, 0.5 + (i + 1) * stepEach);
+      const t = slice(p, 0.2 + i * stepEach, 0.2 + (i + 1) * stepEach);
       // Unlit steps wait as faint outlines; lit ones go full ink with an underline.
       step.style.opacity = 0.25 + 0.75 * ease(t);
       step.querySelector('.tt-built__flow-bar').style.transform = `scaleX(${ease(t)})`;
@@ -303,7 +266,7 @@ function mediaScene() {
       </div>
     </div>
   `;
-  const head = header({ eyebrow: 'The MVP', headline: 'How it came together' });
+  const head = header({ headline: 'How it came together' });
   stage.querySelector('.tt-built__media-frame').prepend(head);
   // TODO: add the MVP demo video here (replace the placeholder box).
   stage.querySelector('.tt-built__video-slot').append(todoTag('add demo video'));
@@ -335,9 +298,8 @@ function nextBuildScene() {
     </div>
   `;
   const head = header({
-    eyebrow: 'Building on that',
     headline: 'Four shoes, sound effects',
-    line: 'Each player wears a full pair, and the song parts become sound effects for each world.',
+    line: 'Each player wears a full pair.',
   });
   stage.querySelector('.tt-built__next').prepend(head);
 

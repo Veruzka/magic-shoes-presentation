@@ -15,7 +15,6 @@
 import './movement-scene.css';
 import shoeUrl from '../assets/shoe-sketch.png';
 import { scene, calmMotion, slice, ease, lerp, clamp01 } from '../core/scene.js';
-import { movementGroups } from '../data/story-movements.js';
 import { soundRipples } from './sound-ripples.js';
 
 // The movement plays between these two points of the scene, so the shoe rests
@@ -180,10 +179,8 @@ export function movementScene(movement) {
   stage.innerHTML = `
     <div class="tt-move__layout">
       <div class="tt-move__text">
-        <p class="tt-eyebrow"></p>
         <h2 class="tt-headline"></h2>
         <p class="tt-line"></p>
-        <p class="tt-move__makes">Makes: <span></span></p>
       </div>
       <div class="tt-move__visual">
         <div class="tt-move__ripples"></div>
@@ -195,10 +192,8 @@ export function movementScene(movement) {
     </div>
   `;
   // Text goes in with textContent, so names like "Dancer's pose" stay safe.
-  stage.querySelector('.tt-eyebrow').textContent = movementGroups[movement.group] ?? movement.group;
   stage.querySelector('.tt-headline').textContent = movement.name;
   stage.querySelector('.tt-line').textContent = movement.line;
-  stage.querySelector('.tt-move__makes span').textContent = movement.sound;
   stage.querySelector('.tt-move__shoe img').alt = `The Twinkle Toes shoe doing a ${movement.name.toLowerCase()}`;
 
   const shoeEl = stage.querySelector('.tt-move__shoe');
