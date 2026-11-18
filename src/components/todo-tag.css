@@ -1,0 +1,14 @@
+.todo-tag {
+  display: inline-block;
+  font-family: var(--font-callout);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  color: #5a3d00;
+  background: #ffe27a;
+  border: 1px dashed #b88a00;
+  border-radius: 4px;
+  padding: 3px 7px;
+  vertical-align: middle;
+}
