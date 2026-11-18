@@ -17,6 +17,8 @@
 //   labels   0 → 1: the part labels appear one after another
 //   pair     0 → 1: the shoe becomes a pair on the sprite's feet (concept scene)
 //   feet     a function giving the sprite's feet on screen (set by the moves scene)
+//   float    0 → 1: the shoe bobs and rocks gently on its own, over time, even
+//            when nobody scrolls (see FLOAT in src/three/shoe-director.js)
 //
 // A path function gets (p, sceneElement).
 //
@@ -40,14 +42,17 @@ export const REST = {
   labels: 0,
   pair: 0,
   feet: null,
+  float: 0,
 };
 
 // Off stage: hidden, still in pieces (so it can come back together at the end).
 const away = () => ({ opacity: 0, explode: 1, size: 0.5 });
 
 export const shoePath = {
-  // Hero: one full 3D spin under the title.
-  hero: (p) => ({ ay: -0.32, size: 0.6, turn: ease(slice(p, 0.05, 0.95)) }),
+  // Hero: floats under the title, bobbing and rocking on its own (no spin; the
+  // earlier one-full-turn spin is in git history). The float fades out as the
+  // shoe glides into the next scene.
+  hero: () => ({ ay: -0.32, size: 0.6, float: 1 }),
 
   // "Stories! Movement!": resting low and small under the headline.
   concept: (p) => ({ ay: -0.6, size: 0.34, y: 0.04 * Math.sin(p * Math.PI) }),

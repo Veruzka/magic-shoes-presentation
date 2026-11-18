@@ -1,8 +1,8 @@
 // Twinkle Toes hero: the first screen of the story. A huge name and one line
-// at the top; the 3D shoe (src/three/shoe-stage.js) does one full spin in the
-// space below as you start to scroll (see `hero` in src/data/shoe-path.js).
+// at the top; the 3D shoe (src/three/shoe-stage.js) floats in the space below,
+// bobbing and rocking on its own (see `hero` in src/data/shoe-path.js).
 //
-// Everything moves from the scroll position only (no timers).
+// The text moves from the scroll position only (no timers).
 // The earlier four-color fan is in git history (commit "Twinkle Toes hero").
 import '../styles/tt-hero.css';
 import { scene, calmMotion, slice, ease, lerp } from '../core/scene.js';
@@ -21,7 +21,7 @@ export function ttHero() {
 
   if (calmMotion()) return section; // reduced motion: the text stays put
 
-  // The text drifts up a little as the shoe spins.
+  // The text drifts up a little as you start to scroll.
   const text = stage.querySelector('.tt-hero__text');
   onProgress((p) => {
     text.style.transform = `translateY(${lerp(0, -28, ease(slice(p, 0, 0.7)))}px)`;

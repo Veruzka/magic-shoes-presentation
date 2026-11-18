@@ -231,7 +231,10 @@ export function shoeStage() {
   // Puts the shoe in a pose and draws one picture.
   function render(pose) {
     lastPose = pose;
-    element.style.opacity = String(pose.opacity);
+    // Only touch the page's styles when the fade really changes (the hero's
+    // float redraws every frame).
+    const opacity = String(pose.opacity);
+    if (element.style.opacity !== opacity) element.style.opacity = opacity;
     if (pose.opacity <= 0.001) return; // nothing to draw
 
     const viewH = 2 * CAMERA_DISTANCE * Math.tan(THREE.MathUtils.degToRad(FOV / 2));

@@ -20,7 +20,7 @@ It lives inside **Veruzka's repo** (the Magic Shoes site). Her original shoe sto
 4. **Less is more.** One headline per scene, one line at most, no em dashes in site copy.
 5. **Refine, don't replace** Veruzka's work. Make the smallest change, one change per commit, and never delete (move to `src/_archive/`). Ask when unsure. See `cassius-agents/claude-code-prompt-keep-integrity.md`.
 6. **The shoe drives the story in 3D:**
-   - the hero: it spins
+   - the hero: it floats, bobbing and rocking on its own (it used to spin)
    - the concept: it moves onto the players' feet
    - "What we've built": it breaks apart with labels, then Veruzka's sketch breakdown of the FSR
    - the close: it's whole again

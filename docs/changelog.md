@@ -5,7 +5,9 @@ One short entry per work session, newest first.
 ## 2026-11-18 (evening): "Once upon a step" opening (Veruzka, branch `veruzka-opening-scene`)
 - **New title:** the first and last screens now say "Once upon a step" instead of "Twinkle Toes". The browser tab title and Liz's Medium link still say Twinkle Toes.
 - **Hero TODO sticker removed:** the name is decided. The stickers in the other scenes stay as reminders.
-- **Coming next:** the hero shoe floats instead of spinning, and a swaying wildflower field goes behind it (planned with the illustrator, motion-director and motion-reviewer agents).
+- **The hero shoe floats instead of spinning:** it bobs up and down (every 4.6 s) and rocks toe up and down (every 6.7 s), out of step so it never looks mechanical, and keeps going while the presenter talks. It fades into the usual glide when you scroll to the next scene. Reduced motion: it stays still. Settings: `FLOAT` in `src/three/shoe-director.js`.
+- **Checked:** build; `npm run debug:stalls` three times with the float and three times without. Both sometimes show a stall after the first scene (up to about 250 ms), so that is not new; one run with the float had stalls at the very start (about 100 ms), worth watching. The shoe redraws every frame on the first screen and stops completely once you scroll away. **Not checked on the TV yet.**
+- **Coming next:** a lighter shoe drawing for the TV, then a swaying wildflower field behind the shoe (planned with the illustrator, motion-director and motion-reviewer agents).
 
 ## 2026-11-18 (later afternoon): arrow-key stops (Liz, branch `liz-animation-fixes`)
 - **Blank slides (fixed):** the MVP, "How it came together" and "Four shoes, sound effects" put their first arrow-key stop before anything had faded in, so the right arrow landed on a blank screen and the content flashed past on the next press. The MVP now stops on its headline, then with the data flow lit; the other two stop with everything shown (`data-stop-at` in `built-parts.js`).

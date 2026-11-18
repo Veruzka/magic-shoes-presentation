@@ -7,13 +7,37 @@
 //
 // Like the scroll progress elsewhere, it glides toward the scroll position
 // instead of jumping (no jolts from mouse-wheel notches), and stops redrawing
-// once it has arrived. Reduced motion: no gliding, no movement; the shoe keeps
-// each scene's resting pose and only fades, comes apart and shows its labels.
+// once it has arrived. The one exception is the hero, where the shoe floats on
+// its own over time (FLOAT below), so it keeps redrawing while the hero shows.
+// Reduced motion: no gliding, no movement, no float; the shoe keeps each
+// scene's resting pose and only fades, comes apart and shows its labels.
 import { REST, shoePath } from '../data/shoe-path.js';
 import { clamp01, ease } from '../core/scene.js';
 
 const SETTLE = 0.1; // seconds; how quickly it catches up with the scroll
 const ANGLES = new Set(['yaw', 'turn']); // in turns: blend the short way round
+
+// The hero's float: slow, out-of-step waves so it never looks mechanical.
+// Nothing faster than about 4 seconds a cycle.
+const FLOAT = {
+  bob: 0.02, // up and down, as a share of the shoe's length
+  bobPeriod: 4.6, // seconds
+  rock: 2.5, // toe up and down, in degrees
+  rockPeriod: 6.7, // seconds
+};
+
+// Adds the float on top of a pose, by the pose's float amount (0 → 1). It uses
+// the page's clock (performance.now), so anything else that sways, like the
+// hero's field, can share the same time and stay in step.
+function withFloat(pose, now) {
+  const t = now / 1000;
+  const wave = (period) => Math.sin((t / period) * Math.PI * 2);
+  return {
+    ...pose,
+    y: pose.y + FLOAT.bob * wave(FLOAT.bobPeriod) * pose.float,
+    tilt: pose.tilt + FLOAT.rock * wave(FLOAT.rockPeriod) * pose.float,
+  };
+}
 
 function progressOf(el) {
   const rect = el.getBoundingClientRect();
@@ -99,8 +123,12 @@ export function startShoeDirector(stage) {
       }
     }
     current = next;
-    stage.render(current);
-    if (moving) frame = requestAnimationFrame(step);
+    // The float goes on after the glide, so the shoe still settles on the
+    // scroll position. Reduced motion: no float.
+    const floating = !reduceMotion.matches && current.float > 0.001;
+    stage.render(floating ? withFloat(current, time) : current);
+    // Keep drawing while it glides or floats; otherwise stop until the next scroll.
+    if (moving || floating) frame = requestAnimationFrame(step);
     else lastTime = null;
   }
 
@@ -113,6 +141,10 @@ export function startShoeDirector(stage) {
   // The concept's sprite moves its feet every frame: redraw so the shoes stay on them.
   window.addEventListener('shoe-refresh', () => {
     if (current && frame === null) stage.render(current);
+  });
+  // Coming back to the tab: pick the float up again.
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && current && frame === null) frame = requestAnimationFrame(step);
   });
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);

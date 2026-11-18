@@ -360,7 +360,7 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 
 > **Example:** `{ id: 'stomp', group: 'basic', name: 'Stomp', motion: 'run', offers: [{ offer: 'a giant is coming.', sound: 'a deep boom, getting closer' }] },`
 
-**Change what the 3D shoe does in a scene:** `src/data/shoe-path.js`. One entry per scene name. The fields are explained at the top of the file: where it sits (`ax`, `ay`), how big (`size`), spin (`turn`), toe up (`tilt`), hidden (`opacity`), broken apart (`explode`) and labels (`labels`).
+**Change what the 3D shoe does in a scene:** `src/data/shoe-path.js`. One entry per scene name. The fields are explained at the top of the file: where it sits (`ax`, `ay`), how big (`size`), spin (`turn`), toe up (`tilt`), hidden (`opacity`), broken apart (`explode`), labels (`labels`) and the gentle float over time (`float`, 0 to 1). How far and how slowly it floats: `FLOAT` at the top of `src/three/shoe-director.js`.
 
 > **Example:** to make the hero shoe bigger, change `size: 0.6` to `size: 0.75` in `hero`.
 
