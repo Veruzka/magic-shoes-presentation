@@ -1,0 +1,29 @@
+/* Section 1, "The concept" (src/sections/concept-movements.js): the intro
+   screen and the wrapper around the movement scenes. Each movement scene's own
+   look is in src/components/movement-scene.css. */
+.tt-moves {
+  background: var(--color-bg);
+  color: var(--color-text);
+  overflow-x: clip; /* nothing a moving shoe does can make the page scroll sideways */
+}
+
+/* The intro: centered, huge, lots of empty space. */
+.tt-moves__intro-text {
+  width: min(1100px, 100% - 48px);
+  text-align: center;
+  will-change: transform;
+}
+
+.tt-moves__intro-text .tt-line {
+  margin-inline: auto;
+}
+
+/* "Stories! / Movement!" on two lines, bigger than the usual headline. */
+.tt-moves__title {
+  font-size: clamp(3rem, 10vw, 9rem);
+  line-height: 0.95;
+}
+
+.tt-moves__title span {
+  display: block;
+}

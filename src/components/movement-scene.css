@@ -1,0 +1,107 @@
+/* One movement scene (src/components/movement-scene.js): text on the left,
+   the shoe doing the movement on the right, lit like a product on cream. */
+.tt-move {
+  --move-shoe-width: min(36vw, 500px);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Two columns that fit inside the screen with room to breathe. */
+.tt-move__layout {
+  width: min(1200px, 100% - 2 * clamp(24px, 5vw, 80px));
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 64px);
+}
+
+.tt-move__text {
+  min-width: 0;
+}
+
+/* "Makes: soft footsteps": a small technical caption under the line. */
+.tt-move__makes {
+  font-family: var(--font-callout);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 1.6rem 0 0;
+}
+
+.tt-move__makes span {
+  color: var(--color-text);
+}
+
+.tt-move__text .todo-tag {
+  margin-top: 1.2rem;
+}
+
+/* The shoe's area. Everything inside is stacked in the middle. */
+.tt-move__visual {
+  position: relative;
+  height: min(70vh, 560px);
+  display: grid;
+  place-items: center;
+}
+
+.tt-move__visual > * {
+  grid-area: 1 / 1;
+}
+
+/* The sound rings sit behind the shoe, in the sand accent color. */
+.tt-move__ripples {
+  color: var(--color-accent);
+}
+
+.tt-move__ripples .sound-ripples {
+  width: calc(var(--move-shoe-width) * 0.85);
+  height: calc(var(--move-shoe-width) * 0.85);
+}
+
+/* The shoe itself: mirrored so the toe points right, away from the text. */
+.tt-move__shoe {
+  width: var(--move-shoe-width);
+  will-change: transform;
+}
+
+.tt-move__shoe img {
+  display: block;
+  width: 100%;
+  height: auto;
+  scale: -1 1;
+}
+
+/* A soft oval shadow on the "floor", so the shoe reads as lit like a product.
+   The script shrinks and fades it when the shoe leaves the ground. */
+.tt-move__shadow {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + var(--move-shoe-width) * 0.27);
+  width: calc(var(--move-shoe-width) * 0.8);
+  height: calc(var(--move-shoe-width) * 0.07);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(110 90 60 / 0.28), rgb(110 90 60 / 0));
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Narrow screens: stack the text above the shoe. */
+@media (max-width: 760px) {
+  .tt-move {
+    --move-shoe-width: min(78vw, 420px);
+  }
+
+  .tt-move__layout {
+    grid-template-columns: minmax(0, 1fr);
+    text-align: center;
+  }
+
+  .tt-move__text .tt-line {
+    margin-inline: auto;
+  }
+
+  .tt-move__visual {
+    height: min(46vh, 380px);
+  }
+}
