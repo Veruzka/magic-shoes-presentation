@@ -15,7 +15,6 @@ import { pageSwitch } from './components/page-switch.js';
 import { startKeyboardNav } from './core/keyboard-nav.js';
 import { ttHero } from './sections/tt-hero.js';
 import { conceptMovements } from './sections/concept-movements.js';
-import { conceptWorlds } from './sections/concept-worlds.js';
 import { builtParts } from './sections/built-parts.js';
 import { process as processSection } from './sections/process.js';
 import { forward } from './sections/forward.js';
@@ -26,7 +25,6 @@ import { close } from './sections/close.js';
 const sections = [
   ttHero, // the shoe fanned out in the four world colors
   conceptMovements, // "Stories! Movement!" + one scene per movement
-  conceptWorlds, // Sky, Lava, Forest, Water, with the double stomp between them
   hero, // "What we've built" starts with the existing story: the shoe comes apart, the FSR explains itself
   builtParts, // the parts inside each shoe, the MVP, what's next, takeaways
   processSection, // the timeline and the bodystorm grid
