@@ -2,10 +2,11 @@
 // fixed over the page (clicks pass straight through it), with the shoe posed by
 // src/three/shoe-director.js from the list in src/data/shoe-path.js.
 //
-// The shoe: the 3D model at /assets/models/shoe.glb (folder public/assets/models/).
-// Until that file exists, a stand-in follows the same path: the Sketch drawing
-// on a thin card, plus a small block for each part so breaking apart still works.
-// TODO: replace the stand-in with the real model when the .glb arrives.
+// The shoe: the Sketch drawing on a thin card, plus a small block for each part,
+// everywhere in the story. Only in "Inside each shoe" (pose.model = 1) is it
+// swapped for the real 3D model, /assets/models/shoe.glb (folder
+// public/assets/models/), which comes apart in stacked layers, in the order the
+// shoe is assembled. If the model can't load, the card is used there too.
 //
 // It only draws a new picture when the pose changes (never in a constant loop).
 import './shoe-stage.css';
@@ -22,6 +23,20 @@ const FOV = 30; // degrees, top to bottom
 const SKETCH_RATIO = 846 / 1356; // height / length of the Sketch drawing
 const EXPLODE_DISTANCE = 0.55; // how far parts travel when fully apart, in shoe lengths
 const SHOE_ON_FOOT = 1.9; // how long a shoe is on the sprite, compared with its foot
+
+// The real model's layers, bottom to top, in the order the shoe is put together
+// (see PRINT_SHEET.md next to the Rhino file). Coming apart, each layer lifts
+// until it sits just above the one below it. Names are the model's object names.
+const MODEL_LAYERS = [
+  ['sole_toe', 'sole_heel'],
+  ['fsr_heel', 'fsr_ball'],
+  ['tray'],
+  ['breadboard', 'xiao_esp32c6', 'gyro_mpu6050', 'resistor', 'capacitor', 'usb_c_port', 'usb_c_plug', 'usb_cable'],
+  ['lid'],
+  ['insole'],
+];
+const LAYER_GAP = 0.035; // space between layers when fully apart, in shoe lengths
+const MODEL_FIT = 0.7; // when fully apart, the model shrinks to this size so the stack fits the screen
 
 const turnsBetween = (a, b) => b - a - Math.round(b - a); // the short way round
 
@@ -85,6 +100,8 @@ export function shoeStage() {
     return { root: r, yaw, tilt };
   });
   let fadeMain = () => {}; // fades the big shoe out as the small ones take over
+  let card = null; // the Sketch drawing on its card (the big shoe)
+  let model = null; // the real model, once loaded: { group, layers, parts, lift }
 
   // A solid stand-in shoe, 1 unit long, toe toward -x: a sole and a rounded upper.
   // Set aside (2026-11-19): the players wear the Sketch card now (buildStandIn).
@@ -115,7 +132,6 @@ export function shoeStage() {
   let lastPose = { ...REST, opacity: 0 };
 
   function makeLabels(list) {
-    labelLayer.replaceChildren();
     list.forEach((part) => {
       const label = document.createElement('div');
       label.className = 'shoe-stage__label';
@@ -179,7 +195,7 @@ export function shoeStage() {
     const texture = new THREE.TextureLoader().load(shoeUrl, () => render(lastPose));
     texture.colorSpace = THREE.SRGBColorSpace;
     const cardMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.05, side: THREE.DoubleSide });
-    const card = new THREE.Mesh(new THREE.PlaneGeometry(1, SKETCH_RATIO), cardMaterial);
+    card = new THREE.Mesh(new THREE.PlaneGeometry(1, SKETCH_RATIO), cardMaterial);
     tiltGroup.add(card);
     // The players wear the same shoe as the hero: the Sketch drawing on a card
     // (2026-11-19; they wore standInShoe(), a simpler solid shape, before).
@@ -214,45 +230,72 @@ export function shoeStage() {
     makeLabels(parts);
   }
 
-  // The real model. Each part must be a separate top-level object named after
-  // its id in src/data/shoe-parts.js (fsr, mpu, xiao, power, case).
+  // The real model, for "Inside each shoe" only. It lies toe to +X in the file,
+  // so it's turned round to match the drawing (toe on the left). Each label is
+  // pinned to the first object listed in that part's `model` (src/data/shoe-parts.js).
   function useModel(gltf) {
-    const model = gltf.scene;
-    const box = new THREE.Box3().setFromObject(model);
+    const inner = gltf.scene;
+    // Measure everything first, in the file's own units (nothing is moved yet).
+    inner.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(inner);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
     const scale = 1 / Math.max(size.x, size.z); // 1 unit long
-    model.scale.setScalar(scale);
-    model.position.copy(center).multiplyScalar(-scale);
-    tiltGroup.add(model);
-    footShoes.forEach((f, i) => {
-      const twin = model.clone(true);
-      if (i % 2 === 0) twin.scale.z *= -1; // far feet get the mirrored (other-foot) shoe
-      twin.traverse((o) => {
-        if (o.material) {
-          o.material = o.material.clone();
-          o.material.transparent = true;
-          footMaterials.push(o.material);
-        }
-      });
-      f.tilt.add(twin);
+
+    // How far each layer lifts when fully apart, so its bottom ends up just
+    // above the top of the layer below.
+    const gap = LAYER_GAP / scale;
+    let top = -Infinity;
+    const layers = MODEL_LAYERS.map((names) => {
+      const objects = names.map((name) => inner.getObjectByName(name)).filter(Boolean);
+      const layerBox = new THREE.Box3();
+      objects.forEach((o) => layerBox.expandByObject(o));
+      const lift = objects.length && top > -Infinity ? Math.max(0, top + gap - layerBox.min.y) : 0;
+      if (objects.length) top = layerBox.max.y + lift;
+      return { objects, lift };
     });
-    fadeMain = (shown) => (root.visible = shown > 0.02);
-    parts = shoeParts
+    const lift = (top - box.max.y) * scale; // how much taller the stack is, in shoe lengths
+
+    // Labels: pinned to the middle of each part's first object.
+    const modelParts = shoeParts
       .map((data) => {
-        const object = model.getObjectByName(data.id);
+        const object = (data.model ?? [data.id]).map((name) => inner.getObjectByName(name)).find(Boolean);
         if (!object) return null;
-        const home = object.position.clone();
-        const partCenter = new THREE.Box3().setFromObject(object).getCenter(new THREE.Vector3());
-        const dir = (data.explode ? new THREE.Vector3(...data.explode) : partCenter.sub(center)).normalize();
-        return { data, object, home, dir, modelScale: scale };
+        const anchor = object.worldToLocal(new THREE.Box3().setFromObject(object).getCenter(new THREE.Vector3()));
+        return { data, object, anchor };
       })
       .filter(Boolean);
-    makeLabels(parts);
+
+    // Then size it to 1 unit long, centre it, and turn it toe-left like the drawing.
+    inner.scale.setScalar(scale);
+    inner.position.copy(center).multiplyScalar(-scale);
+    const turned = new THREE.Group();
+    turned.rotation.y = Math.PI;
+    turned.add(inner);
+    const group = new THREE.Group();
+    group.add(turned);
+    group.visible = false;
+    tiltGroup.add(group);
+
+    makeLabels(modelParts);
+    model = { group, layers, parts: modelParts, lift };
+    // Warm up: draw it once now (off screen, nothing visible changes), so the
+    // graphics card has it ready and the first scroll into the scene doesn't stall.
+    const wasAt = root.position.clone();
+    group.visible = true;
+    root.position.set(0, 0, 0);
+    scene.updateMatrixWorld();
+    renderer.compile(scene, camera);
+    renderer.render(scene, camera);
+    group.visible = false;
+    root.position.copy(wasAt);
+    renderer.render(scene, camera);
     render(lastPose);
   }
 
   async function load() {
+    buildStandIn();
+    render(lastPose);
     try {
       const response = await fetch(MODEL_URL);
       const type = response.headers.get('content-type') ?? '';
@@ -261,8 +304,7 @@ export function shoeStage() {
       const gltf = await new GLTFLoader().parseAsync(await response.arrayBuffer(), '');
       useModel(gltf);
     } catch {
-      buildStandIn();
-      render(lastPose);
+      // No model: "Inside each shoe" keeps the Sketch card and its part blocks.
     }
   }
 
@@ -333,26 +375,46 @@ export function shoeStage() {
 
     const apart = ease(pose.explode);
     fadeWhole(apart);
+    // The real model takes over from the card only in "Inside each shoe".
+    // (The switch happens while the shoe is hidden, between scenes.)
+    const real = Boolean(model) && (pose.model ?? 0) >= 0.5 && !feet;
+    if (card) card.visible = !real;
+    if (model) {
+      model.group.visible = real;
+      if (real) {
+        // Stacked layers: each lifts into place; the stack shrinks and stays centred.
+        model.layers.forEach((layer) => layer.objects.forEach((o) => (o.position.y = layer.lift * apart)));
+        const fit = 1 + (MODEL_FIT - 1) * apart;
+        model.group.scale.setScalar(fit);
+        model.group.position.y = (-model.lift / 2) * apart * fit;
+      }
+    }
     parts.forEach((part) => {
-      const offset = part.dir.clone().multiplyScalar(apart * EXPLODE_DISTANCE / (part.modelScale ?? 1));
+      const offset = part.dir.clone().multiplyScalar(apart * EXPLODE_DISTANCE);
       part.object.position.copy(part.home).add(offset);
-      if (part.standIn) part.object.scale.setScalar(Math.max(apart, 0.0001));
+      part.object.scale.setScalar(Math.max(apart, 0.0001));
+      part.object.visible = !real;
     });
 
     scene.updateMatrixWorld();
     renderer.render(scene, camera);
 
     // Labels: each one appears in turn, pinned next to its part on screen.
-    const n = parts.length;
-    parts.forEach((part, i) => {
-      const shown = apart > 0.5 && !feet ? ease(slice(pose.labels, i / n, (i + 0.7) / n)) : 0;
-      part.label.style.opacity = String(shown);
-      if (!shown) return;
-      part.object.getWorldPosition(point).project(camera);
-      const x = ((point.x + 1) / 2) * window.innerWidth;
-      const y = ((1 - point.y) / 2) * window.innerHeight;
-      part.label.style.transform = `translate(${x}px, ${y}px)`;
-    });
+    const showLabels = (list, on) => {
+      const n = list.length;
+      list.forEach((part, i) => {
+        const shown = on && apart > 0.5 && !feet ? ease(slice(pose.labels, i / n, (i + 0.7) / n)) : 0;
+        part.label.style.opacity = String(shown);
+        if (!shown) return;
+        if (part.anchor) point.copy(part.anchor).applyMatrix4(part.object.matrixWorld).project(camera);
+        else part.object.getWorldPosition(point).project(camera);
+        const x = ((point.x + 1) / 2) * window.innerWidth;
+        const y = ((1 - point.y) / 2) * window.innerHeight;
+        part.label.style.transform = `translate(${x}px, ${y}px)`;
+      });
+    };
+    showLabels(parts, !real);
+    if (model) showLabels(model.parts, real);
   }
 
   window.addEventListener('resize', resize);

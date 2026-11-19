@@ -19,6 +19,9 @@
 //   feet     a function giving the sprite's feet on screen (set by the moves scene)
 //   float    0 → 1: the shoe bobs and rocks gently on its own, over time, even
 //            when nobody scrolls (see FLOAT in src/three/shoe-director.js)
+//   model    1 = show the real 3D model (shoe.glb) instead of the Sketch card.
+//            Only "Inside each shoe" uses it; the scenes either side set it
+//            too while the shoe is hidden, so the swap never shows.
 //
 // A path function gets (p, sceneElement).
 //
@@ -43,6 +46,7 @@ export const REST = {
   pair: 0,
   feet: null,
   float: 0,
+  model: 0,
 };
 
 // Off stage: hidden, still in pieces (so it can come back together at the end).
@@ -72,10 +76,12 @@ export const shoePath = {
   // What the MVP does: the figure has the stage; the shoe waits off screen,
   // whole, where "Inside each shoe" picks it up. `pair: 1` keeps the players'
   // shoes on their feet while they scroll away (the big shoe doesn't come back).
-  'mvp-does': () => ({ ax: 0.12, ay: -0.05, size: 0.62, opacity: 0, pair: 1 }),
+  'mvp-does': () => ({ ax: 0.12, ay: -0.05, size: 0.62, opacity: 0, pair: 1, model: 1 }),
 
   // What we've built: it breaks apart, then each part gets its label.
+  // The real 3D model shows here only, coming apart in stacked layers.
   parts: (p) => ({
+    model: 1,
     ax: 0.12,
     ay: -0.05,
     size: 0.62,
@@ -85,7 +91,7 @@ export const shoePath = {
   }),
 
   // Veruzka's sketch breakdown (the FSR close-up) plays here: the 3D shoe steps aside.
-  'built-inside': away,
+  'built-inside': () => ({ ...away(), model: 1 }),
   mvp: away,
   'mvp-media': away,
   'next-build': away,
