@@ -12,6 +12,7 @@ One short entry per work session, newest first.
 - **Checked:** build; scripted run: the model loads, its five labels appear one by one, the Sketch labels stay hidden, no errors in any scene. `npm run debug:stalls`: the model first caused a 308 ms stall the first time it was drawn; it's now drawn once, hidden, when it loads, and the longest frame is back to 34 ms (same as without it). **Not checked by eye:** how the stack and labels look.
 
 ## 2026-11-19: takeaways (Liz)
+- **MVP demo video is in** ("How it came together", first tile): the team's clip loops muted like a GIF and plays only while the slide is on screen (reduced motion: still frame with play controls). The original was a 56 MB GIF; it's converted to `src/assets/mvp/mvp-demo.mp4` (2.4 MB, same 7-second loop) so it loads fast on the TV. The GIF itself isn't in the repo.
 - **"Four shoes, sound effects" has its takeaways** (they were TODO stickers): 01 Sound effects vs. music (curiosity and imagination; music empowered improv), 02 Scenarios and imagination built off friends (building scenarios, sounds, and play), 03 A more open approach (explore instead of define). Each is a numbered title with its points underneath in a lighter style (`TAKEAWAYS` in `built-parts.js`).
 
 ## 2026-11-18 (evening): "Once upon a step" opening (Veruzka, branch `veruzka-opening-scene`)
