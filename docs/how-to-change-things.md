@@ -359,6 +359,7 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 - **Offers** are the improv prompts: each finishes "Yes, and…" (`offer`) and names the sound that makes it real (`sound`). Each move shows one, chosen by `pick` (0, 1 or 2); the line rolls past the spares and lands on it like a slot machine. To show a different offer, change `pick`. Remove `pick` to go back to a random one per visit.
 - The motions are `step`, `run`, `spin`, `pose`, `kick`, `sky` and `heelclick`, in `MOVES` in `src/components/sprite-rig.js`. A new kind of motion = a new entry there: a `pose(phase)` with joint angles (explained at the top of the file) and its `strikes` (when a foot sends out a sound ring).
 - **How long one loop takes:** `seconds` on each movement in `MOVES` (`src/components/sprite-rig.js`).
+- **How long each "Yes, and…" offer stays:** `HOLD_SECONDS` at the top of `src/sections/concept-movements.js` (the scene's scroll length is `length` in `spriteScene`).
 - **The two players:** at the top of `src/sections/concept-movements.js`: `COPY_DELAY` (how far behind player 2 starts), `SYNC_SECONDS` (how long it takes to fall into step), `SPRING` (how loose each joint is: lower = floppier), `SWITCH_SECONDS` (how long a change of movement blends).
 - **Colours:** player 1 is `--tt-cyan`, player 2 is Veruzka's sand (`--color-accent`), the story is `.tt-sprite__story` in `src/styles/concept-movements.css`.
 - **The stories behind the players:** one function per vignette in `src/components/story-props.js`.
