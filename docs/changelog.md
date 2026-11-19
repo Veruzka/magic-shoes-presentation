@@ -17,7 +17,7 @@ One short entry per work session, newest first.
 - **The players wear the hero's shoe:** the Sketch drawing on a card, instead of the simpler solid stand-in (kept in `shoe-stage.js` as `standInShoe`, set aside).
 - **Thin ice, in paper:** the jagged cracks under the walkers are gone. Each of player 1's steps lays a new sheet of paper ice: a line grows across the ground from left to right and a wavy-edged sheet follows it, each a little lower in the next blue or white tone with a soft paper shadow (six sheets).
 - **The "Yes, and…" offer stays readable:** once it has rolled in, it stays at least 3 seconds before the next movement takes over, even if the scroll moves on (`HOLD_SECONDS` in `concept-movements.js`), and each movement has about 1.5 screens of scrolling (the scene is 11 screens, was 6).
-- **Checked:** build only (no browser checks this round, at Veruzka's request).
+- **Checked:** build only. No browser checks this round, so none of it has been seen on screen yet.
 - **Checked (first version):** build; screenshots at stop 1, mid-slide and stop 2; `npm run debug:stalls` six times. The first run stuttered in the forest (likely the browser decoding the big pictures on first view), so the pictures are now decoded at page load; the next runs were smooth there (only the old ~67 ms stall further down). New suspect "no paper forest (hero)" in `frame-stalls.mjs`. **Not checked on the TV yet.** Known: the rising layers show a straight top edge while they move.
 
 ## 2026-11-18 (later afternoon): arrow-key stops (Liz, branch `liz-animation-fixes`)
