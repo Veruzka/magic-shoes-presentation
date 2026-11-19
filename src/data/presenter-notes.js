@@ -19,7 +19,7 @@ export const presenterNotes = [
   },
   {
     part: "What we've built",
-    scenes: ['parts', 'built-inside'],
+    scenes: ['parts'],
     speaker: 'TODO: speaker',
     points: ['Inside each shoe: an FSR under the heel and a gyro.', 'The FSR feels pressure: a stomp is a quick, hard press.'],
   },

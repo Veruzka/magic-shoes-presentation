@@ -31,7 +31,8 @@ const sections = [
   conceptMovements, // the two players, one arrow stop per movement ("Stories! Movement!" intro set aside)
   mvpDoes, // what the MVP does: walk and run, spin, whimsy moves (one arrow stop each)
   builtShoeParts, // "What we've built": the 3D shoe breaks apart, each part labeled
-  hero, // then Veruzka's sketch breakdown: the FSR flies out, is drawn and explains itself
+  // hero: Veruzka's "Magic Shoes" story and FSR breakdown, set aside 2026-11-19
+  // (see heroSection below): "Music Sampling Shoes" follows "Inside each shoe".
   builtParts, // the MVP, photos, what's next, takeaways
   processSection, // the timeline and the bodystorm grid
   forward,
@@ -47,7 +48,12 @@ const parallax = createParallax();
 // parts), chapter 2 flies the FSR to the centre as the scene scrolls away,
 // chapter 3 turns it and half of it becomes a labelled sketch, chapter 4 slides it
 // into the paper, fully drawn and flat, with texts on the left.
-const heroSection = app.querySelector('.hero');
+// Veruzka's "Magic Shoes" story (big title on its background, then the FSR
+// breakdown: "What's an FSR", "What does it do in the shoe") is set aside: built
+// but not put on the page, so the Style lab's switches still have something to
+// drive and nothing breaks. To bring it back, add `hero` to `sections` after
+// `builtShoeParts` and change this line back to `app.querySelector('.hero')`.
+const heroSection = hero();
 // The keyboard navigation treats the hero as one scene with a stop per chapter.
 heroSection.dataset.scene = 'built-inside';
 heroSection.dataset.stops = '5';

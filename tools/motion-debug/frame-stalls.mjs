@@ -52,7 +52,7 @@ async function measure(name, css) {
     await chrome.wheel(120);
     await chrome.wait(90);
     const [gap, progress] = await chrome.run(
-      `(() => { const g = Math.round(window.__gap); window.__gap = 0; return [g, document.querySelector('.hero').dataset.progress]; })()`,
+      `(() => { const g = Math.round(window.__gap); window.__gap = 0; const page = (scrollY / Math.max(document.documentElement.scrollHeight - innerHeight, 1)).toFixed(3); return [g, document.querySelector('.hero')?.dataset.progress ?? 'page ' + page]; })()`,
     );
     worst = Math.max(worst, gap);
     if (gap > 50) stalls.push(`${gap}ms at ${progress}`);
