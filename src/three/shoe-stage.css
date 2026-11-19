@@ -52,3 +52,29 @@
   border-radius: 4px;
   translate: 6px -50%;
 }
+
+/* A label whose name sits to the left of its dot (keeps neighbouring labels apart). */
+.shoe-stage__label--left {
+  flex-direction: row-reverse;
+  translate: -100% 0;
+}
+
+.shoe-stage__label--left .shoe-stage__dot {
+  margin-left: 0;
+  margin-right: -4.5px;
+}
+
+.shoe-stage__label--left .shoe-stage__name {
+  translate: -6px -50%;
+  text-align: right;
+}
+
+/* A second, smaller line under a label's name (e.g. the clip-on toe's sizes). */
+.shoe-stage__detail {
+  display: block;
+  font-family: var(--font-note);
+  font-size: 0.8em;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: 0.75;
+}

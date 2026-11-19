@@ -67,7 +67,7 @@ function partsScene() {
     <div class="tt-built__frame tt-built__parts"></div>
   `;
   const frame = stage.querySelector('.tt-built__parts');
-  const head = header({ headline: 'Inside each shoe' });
+  const head = header({ headline: 'Inside each shoe', line: 'One printed shoe that senses every step, with a clip-on toe so anyone can play.' });
   frame.prepend(head);
 
   function update(p) {

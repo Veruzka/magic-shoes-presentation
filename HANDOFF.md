@@ -40,7 +40,7 @@ Everything is pushed to `web-presentation-draft`.
   - Seven moves. Walk, run, spin, feet to the sky and the heel click are hand-animated (the tracked heel-click loop came from a front-on video and bent the knees backwards side-on; it's kept in the data). The side kick and dancer's pose use real tracked peak poses (`src/data/bodystorm-motion.json`).
   - **One "Yes, and…" offer per move**, set with `pick` in `src/data/story-movements.js`, plus its story picture (`src/components/story-props.js`). The spare offers and pictures are kept for later.
 - **Just fixed:** the players moved erratically while paused, from an unstable spring. The 3D shoes snapped round during the spin. Both are fixed and pass a simulation at 60, 30 and 20 fps, **but haven't been looked at on screen yet.**
-- **3D shoe:** a stand-in until the real model is exported (see below).
+- **3D shoe:** the Sketch drawing everywhere, except "Inside each shoe", which shows the real Rhino model (`public/assets/models/shoe.glb`) coming apart in stacked layers.
 
 ## What's left, in order
 1. **Look at the paused movement scene by eye** (step with the arrow keys, wait a few seconds on each move). Confirm it's calm, and that the story pictures and the four stand-in shoes on the feet look right.
@@ -52,7 +52,7 @@ Everything is pushed to `web-presentation-draft`.
    - ~~the timeline and owners for next steps~~: "What's next" is now just the headline and the floating shoe (2026-11-19)
    - more basic moves after the Kimney meeting (`src/data/story-movements.js`)
    - the per-shoe parts, confirmed with engineering (`src/data/shoe-parts.js`)
-4. **The real 3D shoe:** export the Rhino model (`twinkle_toes.3dm`, Cassius has it; still in progress) to `public/assets/models/shoe.glb`. The part names and orientation it needs are in `public/assets/models/README.md`. The site switches from the stand-in automatically.
+4. **The real 3D shoe:** done for "Inside each shoe" (2026-11-19). To update it, re-export the Rhino model to `public/assets/models/shoe.glb` with the same object names (see `public/assets/models/README.md`).
 5. **Rehearse** one full arrow-key run on the TV.
 
 ## How to run and check
