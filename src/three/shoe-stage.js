@@ -10,6 +10,7 @@
 // It only draws a new picture when the pose changes (never in a constant loop).
 import './shoe-stage.css';
 import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import shoeUrl from '../assets/shoe-sketch.png';
 import { shoeParts } from '../data/shoe-parts.js';
 import { REST } from '../data/shoe-path.js';
@@ -125,7 +126,55 @@ export function shoeStage() {
     });
   }
 
-  // The stand-in: the Sketch drawing on a card, and one block per part.
+  // One electronic part, drawn like a small relay (2026-11-19, from Veruzka's
+  // reference photos): a matte dark green-grey box with softly rounded edges,
+  // like a 3D print, tiny white markings on its face (not meant to be read) and
+  // little metal pins underneath. Every part uses the same box, to keep it simple.
+  const PART_BOX = { w: 0.075, h: 0.06, d: 0.055 };
+  const partBodyMaterial = new THREE.MeshStandardMaterial({ color: 0x3e4a46, roughness: 0.88, metalness: 0 });
+  const pinMaterial = new THREE.MeshStandardMaterial({ color: 0xc9cbc7, roughness: 0.35, metalness: 0.7 });
+  function markings(seed) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 192;
+    const g = canvas.getContext('2d');
+    g.fillStyle = 'rgba(255,255,255,0.88)';
+    g.font = '600 30px "Courier New", monospace';
+    // Four short lines of maker's-mark style text, a little uneven, like print on a part.
+    const chars = 'RK0S8LNE6CR5FHVOAQ27X';
+    let n = seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+    const pick = () => chars[(n = (n * 31 + 7) % 997) % chars.length];
+    const lines = [seed.toUpperCase().slice(0, 7), 'RN ' + pick() + pick() + pick() + pick(), pick() + pick() + ' ' + pick() + pick() + pick() + pick(), pick() + pick() + pick() + pick() + pick() + pick() + pick()];
+    lines.forEach((line, i) => {
+      g.save();
+      g.translate(26 + i * 4, 44 + i * 40);
+      g.rotate(-0.04);
+      g.fillText(line, 0, 0);
+      g.restore();
+    });
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return new THREE.MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false });
+  }
+  function partBox(id) {
+    const { w, h, d } = PART_BOX;
+    const group = new THREE.Group();
+    group.add(new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 3, 0.006), partBodyMaterial));
+    const label = new THREE.Mesh(new THREE.PlaneGeometry(w * 0.82, h * 0.7), markings(id));
+    label.position.z = d / 2 + 0.0006;
+    group.add(label);
+    // Pins: two rows of two, poking out of the bottom.
+    [-1, 1].forEach((sx) =>
+      [-1, 1].forEach((sz) => {
+        const pin = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.014, 0.003), pinMaterial);
+        pin.position.set(sx * w * 0.32, -h / 2 - 0.006, sz * d * 0.28);
+        group.add(pin);
+      }),
+    );
+    return group;
+  }
+
+  // The stand-in: the Sketch drawing on a card, and one relay-style box per part.
   function buildStandIn() {
     const texture = new THREE.TextureLoader().load(shoeUrl, () => render(lastPose));
     texture.colorSpace = THREE.SRGBColorSpace;
@@ -156,10 +205,7 @@ export function shoeStage() {
       // Where the part sits, from its point on the drawing (0,0 top-left → 1,1 bottom-right).
       const home = new THREE.Vector3(data.point.x - 0.5, (0.5 - data.point.y) * SKETCH_RATIO, 0.02);
       const dir = new THREE.Vector3(home.x, home.y, 0.35).normalize();
-      const block = new THREE.Mesh(
-        new THREE.BoxGeometry(0.09, 0.055, 0.04),
-        new THREE.MeshStandardMaterial({ color: 0x3a332b, roughness: 0.6 }),
-      );
+      const block = partBox(data.id);
       tiltGroup.add(block);
       return { data, object: block, home, dir, standIn: true };
     });
@@ -167,7 +213,7 @@ export function shoeStage() {
   }
 
   // The real model. Each part must be a separate top-level object named after
-  // its id in src/data/shoe-parts.js (fsr, mpu, minima, xiao, power, case).
+  // its id in src/data/shoe-parts.js (fsr, mpu, xiao, power, case).
   function useModel(gltf) {
     const model = gltf.scene;
     const box = new THREE.Box3().setFromObject(model);
