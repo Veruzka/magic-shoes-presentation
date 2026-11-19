@@ -5,7 +5,10 @@ One short entry per work session, newest first.
 ## 2026-11-19: the real 3D shoe in "Inside each shoe" (Cassius, branch `shoe-model-inside`)
 - **The Rhino model is in** (`public/assets/models/shoe.glb`, the left shoe, exported from `twinkle_toes.3dm`, 4.8 MB). It shows **only in "Inside each shoe"**; the hero, the players' feet, "What's next" and the close keep the Sketch drawing.
 - **It comes apart in stacked layers**, in the order the shoe is assembled: sole, FSRs, tray, electronics (breadboard, XIAO, gyro, cable), lid, insole. The stack shrinks a little to fit the screen.
-- **Labels sit on the real parts:** FSR (heel FSR), MPU-6050 gyro, XIAO ESP32-C6, USB power bank (the USB cable: the power bank itself isn't modeled), 3D-printed case (the tray).
+- **Labels sit on the real parts:** FSR (heel FSR), MPU-6050 gyro, XIAO ESP32-C6, USB power bank (the USB cable: the power bank itself isn't modeled), 3D-printed case (the tray). The gyro's name sits left of its dot so it doesn't run into the XIAO's.
+- **Clip-on toe:** a sixth label on the toe piece, "Clip-on toe / Sizes 6, 9, 12, to fit most feet" (no millimetres, by choice).
+- **One line under the headline:** "One printed shoe that senses every step, with a clip-on toe so anyone can play."
+- **The grey part blocks are gone:** once the real model is in, the Sketch stand-in's part blocks and their labels never show (they used to fly in with the Sketch shoe on the way into "What's next").
 - **Checked:** build; scripted run: the model loads, its five labels appear one by one, the Sketch labels stay hidden, no errors in any scene. `npm run debug:stalls`: the model first caused a 308 ms stall the first time it was drawn; it's now drawn once, hidden, when it loads, and the longest frame is back to 34 ms (same as without it). **Not checked by eye:** how the stack and labels look.
 
 ## 2026-11-19: takeaways (Liz)

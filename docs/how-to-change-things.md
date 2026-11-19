@@ -374,7 +374,7 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 > **Example:** to make the hero shoe bigger, change `size: 0.6` to `size: 0.75` in `hero`.
 
 **The real 3D model** (`public/assets/models/shoe.glb`) shows only in "Inside each shoe". To swap in a new export, replace the file (same object names; see that folder's README). To show it in another scene, add `model: 1` to that scene in `src/data/shoe-path.js`, and to the scenes either side while the shoe is hidden there, so the swap never shows.
-- **Which objects a label points at:** `model: [...]` on each part in `src/data/shoe-parts.js` (the label sits on the first one).
+- **Which objects a label points at:** `model: [...]` on each part in `src/data/shoe-parts.js` (the label sits on the first one). `side: 'left'` puts the name left of its dot, `detail` adds a smaller second line, and `modelOnly: true` labels the real model only (like the clip-on toe).
 - **How it comes apart:** `MODEL_LAYERS` in `src/three/shoe-stage.js` lists the layers bottom to top; each lifts to sit just above the one below. `LAYER_GAP` is the space between layers, `MODEL_FIT` how small the stack gets so it fits the screen.
 
 **Change the parts and their labels:** `src/data/shoe-parts.js` (`name`; `point` = where the part sits on the drawing).
