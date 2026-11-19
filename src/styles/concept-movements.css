@@ -83,10 +83,10 @@
 }
 
 /* The players are paper-cut people (src/components/paper-person.js): each
-   figure casts one soft paper shadow, and the far arm and leg are a touch
-   darker, like paper further back. */
+   piece carries its own lifted shadow (in the art), the figure a very light
+   one, and the far arm and leg are a touch darker, like paper further back. */
 .tt-sprite__body .paper-person {
-  filter: drop-shadow(0 1.5px 1.5px rgb(42 78 87 / 0.28));
+  filter: drop-shadow(0 1px 1px rgb(42 78 87 / 0.15));
 }
 
 .tt-sprite__body .paper-person__far {

@@ -1,7 +1,8 @@
 // The paper-cut people for the players' scene: a guy in a beanie and a woman
 // with long dark hair, in the paper forest's colours, like small cut-paper
 // figures. Built in Figma (file "Magic Shoes – assets", page "Paper people"),
-// one component per body part, and exported as SVG to src/assets/paper-people/.
+// one component per body part. tools/paper-people.mjs draws the same parts
+// (same seeded shapes) into src/assets/paper-people/, one SVG per part.
 //
 // Each part is drawn hanging straight down from its joint (the shoulder for an
 // upper arm, the knee for a shin, the neck for the torso), so it can follow the
@@ -11,9 +12,9 @@
 //   const person = paperPerson(group, 'guy');   // or 'woman'
 //   person.update(pose);                         // each frame
 //
-// To change a part: edit it in Figma, export it as SVG over the file in
-// src/assets/paper-people/, and keep its joint where JOINTS says (in Figma
-// pixels from the part's top-left; parts are drawn 4 px per skeleton unit).
+// Each file is in skeleton units with its joint at (0,0). To change a part,
+// change it in tools/paper-people.mjs and run `node tools/paper-people.mjs`
+// (and, to keep Figma in step, rebuild the "Paper people" page from the same code).
 import { joints } from './sprite-rig.js';
 import guyTorso from '../assets/paper-people/guy-torso.svg?raw';
 import guyUpperArm from '../assets/paper-people/guy-upperArm.svg?raw';
@@ -30,18 +31,6 @@ import womanShin from '../assets/paper-people/woman-shin.svg?raw';
 import womanHead from '../assets/paper-people/woman-head.svg?raw';
 
 const SVGNS = 'http://www.w3.org/2000/svg';
-const PX = 4; // Figma pixels per skeleton unit
-
-// Where each part's joint is, in Figma pixels from its top-left corner.
-const JOINTS = {
-  hairBack: [80, 64], // the head's centre
-  torso: [56, 48], // the neck
-  upperArm: [28, 16], // the shoulder
-  forearm: [28, 12], // the elbow
-  thigh: [36, 20], // the hip
-  shin: [32, 12], // the knee
-  head: [72, 96], // the head's centre
-};
 
 const ART = {
   guy: { torso: guyTorso, upperArm: guyUpperArm, forearm: guyForearm, thigh: guyThigh, shin: guyShin, head: guyHead },
@@ -102,8 +91,7 @@ export function paperPerson(parent, who) {
           at = from;
           angle = boneAngle(from, to);
         }
-        const [px, py] = JOINTS[part];
-        g.setAttribute('transform', `translate(${at.x.toFixed(2)},${at.y.toFixed(2)}) rotate(${(-angle).toFixed(2)}) scale(${1 / PX}) translate(${-px},${-py})`);
+        g.setAttribute('transform', `translate(${at.x.toFixed(2)},${at.y.toFixed(2)}) rotate(${(-angle).toFixed(2)})`);
       }
     },
   };
