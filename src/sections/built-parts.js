@@ -13,11 +13,12 @@
 // prefer reduced motion get plain fades with no movement.
 import '../styles/built-parts.css';
 import { scene, calmMotion, slice, ease } from '../core/scene.js';
-import { todoTag } from '../components/todo-tag.js';
 import breadboard1Url from '../assets/mvp/breadboard-1.jpg';
 import breadboard2Url from '../assets/mvp/breadboard-2.jpg';
 import samplerUrl from '../assets/mvp/sampler-app.png';
 import tinkercadUrl from '../assets/mvp/tinkercad-circuit.png';
+import demoVideoUrl from '../assets/mvp/mvp-demo.mp4'; // the team's demo clip (from a 56 MB GIF; same loop, 2.4 MB)
+import demoPosterUrl from '../assets/mvp/mvp-demo-poster.jpg';
 
 // The shoe breaking apart comes first, then Veruzka's sketch breakdown
 // (hero.js), then the rest, so they're two separate pieces of the page.
@@ -165,9 +166,8 @@ function mediaScene() {
     <div class="tt-built__frame tt-built__media-frame">
       <div class="tt-built__media-grid">
         <figure class="tt-built__media tt-built__media--video">
-          <div class="tt-built__video-slot">
-            <span class="tt-built__video-label">MVP demo video</span>
-          </div>
+          <video class="tt-built__video" src="${demoVideoUrl}" poster="${demoPosterUrl}"
+            muted loop playsinline preload="auto" aria-label="The MVP demo: teammates trying the shoes"></video>
           <figcaption>The MVP in action</figcaption>
         </figure>
         ${photos
@@ -184,8 +184,16 @@ function mediaScene() {
   `;
   const head = header({ headline: 'How it came together' });
   stage.querySelector('.tt-built__media-frame').prepend(head);
-  // TODO: add the MVP demo video here (replace the placeholder box).
-  stage.querySelector('.tt-built__video-slot').append(todoTag('add demo video'));
+  // The demo loops like a GIF, muted. It plays only while the slide is on
+  // screen; with reduced motion it stays on its first frame with play controls.
+  const video = stage.querySelector('.tt-built__video');
+  if (calmMotion()) video.controls = true;
+  else {
+    new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) video.play().catch(() => {});
+      else video.pause();
+    }).observe(video);
+  }
 
   const tiles = [...stage.querySelectorAll('.tt-built__media')];
 
