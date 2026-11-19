@@ -206,9 +206,15 @@ export const MOVES = {
     seconds: 1.6,
   },
   pose: {
-    // Dancer's pose (P-08a): rise into the real peak pose, hold it, sway a little, come down.
+    // Dancer's pose: rise into the peak pose, hold it, sway a little, come down.
+    // The peak is set by hand (2026-11-19, from Veruzka's reference photo of the
+    // yoga dancer's pose): the torso leans forward, the standing leg is straight,
+    // the far thigh lifts behind with the knee bent so the foot rises, the far
+    // hand reaches straight back to hold that foot, and the near arm reaches
+    // forward and up. The tracked peak (motion.peaks.pose, P-08a) bent the knees
+    // the wrong way on the side-on paper people; it stays in the data.
     pose: (f) => {
-      const peak = { ...STAND, ...motion.peaks.pose.pose };
+      const peak = { ...STAND, lean: 40, hA: -100, kA: -110, aA: 0, sA: -130, eA: 0, hB: 0, kB: 0, aB: 0, sB: 70, eB: 6 };
       const up = ease(slice(f, 0, 0.22)) * (1 - ease(slice(f, 0.82, 1)));
       const held = blendPose(STAND, peak, up);
       held.lean += 2 * Math.sin(f * TAU * 2) * up; // a balancing sway
