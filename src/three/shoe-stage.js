@@ -134,9 +134,16 @@ export function shoeStage() {
   function makeLabels(list) {
     list.forEach((part) => {
       const label = document.createElement('div');
-      label.className = 'shoe-stage__label';
+      label.className = `shoe-stage__label${part.data.side === 'left' ? ' shoe-stage__label--left' : ''}`;
       label.innerHTML = '<span class="shoe-stage__dot"></span><span class="shoe-stage__name"></span>';
-      label.querySelector('.shoe-stage__name').textContent = part.data.name;
+      const name = label.querySelector('.shoe-stage__name');
+      name.textContent = part.data.name;
+      if (part.data.detail) {
+        const detail = document.createElement('span');
+        detail.className = 'shoe-stage__detail';
+        detail.textContent = part.data.detail;
+        name.append(detail);
+      }
       labelLayer.append(label);
       part.label = label;
     });
@@ -219,7 +226,7 @@ export function shoeStage() {
       applyFade();
     };
 
-    parts = shoeParts.map((data) => {
+    parts = shoeParts.filter((data) => !data.modelOnly).map((data) => {
       // Where the part sits, from its point on the drawing (0,0 top-left → 1,1 bottom-right).
       const home = new THREE.Vector3(data.point.x - 0.5, (0.5 - data.point.y) * SKETCH_RATIO, 0.02);
       const dir = new THREE.Vector3(home.x, home.y, 0.35).normalize();
@@ -393,7 +400,9 @@ export function shoeStage() {
       const offset = part.dir.clone().multiplyScalar(apart * EXPLODE_DISTANCE);
       part.object.position.copy(part.home).add(offset);
       part.object.scale.setScalar(Math.max(apart, 0.0001));
-      part.object.visible = !real;
+      // Once the real model is in, the stand-in's part blocks never show (they
+      // used to fly in with the Sketch shoe on the way into "What's next").
+      part.object.visible = !model;
     });
 
     scene.updateMatrixWorld();
@@ -413,7 +422,7 @@ export function shoeStage() {
         part.label.style.transform = `translate(${x}px, ${y}px)`;
       });
     };
-    showLabels(parts, !real);
+    showLabels(parts, !model);
     if (model) showLabels(model.parts, real);
   }
 
