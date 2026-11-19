@@ -1,62 +1,27 @@
-// "What's next": the two concrete next steps, in one short pinned scene.
-// The headline is there from the start; the two steps come in one per arrow
-// key stop (p = 0.5 for the first, p = 1 for the second).
+// "What's next": just the headline, with the whole 3D shoe floating under it
+// (see `forward` in src/data/shoe-path.js). Until 2026-11-19 it listed two next
+// steps (below, set aside) with the shoe's pieces drifting in; Veruzka asked
+// for the floating shoe only.
 //
 //   page.append(forward());
-//
-// Visitors who prefer reduced motion get fades only.
 import '../styles/forward.css';
-import { scene, calmMotion, slice, ease, lerp } from '../core/scene.js';
-import { todoTag } from '../components/todo-tag.js';
+import { scene } from '../core/scene.js';
 
-const nextSteps = [
+// Set aside: the two next steps that used to come in one per arrow-key stop.
+// To show them again, see this file's git history (commit before 2026-11-19's
+// "What's next: floating shoe only").
+export const nextSteps = [
   { title: 'Shoe development', sub: 'A full pair for each player, one FSR and one gyro per shoe.' },
   { title: 'Sound development', sub: 'Our own sound-effect library for each move.' },
 ];
 
 export function forward() {
-  const { section, stage, onProgress } = scene({ name: 'forward', length: 1, stops: 3 });
+  const { section, stage } = scene({ name: 'forward', length: 1, stops: 1 });
   stage.classList.add('tt-forward__stage');
-
   stage.innerHTML = `
-    <div class="tt-forward__inner">
-      <header class="tt-forward__head">
-        <h2 class="tt-headline tt-forward__headline">What's next</h2>
-        <p class="tt-line tt-forward__line">Two concrete steps.</p>
-      </header>
-      <ol class="tt-forward__points">
-        ${nextSteps
-          .map(
-            (s) => `
-        <li class="tt-forward__point">
-          <h3 class="tt-forward__title">${s.title}</h3>
-          <p class="tt-forward__sub">${s.sub}</p>
-        </li>`,
-          )
-          .join('')}
-      </ol>
-      <p class="tt-forward__todo"></p>
+    <div class="tt-forward__inner tt-forward__inner--shoe">
+      <h2 class="tt-headline tt-forward__headline">What's next</h2>
     </div>
   `;
-
-  // TODO: add a timeline and who owns each step.
-  const todo = stage.querySelector('.tt-forward__todo');
-  todo.append(todoTag('timeline and owners'));
-
-  const points = [...stage.querySelectorAll('.tt-forward__point')];
-  const calm = calmMotion();
-
-  onProgress((p) => {
-    // Step 1 comes in on the way to the middle stop (0.1 → 0.45),
-    // step 2 on the way to the last stop (0.6 → 0.95).
-    points.forEach((point, i) => {
-      const t = ease(slice(p, 0.1 + i * 0.5, 0.45 + i * 0.5));
-      point.style.opacity = String(t);
-      point.style.transform = calm ? 'none' : `translateY(${lerp(28, 0, t)}px)`;
-    });
-    // The TODO sticker shows up with the second step.
-    todo.style.opacity = String(ease(slice(p, 0.75, 0.95)));
-  });
-
   return section;
 }

@@ -1,5 +1,6 @@
-/* "What's next" (src/sections/forward.js): headline on the left, two big
-   numbered steps on the right. Only opacity and transform change on scroll. */
+/* "What's next" (src/sections/forward.js): the headline at the top, centred;
+   the 3D shoe floats below it. (The two numbered steps' styles below are kept
+   for when they come back.) */
 .tt-forward__stage {
   background: var(--color-bg);
   color: var(--color-text);
@@ -80,4 +81,12 @@
   .tt-forward__todo {
     grid-column: 1;
   }
+}
+
+/* Headline only: centred near the top, leaving the screen below for the shoe. */
+.tt-forward__inner--shoe {
+  display: block;
+  align-self: start;
+  margin-top: 12vh;
+  text-align: center;
 }
