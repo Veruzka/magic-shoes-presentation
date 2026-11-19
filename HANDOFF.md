@@ -49,7 +49,7 @@ Everything is pushed to `web-presentation-draft`.
    - ~~the name~~: done, the opening and closing title is "Once upon a step" (2026-11-18)
    - the speaker for each part (`src/data/presenter-notes.js`)
    - the MVP demo video and the three takeaways (`src/sections/built-parts.js`)
-   - the timeline and owners for next steps (`src/sections/forward.js`)
+   - ~~the timeline and owners for next steps~~: "What's next" is now just the headline and the floating shoe (2026-11-19)
    - more basic moves after the Kimney meeting (`src/data/story-movements.js`)
    - the per-shoe parts, confirmed with engineering (`src/data/shoe-parts.js`)
 4. **The real 3D shoe:** export the Rhino model (`twinkle_toes.3dm`, Cassius has it; still in progress) to `public/assets/models/shoe.glb`. The part names and orientation it needs are in `public/assets/models/README.md`. The site switches from the stand-in automatically.
