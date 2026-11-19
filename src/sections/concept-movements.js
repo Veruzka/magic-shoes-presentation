@@ -26,6 +26,11 @@ import { STORY_PROPS, PROP_FOR_OFFER } from '../components/story-props.js';
 // The scene's timeline (share of the scene's scrolling, 0 → 1):
 const MOVES_START = 0.16; // before this: the big shoe hands over to the feet
 const MOVES_END = 0.9; // after this: the shoes lift off for "Inside each shoe"
+// Each "Yes, and…" offer stays readable: once it has rolled in (about a second),
+// it stays at least this long before the next movement can take over, even if
+// the scroll has already moved on. The players keep doing the movement on show.
+const HOLD_SECONDS = 3;
+const ROLL_SECONDS = 1.05; // how long the offer takes to roll in (see the label below)
 
 // Where the players stand in the scene's drawing (viewBox -480 -270 960 540).
 const GROUND_Y = 150;
@@ -163,7 +168,8 @@ function spriteScene() {
   const each = (MOVES_END - MOVES_START) / n;
   // Arrow-key stops: the start, the handover, the middle of each movement, the end.
   const stops = [0, MOVES_START - 0.02, ...moves.map((_, i) => MOVES_START + (i + 0.55) * each), 1];
-  const { section, stage, onProgress } = scene({ name: 'moves', length: 6, stops: stops.length, className: 'tt-sprite' });
+  // About 1.5 screens of scrolling per movement, so a normal scroll lingers on each.
+  const { section, stage, onProgress } = scene({ name: 'moves', length: 11, stops: stops.length, className: 'tt-sprite' });
   section.dataset.stopAt = stops.map((s) => s.toFixed(3)).join(',');
 
   stage.innerHTML = `
@@ -256,7 +262,12 @@ function spriteScene() {
   let wasBefore = true;
   function frame(dt) {
     const before = p < MOVES_START;
-    startMovement(movementAt(p));
+    // Switch to the scroll's movement, unless the offer on show hasn't been
+    // readable for HOLD_SECONDS yet (reduced motion: no hold, it only draws
+    // when the scroll changes).
+    const wanted = movementAt(p);
+    const held = !calm && index >= 0 && moveTime < ROLL_SECONDS + HOLD_SECONDS;
+    if (!held) startMovement(wanted);
     if (wasBefore && !before) {
       moveTime = 0; // the movements just began: start the roll and the sync fresh
       phase = 0;
