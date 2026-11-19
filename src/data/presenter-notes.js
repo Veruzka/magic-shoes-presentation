@@ -13,7 +13,7 @@ export const presenterNotes = [
   },
   {
     part: 'The concept',
-    scenes: ['concept', 'moves', 'mvp-does'],
+    scenes: ['moves', 'mvp-does'],
     speaker: 'TODO: speaker',
     points: ['Each move is an improv prompt: "Yes, and…" sets a situation, the sound makes it real.', 'In play the offer changes each time, like improv: no two sessions play the same.', 'Everyday moves first, then whimsy from our bodystorm. Heel click: back home.'],
   },

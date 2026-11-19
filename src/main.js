@@ -27,8 +27,8 @@ import { close } from './sections/close.js';
 // Add new sections here, in page order. Each one returns a DOM element.
 // The Twinkle Toes story: concept first, then what we've built, then the process.
 const sections = [
-  ttHero, // the name, one line, and the 3D shoe doing a full spin
-  conceptMovements, // "Stories! Movement!" + one scene per movement
+  ttHero, // "Once upon a step", the floating 3D shoe, and the paper forest rising behind them
+  conceptMovements, // the two players, one arrow stop per movement ("Stories! Movement!" intro set aside)
   mvpDoes, // what the MVP does: walk and run, spin, whimsy moves (one arrow stop each)
   builtShoeParts, // "What we've built": the 3D shoe breaks apart, each part labeled
   hero, // then Veruzka's sketch breakdown: the FSR flies out, is drawn and explains itself

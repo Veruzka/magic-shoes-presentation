@@ -51,11 +51,15 @@ const KEY_PHASE = { step: 0.25, run: 0.25, spin: 0.12, pose: 0.5, kick: 0.5, sky
 export function conceptMovements() {
   const wrapper = document.createElement('div');
   wrapper.className = 'tt-moves';
-  wrapper.append(conceptIntro(), spriteScene());
+  // The "Stories! Movement!" intro (conceptIntro below) is set aside
+  // (2026-11-18): the players follow straight after the hero. To bring it
+  // back: wrapper.append(conceptIntro(), spriteScene());
+  wrapper.append(spriteScene());
   return wrapper;
 }
 
 // The intro screen: the promise in two words, in gradient type, and one line.
+// Set aside: not on the page (see conceptMovements above).
 function conceptIntro() {
   const { section, stage, onProgress } = scene({ name: 'concept', length: 0.6, stops: 1, className: 'tt-moves__intro' });
   stage.innerHTML = `
