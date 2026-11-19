@@ -5,7 +5,7 @@
 //            sprite-rig.js), each in a pair of shoes, do a movement together:
 //            player 1 (cyan) leads, player 2 (sand) copies a beat late and falls
 //            into sync, and as they sync the sound rings grow ("copy and
-//            heighten"). Above them: the movement and a random "Yes, and…" offer.
+//            heighten"). Above them: the movement and its "and imagine…" offer.
 //            Behind them: that offer's story, drawn in the same flat style
 //            (src/components/story-props.js): the thin ice cracks, the giant
 //            chases. Players piece these together into a world they make up.
@@ -27,11 +27,11 @@ import { paperPerson } from '../components/paper-person.js';
 // The scene's timeline (share of the scene's scrolling, 0 → 1):
 const MOVES_START = 0.16; // before this: the big shoe hands over to the feet
 const MOVES_END = 0.9; // after this: the shoes lift off for "Inside each shoe"
-// Each "Yes, and…" offer stays readable: once it has rolled in (about a second),
-// it stays at least this long before the next movement can take over, even if
-// the scroll has already moved on. The players keep doing the movement on show.
+// Each "and imagine…" offer stays readable: once it has faded in, it stays at
+// least this long before the next movement can take over, even if the scroll
+// has already moved on. The players keep doing the movement on show.
 const HOLD_SECONDS = 3;
-const ROLL_SECONDS = 1.05; // how long the offer takes to roll in (see the label below)
+const FADE_SECONDS = 0.5; // how long the offer takes to fade in
 
 // Where the players stand in the scene's drawing (viewBox -480 -270 960 540).
 const GROUND_Y = 150;
@@ -171,7 +171,7 @@ function spriteScene() {
   stage.innerHTML = `
     <div class="tt-sprite__label">
       <h2 class="tt-sprite__name"></h2>
-      <p class="tt-line tt-sprite__offer">Yes, and… <span class="tt-sprite__roll"></span></p>
+      <p class="tt-line tt-sprite__offer">and imagine… <span class="tt-sprite__roll"></span></p>
     </div>
   `;
   const svg = el('svg', { class: 'tt-sprite__svg', viewBox: '-480 -270 960 540', preserveAspectRatio: 'xMidYMid meet', 'aria-hidden': 'true' });
@@ -185,7 +185,7 @@ function spriteScene() {
   const offerEl = stage.querySelector('.tt-sprite__offer');
   const roll = stage.querySelector('.tt-sprite__roll');
 
-  // One random "Yes, and…" offer per movement, per visit.
+  // One "and imagine…" offer per movement (its `pick`).
   const picks = moves.map((m) => m.pick ?? Math.floor(Math.random() * (m.offers?.length || 1))); // one offer per move (`pick`), random if unset
 
   // ---------- State ----------
@@ -262,7 +262,7 @@ function spriteScene() {
     // readable for HOLD_SECONDS yet (reduced motion: no hold, it only draws
     // when the scroll changes).
     const wanted = movementAt(p);
-    const held = !calm && index >= 0 && moveTime < ROLL_SECONDS + HOLD_SECONDS;
+    const held = !calm && index >= 0 && moveTime < FADE_SECONDS + HOLD_SECONDS;
     if (!held) startMovement(wanted);
     if (wasBefore && !before) {
       moveTime = 0; // the movements just began: start the roll and the sync fresh
@@ -333,18 +333,15 @@ function spriteScene() {
       }
     }
 
-    // The label: the name and its offer, rolling in when a movement starts.
+    // The label: the name and its one offer, fading in when a movement starts.
+    // (Until 2026-11-19 the offer rolled past the spares like a slot machine.)
     const inMove = !before && !after;
     label.style.opacity = String(inMove ? ease(clamp01(moveTime / 0.35)) : 0);
     const offers = move.offers ?? [];
     if (offers.length) {
-      const r = calm ? 1 : ease(clamp01((moveTime - 0.15) / 0.9));
-      const ticks = (1 - r) * offers.length * 3;
-      const text = offers[(picks[index] + Math.ceil(ticks)) % offers.length].offer;
+      const text = offers[picks[index] % offers.length].offer;
       if (roll.textContent !== text) roll.textContent = text;
-      const f = ticks % 1;
-      roll.style.transform = `translateY(${(-f * 0.5).toFixed(3)}em)`;
-      offerEl.style.opacity = String(r >= 1 ? 1 : 0.35 + 0.65 * (1 - f));
+      offerEl.style.opacity = String(calm ? 1 : ease(clamp01(moveTime / FADE_SECONDS)));
     }
 
     // The figures fade in at the start of the scene.

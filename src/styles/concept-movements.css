@@ -127,7 +127,7 @@
   opacity: 0;
 }
 
-/* The label, at the top: the movement's name, then the rolled "Yes, and…" offer. */
+/* The label, at the top: the movement's name, then its "and imagine…" offer. */
 .tt-sprite__label {
   position: absolute;
   top: 9vh;
