@@ -26,7 +26,7 @@ import { paperPerson } from '../components/paper-person.js';
 
 // The scene's timeline (share of the scene's scrolling, 0 → 1):
 const MOVES_START = 0.16; // before this: the big shoe hands over to the feet
-const MOVES_END = 0.9; // after this: the shoes lift off for "Inside each shoe"
+const MOVES_END = 0.9; // after this: the players stand still, shoes on, as the scene scrolls away
 // Each "and imagine…" offer stays readable: once it has faded in, it stays at
 // least this long before the next movement can take over, even if the scroll
 // has already moved on. The players keep doing the movement on show.

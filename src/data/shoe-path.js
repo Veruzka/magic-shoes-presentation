@@ -58,19 +58,21 @@ export const shoePath = {
   concept: (p) => ({ ay: -0.6, size: 0.34, y: 0.04 * Math.sin(p * Math.PI) }),
 
   // The movements: big in the middle, then it hands over to a shoe on each of
-  // the two players' four feet, rides along with every move, and lifts off at
-  // the end, back to one big shoe for "Inside each shoe".
+  // the two players' four feet and rides along with every move. The shoes stay
+  // on their feet to the end and fade out with the players as "What the MVP
+  // does" scrolls in (until 2026-11-19 they lifted off and flew on as one big shoe).
   moves: (p, el) => ({
     ay: 0.05,
     size: 0.62,
     turn: 0.12 * ease(slice(p, 0, 0.1)),
-    pair: ease(slice(p, 0.03, 0.15)) * (1 - ease(slice(p, 0.9, 0.98))),
+    pair: ease(slice(p, 0.03, 0.15)),
     feet: el?.__feet ?? null,
   }),
 
   // What the MVP does: the figure has the stage; the shoe waits off screen,
-  // whole, where "Inside each shoe" picks it up.
-  'mvp-does': () => ({ ax: 0.12, ay: -0.05, size: 0.62, opacity: 0 }),
+  // whole, where "Inside each shoe" picks it up. `pair: 1` keeps the players'
+  // shoes on their feet while they scroll away (the big shoe doesn't come back).
+  'mvp-does': () => ({ ax: 0.12, ay: -0.05, size: 0.62, opacity: 0, pair: 1 }),
 
   // What we've built: it breaks apart, then each part gets its label.
   parts: (p) => ({
