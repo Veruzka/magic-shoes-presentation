@@ -348,6 +348,13 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 
 **Change the words:** each section's file in `src/sections/`. Rule: **one headline and at most one line per scene.**
 
+**The opening paper forest** (`src/sections/tt-hero.js`): as you scroll the first scene, three paper layers rise behind the title like a pop-up book, and "Once upon a step" becomes "Once upon a forest".
+- **When each layer rises:** `RISE` at the top of the file, as slices of the scene's scrolling (0 to 1). Later and shorter = faster. **The word swap:** `SWAP`. **When the text turns light:** `LIGHTEN`.
+- **The light text colours:** `.tt-hero .scene__stage` (title) and `.tt-hero__line` (the line under it) in `src/styles/tt-hero.css`.
+- **New forest pictures:** put the new originals in `design/originals/forest-layers/`, then run `uv run --with pillow python tools/forest-layers.py` to remake the three web layers in `src/assets/forest/`. Every layer must be the same size so they line up.
+
+> **Example:** to make the front leaves arrive sooner, change `front: [0.3, 0.85]` to `front: [0.2, 0.75]` in `RISE`.
+
 **Add a movement:** add an entry to `src/data/story-movements.js` (`id`, `name`, `motion`, and its `offers`), and its three story vignettes to `PROP_FOR_OFFER` in `src/components/story-props.js` (same order as the offers). The scene gets one more movement and one more arrow-key stop.
 - **Offers** are the improv prompts: each finishes "Yes, and…" (`offer`) and names the sound that makes it real (`sound`). Each move shows one, chosen by `pick` (0, 1 or 2); the line rolls past the spares and lands on it like a slot machine. To show a different offer, change `pick`. Remove `pick` to go back to a random one per visit.
 - The motions are `step`, `run`, `spin`, `pose`, `kick`, `sky` and `heelclick`, in `MOVES` in `src/components/sprite-rig.js`. A new kind of motion = a new entry there: a `pose(phase)` with joint angles (explained at the top of the file) and its `strikes` (when a foot sends out a sound ring).
