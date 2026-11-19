@@ -48,7 +48,7 @@ Everything is pushed to `web-presentation-draft`.
 3. **Fill in the TODO tags** (they show on the page as stickers):
    - ~~the name~~: done, the opening and closing title is "Once upon a step" (2026-11-18)
    - the speaker for each part (`src/data/presenter-notes.js`)
-   - the MVP demo video and the three takeaways (`src/sections/built-parts.js`)
+   - the MVP demo video (`src/sections/built-parts.js`). ~~The three takeaways~~: done (2026-11-19)
    - ~~the timeline and owners for next steps~~: "What's next" is now just the headline and the floating shoe (2026-11-19)
    - more basic moves after the Kimney meeting (`src/data/story-movements.js`)
    - the per-shoe parts, confirmed with engineering (`src/data/shoe-parts.js`)

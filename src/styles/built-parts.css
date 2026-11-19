@@ -229,10 +229,43 @@
   border-bottom: 1px solid color-mix(in srgb, var(--color-ink) 22%, transparent);
 }
 
+.tt-built__takeaway-num {
+  font-family: var(--font-callout);
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.14em;
+  color: var(--color-muted);
+}
+
 .tt-built__takeaway-text {
   font-family: var(--font-note);
+  font-weight: 500;
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  line-height: 1.25;
+}
+
+/* The points under each takeaway: lighter and smaller, with a small dash. */
+.tt-built__takeaway-points {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-family: var(--font-note);
   font-weight: 300;
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+  line-height: 1.45;
+}
+
+.tt-built__takeaway-points li::before {
+  content: '';
+  display: inline-block;
+  width: 0.7em;
+  height: 1px;
+  margin: 0 0.6em 0.3em 0;
+  vertical-align: middle;
+  background: var(--color-muted);
 }
 
 /* Narrow screens: stack the side-by-side layouts. */
