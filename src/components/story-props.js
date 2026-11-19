@@ -217,7 +217,7 @@ export const STORY_PROPS = {
     };
   }),
 
-  // WALK · "The floor is thin ice." Each footfall lays down a new sheet of
+  // WALK · "The floor is thin ice." Each of player 1's steps lays a new sheet of
   // paper ice: a line grows across the ground from left to right, and a
   // cut-paper sheet with a slightly wavy top edge follows it. Each new sheet
   // sits a little lower (nearer to you) in the next blue or white tone, with a
