@@ -102,7 +102,9 @@ const styleLab = switcherPanel(
     },
   }),
 );
-document.body.append(styleLab);
+// Not shown in the presentation (2026-11-19, Veruzka): the panel is still built,
+// so the saved choices apply, but it isn't put on the page.
+// document.body.append(styleLab);
 
 // Arrow keys, space and Page Up/Down jump scene to scene, like slides.
 startKeyboardNav();
@@ -119,4 +121,5 @@ startPresenterNotes();
 document.body.append(infoButton());
 
 // The floating pill (bottom-right, left of "i"): jump to the prototyping lab.
-document.body.append(pageSwitch({ label: 'Start prototyping →', href: `${import.meta.env.BASE_URL}lab/` }));
+// Not shown in the presentation (2026-11-19, Veruzka). The lab is still at /lab/.
+// document.body.append(pageSwitch({ label: 'Start prototyping →', href: `${import.meta.env.BASE_URL}lab/` }));
