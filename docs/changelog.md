@@ -2,6 +2,12 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-19: the real 3D shoe in "Inside each shoe" (Cassius, branch `shoe-model-inside`)
+- **The Rhino model is in** (`public/assets/models/shoe.glb`, the left shoe, exported from `twinkle_toes.3dm`, 4.8 MB). It shows **only in "Inside each shoe"**; the hero, the players' feet, "What's next" and the close keep the Sketch drawing.
+- **It comes apart in stacked layers**, in the order the shoe is assembled: sole, FSRs, tray, electronics (breadboard, XIAO, gyro, cable), lid, insole. The stack shrinks a little to fit the screen.
+- **Labels sit on the real parts:** FSR (heel FSR), MPU-6050 gyro, XIAO ESP32-C6, USB power bank (the USB cable: the power bank itself isn't modeled), 3D-printed case (the tray).
+- **Checked:** build; scripted run: the model loads, its five labels appear one by one, the Sketch labels stay hidden, no errors in any scene. `npm run debug:stalls`: the model first caused a 308 ms stall the first time it was drawn; it's now drawn once, hidden, when it loads, and the longest frame is back to 34 ms (same as without it). **Not checked by eye:** how the stack and labels look.
+
 ## 2026-11-19: takeaways (Liz)
 - **"Four shoes, sound effects" has its takeaways** (they were TODO stickers): 01 Sound effects vs. music (curiosity and imagination; music empowered improv), 02 Scenarios and imagination built off friends (building scenarios, sounds, and play), 03 A more open approach (explore instead of define). Each is a numbered title with its points underneath in a lighter style (`TAKEAWAYS` in `built-parts.js`).
 
