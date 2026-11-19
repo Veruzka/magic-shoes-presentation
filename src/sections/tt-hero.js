@@ -2,12 +2,13 @@
 // at the top; the 3D shoe (src/three/shoe-stage.js) floats in the space below,
 // bobbing and rocking on its own (see `hero` in src/data/shoe-path.js).
 //
-// Two arrow-key stops:
+// Three arrow-key stops (STOPS); the title never moves, only its last word:
 //   1. "Once upon a step" on the cream page.
 //   2. A paper-cut forest has risen behind it, like a pop-up book: the back
 //      wall first and slowest, then the middle trees, then the leafy front
-//      frame. The last word swaps: "step" slides up and away, "forest" rises
-//      into its place, and the text turns light to read on the teal.
+//      frame. The text turns light to read on the teal. Still "step".
+//   3. Only now the last word swaps: "step" slides up and away and "forest"
+//      rises into its place.
 // The forest layers are made by tools/forest-layers.py (src/assets/forest/).
 //
 // The text and forest move from the scroll position only (no timers).
@@ -22,15 +23,17 @@ import forestFront from '../assets/forest/forest-front.webp';
 // When each forest layer rises, as a slice of the scene's scrolling (0 → 1).
 // Later and shorter = rises faster. All are in place before the second stop.
 const RISE = {
-  back: [0.05, 0.65],
-  middle: [0.18, 0.75],
-  front: [0.3, 0.85],
+  back: [0.03, 0.38],
+  middle: [0.1, 0.45],
+  front: [0.17, 0.5],
 };
-const SWAP = [0.45, 0.72]; // "step" → "forest"
-const LIGHTEN = [0.35, 0.6]; // dark text → light text
+const LIGHTEN = [0.15, 0.42]; // dark text → light text, as the forest rises
+const SWAP = [0.66, 0.95]; // "step" → "forest", only after the forest is up
+const STOPS = '0,0.56,1'; // arrow-key stops: title · forest up · word swapped
 
 export function ttHero() {
-  const { section, stage, onProgress } = scene({ name: 'hero', length: 1.4, stops: 2, className: 'tt-hero' });
+  const { section, stage, onProgress } = scene({ name: 'hero', length: 2.2, stops: 3, className: 'tt-hero' });
+  section.dataset.stopAt = STOPS;
 
   stage.innerHTML = `
     <div class="tt-hero__forest" aria-hidden="true">
@@ -47,7 +50,6 @@ export function ttHero() {
   `;
 
   const calm = calmMotion();
-  const text = stage.querySelector('.tt-hero__text');
   const layers = [...stage.querySelectorAll('.tt-hero__layer')];
   // Unpack the big pictures now, while they're still out of sight, so the
   // first scroll doesn't stutter while the browser decodes them.
@@ -79,8 +81,7 @@ export function ttHero() {
       else layer.style.transform = `translate3d(0, ${lerp(100, 0, t)}%, 0)`;
     });
 
-    // The text: drifts up a little, then turns light over the forest.
-    if (!calm) text.style.transform = `translateY(${lerp(0, -28, ease(slice(p, 0, 0.7)))}px)`;
+    // The text stays put and turns light over the forest.
     stage.style.setProperty('--forest', ease(slice(p, LIGHTEN[0], LIGHTEN[1])).toFixed(3));
 
     // The word swap.
