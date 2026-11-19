@@ -223,14 +223,19 @@ function nextBuildScene() {
 
   const title = stage.querySelector('.tt-built__takeaways-title');
   const list = stage.querySelector('.tt-built__takeaway-list');
-  // TODO: team to write takeaway 1.
-  // TODO: team to write takeaway 2.
-  // TODO: team to write takeaway 3.
-  const lines = [1, 2, 3].map((n) => {
+  // The team's three takeaways: a short title, then its points.
+  const TAKEAWAYS = [
+    { title: 'Sound effects vs. music', points: ['Curiosity and imagination', 'Music empowered improv'] },
+    { title: 'Scenarios and imagination built off friends', points: ['Building scenarios, sounds, and play'] },
+    { title: 'A more open approach', points: ['Explore instead of define'] },
+  ];
+  const lines = TAKEAWAYS.map(({ title: text, points }, i) => {
     const li = document.createElement('li');
     li.className = 'tt-built__takeaway';
-    li.innerHTML = `<span class="tt-built__takeaway-text">Takeaway ${n} goes here.</span>`;
-    li.append(todoTag('team to write takeaway'));
+    li.innerHTML = `
+      <span class="tt-built__takeaway-num">0${i + 1}</span>
+      <span class="tt-built__takeaway-text">${text}</span>
+      <ul class="tt-built__takeaway-points">${points.map((point) => `<li>${point}</li>`).join('')}</ul>`;
     list.append(li);
     return li;
   });
