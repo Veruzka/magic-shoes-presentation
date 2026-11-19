@@ -56,6 +56,7 @@ Pages serves the site from a sub-folder (`/magic-shoes-presentation/`), so links
 | [lab-template.md](lab-template.md) | add a new sensor, movement, sound or interaction to the lab (the recipe and checklist) |
 | [lab-roadmap.md](lab-roadmap.md) | see what we decided for the prototyping lab and which piece comes next |
 | [sound-library.md](sound-library.md) | find a sound, check its license, or see how sounds are named and filed |
+| [anti-slop.md](anti-slop.md) | check a scene or copy against the anti-slop rules (the `anti-slop-reviewer` agent uses it) |
 | [glossary.md](glossary.md) | look up a word we use: chapter, stage, progress, swap, pocket, drawing pixels… |
 
 ## How we document things

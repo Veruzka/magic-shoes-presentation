@@ -1,0 +1,64 @@
+/* Presenter mode card (src/components/presenter-notes.js): bottom left, small,
+   frosted, above everything. Only visible after pressing P. */
+.presenter-notes {
+  position: fixed;
+  left: var(--space-edge);
+  bottom: var(--space-edge);
+  z-index: 160;
+  width: min(340px, calc(100vw - 32px));
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--shadow-ui);
+  color: var(--color-text);
+  font-family: var(--font-note);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.presenter-notes[hidden] {
+  display: none;
+}
+
+.presenter-notes p {
+  margin: 0;
+}
+
+.presenter-notes__part {
+  font-family: var(--font-callout);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.presenter-notes__speaker {
+  font-weight: 500;
+  margin-top: 2px !important;
+}
+
+.presenter-notes__points {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.presenter-notes__sound {
+  margin-top: 8px !important;
+  font-family: var(--font-callout);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.presenter-notes__sound:empty {
+  display: none;
+}
+
+.presenter-notes__hint {
+  margin-top: 8px !important;
+  font-family: var(--font-callout);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}

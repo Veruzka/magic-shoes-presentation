@@ -7,14 +7,36 @@ import { watchScrollProgress } from './core/scroll-progress.js';
 import { hero, showBackground, showShoe, setShoeOpening, setSoleMove, setTransition, setReveal, setSettle, hasExitChapter } from './sections/hero.js';
 import { chapterProgress } from './sections/hero-timeline.js';
 import { backgrounds } from './backgrounds/index.js';
-import { shoes } from './shoes/index.js';
+import { shoes, startShoe } from './shoes/index.js';
 import { soleMoves } from './shoes/sole-moves.js';
 import { optionSwitcher, switcherPanel } from './components/option-switcher.js';
 import { infoButton } from './components/info-panel.js';
 import { pageSwitch } from './components/page-switch.js';
+import { startKeyboardNav } from './core/keyboard-nav.js';
+import { shoeStage } from './three/shoe-stage.js';
+import { startShoeDirector } from './three/shoe-director.js';
+import { startPresenterNotes } from './components/presenter-notes.js';
+import { ttHero } from './sections/tt-hero.js';
+import { conceptMovements } from './sections/concept-movements.js';
+import { mvpDoes } from './sections/mvp-does.js';
+import { builtShoeParts, builtParts } from './sections/built-parts.js';
+import { process as processSection } from './sections/process.js';
+import { forward } from './sections/forward.js';
+import { close } from './sections/close.js';
 
 // Add new sections here, in page order. Each one returns a DOM element.
-const sections = [hero];
+// The Twinkle Toes story: concept first, then what we've built, then the process.
+const sections = [
+  ttHero, // the name, one line, and the 3D shoe doing a full spin
+  conceptMovements, // "Stories! Movement!" + one scene per movement
+  mvpDoes, // what the MVP does: walk and run, spin, whimsy moves (one arrow stop each)
+  builtShoeParts, // "What we've built": the 3D shoe breaks apart, each part labeled
+  hero, // then Veruzka's sketch breakdown: the FSR flies out, is drawn and explains itself
+  builtParts, // the MVP, photos, what's next, takeaways
+  processSection, // the timeline and the bodystorm grid
+  forward,
+  close,
+];
 
 const app = document.querySelector('#app');
 sections.forEach((section) => app.append(section()));
@@ -26,6 +48,9 @@ const parallax = createParallax();
 // chapter 3 turns it and half of it becomes a labelled sketch, chapter 4 slides it
 // into the paper, fully drawn and flat, with texts on the left.
 const heroSection = app.querySelector('.hero');
+// The keyboard navigation treats the hero as one scene with a stop per chapter.
+heroSection.dataset.scene = 'built-inside';
+heroSection.dataset.stops = '5';
 const shoeOpening = watchScrollProgress(heroSection, (progress) => {
   heroSection.dataset.progress = progress.toFixed(3); // handy when debugging the motion
   const chapter = chapterProgress(progress, hasExitChapter(heroSection));
@@ -53,7 +78,7 @@ const styleLab = switcherPanel(
   optionSwitcher({
     title: 'Shoe',
     options: shoes,
-    current: loadChoice('shoe', shoes),
+    current: loadChoice('shoe', shoes, startShoe), // the Sketch (see src/shoes/index.js)
     onPick(shoe) {
       showShoe(heroSection, shoe);
       saveChoice('shoe', shoe);
@@ -72,6 +97,17 @@ const styleLab = switcherPanel(
   }),
 );
 document.body.append(styleLab);
+
+// Arrow keys, space and Page Up/Down jump scene to scene, like slides.
+startKeyboardNav();
+
+// The one 3D shoe that travels through the story (path: src/data/shoe-path.js).
+const shoe = shoeStage();
+document.body.append(shoe.element);
+startShoeDirector(shoe);
+
+// Presenter mode: press P for who speaks and the talking points.
+startPresenterNotes();
 
 // The "i" button (bottom-right): shows how the app is built, read from docs/.
 document.body.append(infoButton());

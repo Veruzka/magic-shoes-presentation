@@ -338,3 +338,38 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 - **Safe:** change freely.
 - **Careful:** fine to change the wording or numbers, but not the structure.
 - **Ask me:** the logic is fiddly, so tell me what you want and I'll change it.
+
+---
+
+## The Twinkle Toes story (branch `web-presentation-draft`)
+**What:** the presentation: hero → concept → what we've built → process → what's next → close.
+
+**Change the order or remove a part:** the `sections` list in `src/main.js`.
+
+**Change the words:** each section's file in `src/sections/`. Rule: **one headline and at most one line per scene.**
+
+**Add a movement:** add an entry to `src/data/story-movements.js` (`id`, `name`, `motion`, and its `offers`), and its three story vignettes to `PROP_FOR_OFFER` in `src/components/story-props.js` (same order as the offers). The scene gets one more movement and one more arrow-key stop.
+- **Offers** are the improv prompts: each finishes "Yes, and…" (`offer`) and names the sound that makes it real (`sound`). Each move shows one, chosen by `pick` (0, 1 or 2); the line rolls past the spares and lands on it like a slot machine. To show a different offer, change `pick`. Remove `pick` to go back to a random one per visit.
+- The motions are `step`, `run`, `spin`, `pose`, `kick`, `sky` and `heelclick`, in `MOVES` in `src/components/sprite-rig.js`. A new kind of motion = a new entry there: a `pose(phase)` with joint angles (explained at the top of the file) and its `strikes` (when a foot sends out a sound ring).
+- **How long one loop takes:** `seconds` on each movement in `MOVES` (`src/components/sprite-rig.js`).
+- **The two players:** at the top of `src/sections/concept-movements.js`: `COPY_DELAY` (how far behind player 2 starts), `SYNC_SECONDS` (how long it takes to fall into step), `SPRING` (how loose each joint is: lower = floppier), `SWITCH_SECONDS` (how long a change of movement blends).
+- **Colours:** player 1 is `--tt-cyan`, player 2 is Veruzka's sand (`--color-accent`), the story is `.tt-sprite__story` in `src/styles/concept-movements.css`.
+- **The stories behind the players:** one function per vignette in `src/components/story-props.js`.
+- **The shoes on the feet:** `moves` in `src/data/shoe-path.js` (`pair`: when they hand over to the feet and lift off) and `SHOE_ON_FOOT` in `src/three/shoe-stage.js` (how big they are on the figures).
+- **The real motion:** `src/data/bodystorm-motion.json` (made from the bodystorm pose tracking; see the changelog for how).
+
+> **Example:** `{ id: 'stomp', group: 'basic', name: 'Stomp', motion: 'run', offers: [{ offer: 'a giant is coming.', sound: 'a deep boom, getting closer' }] },`
+
+**Change what the 3D shoe does in a scene:** `src/data/shoe-path.js`. One entry per scene name. The fields are explained at the top of the file: where it sits (`ax`, `ay`), how big (`size`), spin (`turn`), toe up (`tilt`), hidden (`opacity`), broken apart (`explode`) and labels (`labels`).
+
+> **Example:** to make the hero shoe bigger, change `size: 0.6` to `size: 0.75` in `hero`.
+
+**Add the real 3D model:** put `shoe.glb` in `public/assets/models/`. That folder's README says how the parts must be named.
+
+**Change the parts and their labels:** `src/data/shoe-parts.js` (`name`; `point` = where the part sits on the drawing).
+
+**Presenter mode (press P):** speakers and talking points are in `src/data/presenter-notes.js`.
+
+**Keyboard stops:** each scene's `stops` in its `scene({ … })` call.
+
+**Bring back the worlds scene:** see `src/_archive/README.md`.

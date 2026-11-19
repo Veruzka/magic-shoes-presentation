@@ -1,0 +1,256 @@
+/* "What we've built", part 2 (src/sections/built-parts.js): ink on cream.
+   Fonts: Poppins (--font-note) for text, Barlow Semi Condensed (--font-callout)
+   for labels and small caps. Only opacity and transform ever animate. */
+.tt-built {
+  background: var(--color-bg);
+  color: var(--color-text);
+  overflow-x: clip; /* never a sideways scroll */
+}
+
+/* Every scene's content box: centred, with a gutter, never wider than the screen. */
+.tt-built__frame {
+  width: min(1180px, calc(100% - 64px));
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 3.5vh, 2.5rem);
+}
+
+/* A slightly smaller headline than the big story ones, so the content fits. */
+.tt-built__headline {
+  font-size: clamp(2rem, 4.4vw, 4.2rem);
+}
+
+/* ---------- 1. Inside each shoe ---------- */
+/* Headline at the top left; the 3D shoe and its labels fill the rest. */
+.tt-built__parts {
+  height: 100%;
+  justify-content: flex-start;
+  padding-top: 9vh;
+}
+
+/* ---------- 2. The MVP ---------- */
+.tt-built__mvp-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+}
+
+.tt-built__credit {
+  font-family: var(--font-callout);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+  margin: 1.2rem 0 0;
+}
+
+.tt-built__moves {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-note);
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+}
+
+.tt-built__move {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ink) 22%, transparent);
+}
+
+.tt-built__move--head {
+  font-family: var(--font-callout);
+  font-size: var(--text-callout);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  border-bottom-color: var(--color-ink);
+}
+
+.tt-built__move-name {
+  font-weight: 500;
+}
+
+.tt-built__move-both {
+  grid-column: span 2;
+}
+
+/* The data flow: one row of steps joined by arrows. */
+.tt-built__flow {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.tt-built__flow-step {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ink) 25%, transparent);
+}
+
+.tt-built__flow-name {
+  font-family: var(--font-note);
+  font-weight: 500;
+  font-size: clamp(0.85rem, 1.15vw, 1.05rem);
+  line-height: 1.25;
+}
+
+.tt-built__flow-rate {
+  font-family: var(--font-callout);
+  font-size: var(--text-callout);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* The "lit" underline: grows from the left as the step lights up. */
+.tt-built__flow-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 3px;
+  background: var(--color-ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.tt-built__flow-arrow {
+  flex: none;
+  font-family: var(--font-note);
+  font-size: 1.2rem;
+  line-height: 1.2;
+  color: var(--color-ink);
+}
+
+/* ---------- 3. MVP photos ---------- */
+.tt-built__media-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.8rem, 1.6vw, 1.4rem);
+  height: min(62vh, 600px);
+}
+
+.tt-built__media {
+  margin: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.tt-built__media img,
+.tt-built__video-slot {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  border-radius: 6px;
+}
+
+.tt-built__media img {
+  object-fit: cover;
+  display: block;
+}
+
+.tt-built__media--app {
+  grid-column: span 2;
+}
+
+.tt-built__media figcaption {
+  font-family: var(--font-callout);
+  font-size: var(--text-callout);
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+}
+
+.tt-built__video-slot {
+  border: 1.5px dashed var(--color-ink);
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.tt-built__video-label {
+  font-family: var(--font-callout);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+/* ---------- 4. Building on that ---------- */
+.tt-built__next {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.tt-built__takeaways-title {
+  font-family: var(--font-callout);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  margin: 0 0 1rem;
+}
+
+.tt-built__takeaway-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.tt-built__takeaway {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ink) 22%, transparent);
+}
+
+.tt-built__takeaway-text {
+  font-family: var(--font-note);
+  font-weight: 300;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+}
+
+/* Narrow screens: stack the side-by-side layouts. */
+@media (max-width: 760px) {
+  .tt-built__frame {
+    width: calc(100% - 32px);
+  }
+
+  .tt-built__mvp-top,
+  .tt-built__next {
+    grid-template-columns: 1fr;
+  }
+
+  .tt-built__flow {
+    flex-wrap: wrap;
+  }
+
+  .tt-built__flow-step {
+    flex-basis: 40%;
+  }
+}

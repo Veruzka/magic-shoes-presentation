@@ -6,7 +6,7 @@
 // scrolling is what moves the shoe's parts (see setShoeOpening below).
 import '../styles/hero.css';
 import { backgrounds } from '../backgrounds/index.js';
-import { shoes } from '../shoes/index.js';
+import { shoes, startShoe } from '../shoes/index.js';
 import { soleMoves } from '../shoes/sole-moves.js';
 import { loadChoice } from '../core/remember-choice.js';
 import { explodingShoe } from '../components/exploding-shoe.js';
@@ -44,7 +44,7 @@ export function hero() {
   // The big title behind the shoe.
   section.querySelector('.hero__title-slot').replaceWith(heroTitle('Magic Shoes'));
   showBackground(section, loadChoice('background', backgrounds));
-  showShoe(section, loadChoice('shoe', shoes));
+  showShoe(section, loadChoice('shoe', shoes, startShoe));
   return section;
 }
 

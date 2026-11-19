@@ -57,3 +57,17 @@ Parallax switches off automatically for visitors who prefer reduced motion.
 ## Publishing
 
 Pushes to `main` deploy automatically through Vercel's GitHub integration. Never deploy with the Vercel CLI.
+
+## Twinkle Toes presentation draft (branch `web-presentation-draft`)
+
+On this branch the home page tells the Twinkle Toes story, in this order: hero → the concept (one scene per movement) → what we've built (the 3D shoe breaks apart, then Veruzka's FSR sketch breakdown, then the MVP) → the process (timeline, how we tracked movement, Kimiko's critique, the bodystorm grid) → what's next → the close. One 3D shoe carries the story; its model goes in `public/assets/models/shoe.glb`.
+
+- **Run it:** `npm install`, then `npm run dev`, and open http://localhost:5173.
+- **Present it like slides:** arrow keys, space or Page Up/Down jump from scene to scene. Home and End jump to the start and the end.
+- **Presenter mode:** press **P** for who speaks and the talking points.
+- **Placeholders:** every one has a yellow **TODO** sticker on the page and a `// TODO:` comment in the code (`grep -rn "TODO" src`).
+- **Background for agents and teammates:** [cassius-agents/](cassius-agents/).
+
+### Deploying (not done yet, ask first)
+- **GitHub Pages (already set up):** `.github/workflows/pages.yml` publishes `main` to https://veruzka.github.io/magic-shoes-presentation/. To publish this draft, merge the branch into `main` (or point the workflow's branch at `web-presentation-draft`), then push.
+- **Vercel (alternative):** import the GitHub repo in Vercel and pick the Vite preset (build `npm run build`, output `dist`). No settings needed: `BASE_PATH` is only for Pages.

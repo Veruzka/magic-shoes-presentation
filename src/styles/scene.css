@@ -1,0 +1,45 @@
+/* The pinned scene (src/core/scene.js): the section is one screen tall plus its
+   scroll length, and its stage sticks to the top while you scroll through it. */
+.scene {
+  position: relative;
+  height: calc(100vh + var(--scene-length, 100vh));
+}
+
+.scene__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 560px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+/* Shared look for the story's text: huge confident headline, one short line. */
+.tt-eyebrow {
+  font-family: var(--font-callout);
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 0.6rem;
+}
+
+.tt-headline {
+  font-family: var(--font-title); /* Bricolage Grotesque, matching the big "Magic Shoes" title */
+  font-weight: 800;
+  font-stretch: 88%; /* a touch condensed, like her title */
+  font-size: clamp(2.4rem, 6.5vw, 6rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.tt-line {
+  font-family: var(--font-note);
+  font-weight: 300;
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+  line-height: 1.45;
+  max-width: 34ch;
+  margin: 1rem 0 0;
+}

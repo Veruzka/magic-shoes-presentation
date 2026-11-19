@@ -1,0 +1,433 @@
+/* "The process" (src/sections/process.js): the five steps, how we tracked
+   movement, Kimiko's critique, then the bodystorm grid.
+   Only opacity and transform change while you scroll; everything else is fixed here. */
+.tt-process {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* ---- Scene 1: the five steps ---- */
+.tt-process__inner {
+  width: min(1100px, 100% - 2 * 32px);
+  height: 100%;
+  box-sizing: border-box;
+  padding: 9vh 0 7vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 3vh;
+}
+
+.tt-process__headline {
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+}
+
+/* All five steps sit on top of each other in one slot; only one shows at a time. */
+.tt-process__slot {
+  display: grid;
+  align-items: center;
+  min-height: 0;
+}
+
+.tt-process__step {
+  grid-area: 1 / 1;
+  max-width: 20ch;
+  margin: 0;
+  font-family: var(--font-note);
+  font-weight: 500;
+  font-size: clamp(2rem, 4.6vw, 4.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  will-change: opacity, transform;
+}
+
+/* The line with five dots along the bottom. */
+.tt-process__rail {
+  position: relative;
+}
+
+.tt-process__track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 6px;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-ink) 18%, transparent);
+}
+
+.tt-process__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--color-ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.tt-process__stops {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.tt-process__stop {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+
+.tt-process__dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  box-shadow: 0 0 0 4px var(--color-bg);
+  position: relative;
+}
+
+.tt-process__stop-label {
+  font-family: var(--font-callout);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--color-ink);
+}
+
+/* ---- Scene 2: how we tracked movement ---- */
+/* Headline on the left, the 3x3 picture table on the right. Every picture is
+   sized from the screen height so all three rows fit on a 1280x800 screen. */
+.tt-tracked__stage {
+  --tt-panel-w: min(calc((100vh - 150px) / 3 * 0.75), 200px);
+}
+
+.tt-tracked__inner {
+  width: min(1240px, 100% - 2 * 32px);
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto;
+  align-items: center;
+  gap: 40px;
+}
+
+.tt-tracked__headline {
+  font-size: clamp(2.2rem, 4.2vw, 4rem);
+}
+
+.tt-tracked__line {
+  max-width: 20ch;
+}
+
+.tt-tracked__table {
+  display: grid;
+  gap: 10px;
+}
+
+/* One row: name, picture, arrow, picture, arrow, picture. */
+.tt-tracked__row {
+  display: grid;
+  grid-template-columns: 9.5rem repeat(2, var(--tt-panel-w) 22px) var(--tt-panel-w);
+  align-items: center;
+  column-gap: 8px;
+}
+
+.tt-tracked__colhead {
+  font-family: var(--font-callout);
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.tt-tracked__name {
+  margin: 0;
+  font-family: var(--font-note);
+  font-weight: 500;
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  line-height: 1.2;
+  opacity: 0;
+}
+
+/* Each picture sits in a soft cream box (visible before the picture arrives). */
+.tt-tracked__panel {
+  margin: 0;
+  width: var(--tt-panel-w);
+  aspect-ratio: 3 / 4;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.tt-tracked__panel img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* Pictograms have a see-through background, so show them whole. */
+.tt-tracked__panel--pictogram img {
+  object-fit: contain;
+  padding: 6%;
+  box-sizing: border-box;
+}
+
+.tt-tracked__arrow {
+  font-family: var(--font-callout);
+  font-size: 1.2rem;
+  color: var(--color-muted);
+  text-align: center;
+  opacity: 0;
+}
+
+/* Narrow screens: headline on top, row names above their pictures. */
+@media (max-width: 960px) {
+  .tt-tracked__stage {
+    --tt-panel-w: min(calc((100vh - 300px) / 3 * 0.75), calc((100vw - 64px - 60px) / 3));
+  }
+
+  .tt-tracked__inner {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .tt-tracked__line {
+    margin-top: 0.4rem;
+  }
+
+  .tt-tracked__row {
+    grid-template-columns: repeat(2, var(--tt-panel-w) 22px) var(--tt-panel-w);
+    column-gap: 4px;
+  }
+
+  .tt-tracked__row--heads > span:first-child {
+    display: none;
+  }
+
+  .tt-tracked__name {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---- Scene 3: what Kimiko pushed us on ---- */
+.tt-critique__inner {
+  width: min(1200px, 100% - 2 * 32px);
+  display: grid;
+  gap: 6vh;
+}
+
+.tt-critique__headline {
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+}
+
+.tt-critique__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.tt-critique__card {
+  padding: 28px 28px 32px;
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* Her words: italic, like a spoken quote. */
+.tt-critique__quote {
+  margin: 0;
+  font-family: var(--font-note);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.3rem, 2.1vw, 1.9rem);
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+/* Our answer: solid and plain, under a thin line. */
+.tt-critique__answer {
+  margin: 22px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid color-mix(in srgb, var(--color-ink) 22%, transparent);
+  font-family: var(--font-note);
+  font-weight: 600;
+  font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+  line-height: 1.25;
+  color: var(--color-ink);
+  opacity: 0;
+}
+
+.tt-critique__arrow {
+  font-family: var(--font-callout);
+  color: var(--color-muted);
+  margin-right: 4px;
+}
+
+@media (max-width: 860px) {
+  .tt-critique__inner {
+    gap: 20px;
+  }
+
+  .tt-critique__cards {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .tt-critique__card {
+    padding: 16px 20px;
+  }
+
+  .tt-critique__answer {
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+}
+
+/* ---- Scene 4: the bodystorm grid ---- */
+.tt-grid__inner {
+  width: min(1200px, 100% - 2 * 32px);
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  align-items: center;
+  gap: 48px;
+}
+
+.tt-grid__headline {
+  font-size: clamp(2.2rem, 4.2vw, 4rem);
+}
+
+.tt-grid__caption {
+  opacity: 0;
+  max-width: 22ch;
+}
+
+.tt-grid__figure {
+  margin: 0;
+  /* Room around the square for the corner names and end words. */
+  padding: 34px 24px;
+}
+
+.tt-grid__square {
+  position: relative;
+  width: min(70vh, 640px, 52vw);
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--color-ink) 12%, transparent);
+  border-radius: 6px;
+}
+
+/* The two axes cross in the middle and draw in from there. */
+.tt-grid__axis {
+  position: absolute;
+  background: var(--color-ink);
+}
+
+.tt-grid__axis--x {
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  transform: scaleX(0);
+}
+
+.tt-grid__axis--y {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  transform: scaleY(0);
+}
+
+/* Small words at the ends of the axes. */
+.tt-grid__end {
+  position: absolute;
+  font-family: var(--font-callout);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.tt-grid__end--left {
+  left: 8px;
+  top: calc(50% - 1.6em);
+}
+
+.tt-grid__end--right {
+  right: 8px;
+  top: calc(50% - 1.6em);
+}
+
+.tt-grid__end--top {
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+}
+
+.tt-grid__end--bottom {
+  left: 50%;
+  top: calc(100% + 8px);
+  transform: translateX(-50%);
+}
+
+/* The four corner names, just outside the square. */
+.tt-grid__quadrant {
+  position: absolute;
+  font-family: var(--font-note);
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--color-text);
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.tt-grid__quadrant--top-left { left: 0; bottom: calc(100% + 6px); }
+.tt-grid__quadrant--top-right { right: 0; bottom: calc(100% + 6px); }
+.tt-grid__quadrant--bottom-left { left: 0; top: calc(100% + 6px); }
+.tt-grid__quadrant--bottom-right { right: 0; top: calc(100% + 6px); }
+
+/* One gesture: a dot on its spot, with a tiny label beside it. The outer span
+   holds the position; the inner one is what drops in. */
+.tt-grid__gesture {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.tt-grid__drop {
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.tt-grid__gesture--left .tt-grid__drop {
+  left: auto;
+  right: -5px;
+  flex-direction: row-reverse;
+}
+
+.tt-grid__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 1.5px solid var(--color-ink);
+  box-sizing: border-box;
+  flex: none;
+}
+
+.tt-grid__label {
+  font-family: var(--font-callout);
+  font-size: 0.72rem;
+  line-height: 1;
+  color: var(--color-ink);
+}

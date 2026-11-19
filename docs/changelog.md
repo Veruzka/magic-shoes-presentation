@@ -2,6 +2,62 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-18 (later afternoon): arrow-key stops (Liz, branch `liz-animation-fixes`)
+- **Blank slides (fixed):** the MVP, "How it came together" and "Four shoes, sound effects" put their first arrow-key stop before anything had faded in, so the right arrow landed on a blank screen and the content flashed past on the next press. The MVP now stops on its headline, then with the data flow lit; the other two stop with everything shown (`data-stop-at` in `built-parts.js`).
+- **Veruzka's FSR breakdown skipped (fixed):** it only plays with the Sketch shoe, and a fresh browser started on Photo, so her section shrank to one screen. The site now starts on the Sketch (`startShoe` in `src/shoes/index.js`); a pick in the Style Lab is still remembered.
+- **What's next overlap (fixed):** the returning shoe pieces covered "Shoe development"; they now gather under the headline.
+- **New slide, "What the MVP does" (Liz):** right after the movement scene, before "Inside each shoe". Walk and run ("Every step makes a sound."), Spin ("Spin around to change the sounds."), Whimsy moves ("Unexpected and whimsical movements have their own sounds to be discovered."). One arrow-key stop per item; a figure on the right does each one. Picked from three directions (cards, one at a time, move and sound strip): one at a time, no box behind the figure, no label above it.
+- **Kept on purpose:** the Style Lab panel and "Start prototyping" button stay on every slide (Liz's call).
+- **Checked:** a fresh-browser arrow-key run through all 44 stops, with screenshots of each.
+
+## 2026-11-18 (afternoon): animation fixes (Liz, branch `liz-animation-fixes`)
+- **Legs through each other (fixed):** switching into or out of feet to the sky blended straight between lying down and standing, so both players' legs and shoes swung across the middle and through each other. They now lie down and get up through a tucked sit (one second instead of half a second).
+- **Shoes snapping between views (fixed):** going to or from the heel click flipped the four shoes from the side view to the front view in one frame. They now turn over half a second.
+- **Heel click hitch (fixed):** the tracked loop's last frame repeated its first, so the players froze for 1/20 s every loop. That frame plays once now, and the tracked frames are joined with a smooth curve instead of straight lines.
+- **Checked:** build; a scripted arrow-key run through all seven movements (the shoes stay on the feet every frame; the view turn has no jumps); frame-by-frame screenshots of lying down and getting up. **Not checked by eye on a real screen** at full speed.
+- **Arms bent backwards (fixed, Liz's review):** negative elbow values bend the forearm backwards in this rig, so walk, run, spin and standing all had backward elbows (worst in the run). Elbows now bend forward; arms swing opposite the legs, run arms drive at about 90° with the hand up to the chin.
+- **Heel click (fixed, Liz's review):** the players floated about 25 units above the ground when standing and sank below it in the crouch (the tracked hip height didn't match the rig); now the feet touch the ground and only the real jump lifts them. The shoes are side-view like the drawn figure (the front-view shoes were narrower than the feet, which poked out). The tracked arms windmilled almost a full turn in half a second; now they swing back in the crouch and up in the jump, smoothed over time.
+- **Heel click, take two (Liz's review):** the tracked loop's knees bent backwards in the side-on figure (it was filmed from the front), so it's now hand-animated side-on like a real heel-click jump: crouch with the arms back, push off, click the heels high in the air with the arms up and out, land soft. The sound ring fires on the click. The tracked loop stays in `bodystorm-motion.json`.
+
+## 2026-11-18 (late night): QA fixes
+- **Erratic players while paused (fixed):** the springy joints were worked out step by step, which blows up when a frame takes long (a busy laptop, the big TV): limbs flung around. Now the spring is solved exactly, so any frame rate is safe, and it's stiffer, so the joints keep the real motion (they lagged up to about 100° before).
+- **Shoes snapping in the spin (fixed):** the 3D shoes flipped 180° in one frame six times every 5 seconds. They now turn smoothly with the spin.
+- **Checked:** a simulation of every move at 60, 30 and 20 frames a second: no blowups, and the feet move only as far as the motion itself.
+
+## 2026-11-18 (night): two players, real motion, the story behind them
+- **Two players:** player 1 (cyan) leads, player 2 (Veruzka's sand) copies a beat late and falls into sync; the sound rings grow as they sync (copy and heighten). Each wears a pair: four shoes.
+- **Real bodystorm motion:** the heel click is our tracked video loop (P-20, clip 3, cleaned, smoothed, looped). The side kick (P-09c) and dancer's pose (P-08a) use the tracked peak pose from the high-resolution stills, timed by hand; the video tracking had lost the feet there (the people were cut off at the bottom of the frame). The dancer's raised knee comes from the pictogram (the tracker was unsure). Walk, run, spin and feet to the sky stay hand-animated. Source: `crops_pose.json` and `windows_5fps.json` in the synthesis Drive folder.
+- **Loops while you talk:** scroll picks the movement; the players keep looping it in real time while the scene is on screen.
+- **Smoother:** springy joints (arms trail, knees soften), half-second blends between movements.
+- **The story behind them:** the badge wall is replaced by an abstract vignette for each "Yes, and…" offer, in the sprite's style (21 vignettes).
+- **One offer per move** (your call): walk → thin ice, run → being chased, spin → eye of a tornado, dancer's pose → statue in a museum, side kick → kick a door open, feet to the sky → gravity switched off, heel click → the curtain falls. Set with `pick` in `story-movements.js`; the spare offers and their vignettes stay for later.
+- **Checked:** build; a scripted run through all seven movements (two players, the right offer and vignette each time, four feet, no broken drawing values, no errors); frames 9 ms in the movement scene, every scene clean on the rerun. **Not checked by eye:** how the vignettes and the stand-in shoes look in the real scene.
+- **Shoes on the feet:** a solid stand-in shoe (not the flat card), seen from the side or the front like the figures. The Rhino model (`~/Documents/TUI/shoe/twinkle_toes.3dm`) will be exported to `shoe.glb` when it's ready.
+- **Anti-slop reviewer** brought in from Cassius's other projects: `.claude/agents/anti-slop-reviewer.md` + `docs/anti-slop.md`.
+
+## 2026-11-18 (later): the movement sprite scene
+- **From Cassius's motion-sprite prompt** (in `cassius-agents/`), using the Apple Watch screen recording as a technique reference only (the recording stays out of git).
+- **One sprite scene replaces the seven movement scenes** (archived): a cyan pictogram figure on Veruzka's warm dark does walk → run → spin → dancer's pose → side kick → feet to the sky → heel click in place. One rig, poses based on our bodystorm pictograms, blends between movements.
+- **Pattern wall:** round badges of the same movement at low opacity; pulls back at the start, changes with a ripple from the centre, drifts.
+- **The shoes:** the 3D shoe shrinks into a mirrored pair on the figure's feet, rides along, and lifts off into "Inside each shoe".
+- **Label:** the movement's name and the rolled "Yes, and…" offer. The sound for that offer shows in presenter mode (P). Gradient type on "Stories! Movement!".
+- **Our own scroll engine** (not GSAP), so the arrow-key fix and stops still work: one stop per movement.
+- **Checked:** build; a scripted run through the scene (wall 2.6× → 1×, all seven movements and offers, the feet move with each pose, no errors); frames 9 to 10 ms. Two long gaps in the hero were the test window being hidden, not the site. **Not checked by eye:** whether the shoes sit nicely on the feet (the stand-in card will look rough there).
+
+## 2026-11-18: the Twinkle Toes presentation (branch `web-presentation-draft`)
+- **Everything is on the branch** `web-presentation-draft`. Nothing is on `main`. The branch was pushed to GitHub on 2026-11-18 (not merged, not deployed).
+- **Cassius' agents:** the website prompt, the keep-integrity ground rules and the project, Figma and MVP context files are in `cassius-agents/`.
+- **New story order:** hero → concept → what we've built → process → what's next → close. Veruzka's shoe story is kept as it was, as the FSR close-up inside "What we've built".
+- **Fewer words:** one headline and one line per scene.
+- **One 3D shoe (Three.js)** carries the story: it spins in the hero, does each movement (walk, run, spin, dancer's pose, side kick, feet to the sky, heel click), breaks apart with labels, and comes back together for the close. A stand-in is used until `shoe.glb` arrives.
+- **Process:** real bodystorm images (frame, pose tracking, pictogram) for the heel click, the side kick and the toe descent ring, from the synthesis Drive folder. Plus "What Kimiko pushed us on", from Cassius's notes on her critique.
+- **What's next:** shoe development and sound development.
+- **Presenter mode:** press P. **Keyboard:** arrows and space jump scene to scene.
+- **Worlds scene** set aside in `src/_archive/`.
+- **Arrow-key jitter fixed:** the browser's smooth scroll and our scroll glide were stacked, so text, ripples and the shoe trailed the page (by up to a quarter of a scene) and kept moving after it stopped. During a keyboard jump they now follow the scroll exactly (`data-key-scrolling` on the page, set by `keyboard-nav.js`, read by `scroll-progress.js` and the 3D shoe). The mouse wheel keeps its glide. Measured with a scripted arrow-key run: lag went from 0.26 to one frame, no stalls.
+- **Movements are improv prompts:** "Yes, and…" offers picked at random and rolled in like a slot machine, with the sound that makes each one real.
+- **Checked:** `npm run build`; a scripted scroll through every scene (no errors, the shoe shows and hides where it should); `debug:stalls` per scene: no stalls (9 to 33 ms frames). **Not checked by eye yet.**
+
 ## 2026-11-17: the team presentation copy
 - **This repo is a copy** of Magic Shoes for the team to turn into a presentation: github.com/Veruzka/magic-shoes-presentation (public), with the full history and checkpoint tags.
 - **Published with GitHub Pages** on every push to `main`: https://veruzka.github.io/magic-shoes-presentation/. The steps are in `.github/workflows/pages.yml`.

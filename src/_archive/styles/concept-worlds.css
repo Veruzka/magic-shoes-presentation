@@ -1,0 +1,190 @@
+/* "The world changes" (src/sections/concept-worlds.js): text on top, the pair
+   of shoes in the middle, the sound words under them, a short caption at the
+   bottom. The background, ink and shoe tint are set from the scroll in JS. */
+.tt-worlds {
+  /* Size of one shoe. Shrinks on short or narrow screens so it all fits. */
+  --tt-worlds-shoe-w: min(26vw, 34vh, 340px);
+  --tt-worlds-gap: clamp(20px, 5vw, 80px); /* space between the two heels */
+}
+
+.tt-worlds .scene__stage {
+  background: #dfe8f6; /* Sky, until the scroll takes over */
+  color: #24345c;
+}
+
+/* The white flash when the shoes hit. Covers the whole screen. */
+.tt-worlds__flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.tt-worlds__layout {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8vh 24px 4vh;
+  text-align: center;
+}
+
+.tt-worlds__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The eyebrow follows the world's ink instead of the usual soft brown. */
+.tt-worlds__eyebrow {
+  color: currentColor;
+  opacity: 0.7;
+}
+
+/* Keeps its height while the name is swapped, so nothing jumps. */
+.tt-worlds__name {
+  min-height: 1em;
+}
+
+/* The middle of the screen, where the shoes stand. */
+.tt-worlds__floor {
+  flex: 1;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.tt-worlds__pair {
+  position: relative;
+  display: flex;
+  gap: var(--tt-worlds-gap);
+}
+
+.tt-worlds__shoe {
+  position: relative;
+  z-index: 1;
+  width: var(--tt-worlds-shoe-w);
+  aspect-ratio: 1356 / 846;
+  will-change: transform;
+}
+
+/* Each shoe turns around its heel. The left shoe's heel is on its right. */
+.tt-worlds__shoe--left {
+  transform-origin: 85% 80%;
+}
+
+.tt-worlds__shoe--right {
+  transform-origin: 15% 80%;
+}
+
+/* The tinted copies sit on top of each other and cross-fade. */
+.tt-worlds__shoe-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  filter: none;
+}
+
+/* Mirror the right shoe so the two heels face each other. */
+.tt-worlds__shoe--right .tt-worlds__shoe-img {
+  transform: scaleX(-1);
+}
+
+/* Sound ripples and the hit ring both sit at the heels, near the floor. */
+.tt-worlds__ripples {
+  position: absolute;
+  left: 50%;
+  top: 80%;
+  width: 200px;
+  height: 200px;
+  translate: -50% -50%;
+  z-index: 0;
+}
+
+.tt-worlds__ripples .sound-ripples__wave {
+  bottom: -24px;
+  height: 40px;
+}
+
+.tt-worlds__ring {
+  position: absolute;
+  left: 50%;
+  top: 80%;
+  width: 180px;
+  height: 180px;
+  border: 3px solid currentColor;
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* "Double stomp" / "Heel click": pops up above the heels at the hit. */
+.tt-worlds__hit-word {
+  position: absolute;
+  left: 50%;
+  bottom: 105%;
+  translate: -50% 0;
+  font-family: var(--font-callout);
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  z-index: 3;
+}
+
+/* The three sound words for the world, in a row. */
+.tt-worlds__sounds {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.6rem;
+  min-height: 2.2rem;
+  margin: 2.5rem 0 0;
+  padding: 0;
+}
+
+.tt-worlds__sound {
+  font-family: var(--font-signature);
+  font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+  line-height: 1.1;
+}
+
+.tt-worlds__sound:empty {
+  display: none;
+}
+
+/* Caption and closing note share one spot and cross-fade. */
+.tt-worlds__foot {
+  display: grid;
+  justify-items: center;
+  margin-top: 1.4rem;
+}
+
+.tt-worlds__caption,
+.tt-worlds__note {
+  grid-area: 1 / 1;
+  max-width: 46ch;
+  margin: 0;
+  font-family: var(--font-note);
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.45;
+}
+
+.tt-worlds__note {
+  opacity: 0;
+}
+
+.tt-worlds__todo {
+  grid-row: 2;
+  margin-top: 0.7rem;
+}

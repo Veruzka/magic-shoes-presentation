@@ -1,0 +1,149 @@
+/* Section 1, "The concept" (src/sections/concept-movements.js), on Veruzka's
+   warm near-black (--color-note) with an electric cyan figure. */
+.tt-moves {
+  --tt-dark: var(--color-note); /* #2f2a25, from base.css */
+  --tt-cyan: #2fd3ff; /* the sprite */
+  --tt-cyan-deep: #2f7dff;
+  --tt-badge: rgb(255 255 255 / 0.05); /* the wall's circles, a touch lighter than the background */
+  background: var(--tt-dark);
+  color: var(--color-bg);
+  overflow-x: clip; /* nothing that moves can make the page scroll sideways */
+}
+
+.tt-moves .scene__stage {
+  background: var(--tt-dark);
+}
+
+/* Gradient type: on the headline only, like the reference. */
+.tt-gradient {
+  background: linear-gradient(90deg, var(--tt-cyan-deep), var(--tt-cyan) 55%, #7dffc4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- The intro ---------- */
+.tt-moves__intro-text {
+  width: min(1100px, 100% - 48px);
+  text-align: center;
+  will-change: transform;
+}
+
+.tt-moves__intro-text .tt-line {
+  margin-inline: auto;
+  color: rgb(251 250 248 / 0.75);
+}
+
+.tt-moves__intro-text .todo-tag {
+  margin-top: 1.2rem;
+}
+
+/* "Stories! / Movement!" on two lines, bigger than the usual headline. */
+.tt-moves__title {
+  font-size: clamp(3rem, 10vw, 9rem);
+  line-height: 0.95;
+}
+
+.tt-moves__title span {
+  display: block;
+}
+
+/* ---------- The sprite scene ---------- */
+/* One drawing fills the stage: the story behind, the ground line, the two players. */
+.tt-sprite__svg {
+  position: absolute;
+  inset: 8vh 0 0;
+  width: 100%;
+  height: calc(100% - 8vh);
+  overflow: visible;
+  opacity: 0;
+}
+
+/* The offer's story (src/components/story-props.js): background, so the players stay the hero. */
+.tt-sprite__story {
+  color: #9fe6ff;
+}
+
+.tt-sprite__ground {
+  stroke: rgb(251 250 248 / 0.12);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* Player 1 leads in cyan; player 2 copies in Veruzka's sand. */
+.tt-sprite__player--one {
+  color: var(--tt-cyan);
+}
+
+.tt-sprite__player--two {
+  color: var(--color-accent);
+}
+
+/* Flat, bold, rounded: the far limbs, the torso, the near limbs, the head. */
+.tt-sprite__body path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tt-sprite__far {
+  stroke-width: 12;
+  opacity: 0.75;
+}
+
+.tt-sprite__torso {
+  stroke-width: 19;
+}
+
+.tt-sprite__near {
+  stroke-width: 12;
+}
+
+.tt-sprite__head {
+  fill: currentColor;
+}
+
+/* Sound, shown: a ring spreads from a foot on each strike; bigger as the players sync. */
+.tt-sprite__ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  opacity: 0;
+}
+
+/* The label, at the top: the movement's name, then the rolled "Yes, and…" offer. */
+.tt-sprite__label {
+  position: absolute;
+  top: 9vh;
+  left: 50%;
+  translate: -50% 0;
+  width: min(900px, 100% - 48px);
+  text-align: center;
+  opacity: 0;
+}
+
+.tt-sprite__name {
+  margin: 0;
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-stretch: 88%;
+  font-size: clamp(2.2rem, 4.6vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-bg);
+}
+
+.tt-sprite__offer {
+  margin: 0.7rem auto 0;
+  max-width: 44ch;
+  font-size: clamp(1.1rem, 1.8vw, 1.6rem);
+  color: rgb(251 250 248 / 0.8);
+}
+
+.tt-sprite__roll {
+  display: inline-block;
+  font-weight: 500;
+  color: var(--tt-cyan);
+  will-change: transform;
+}
