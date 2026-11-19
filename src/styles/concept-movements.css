@@ -82,8 +82,20 @@
   color: #d9705f;
 }
 
-/* Flat, bold, rounded: the far limbs, the torso, the near limbs, the head. */
-.tt-sprite__body path {
+/* The players are paper-cut people (src/components/paper-person.js): each
+   figure casts one soft paper shadow, and the far arm and leg are a touch
+   darker, like paper further back. */
+.tt-sprite__body .paper-person {
+  filter: drop-shadow(0 1.5px 1.5px rgb(42 78 87 / 0.28));
+}
+
+.tt-sprite__body .paper-person__far {
+  filter: brightness(0.86);
+}
+
+/* The old stick figures' look (no longer drawn; kept for reference):
+   flat, bold, rounded: the far limbs, the torso, the near limbs, the head. */
+.tt-sprite__body > path {
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;

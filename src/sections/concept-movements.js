@@ -20,8 +20,9 @@ import '../styles/concept-movements.css';
 import { scene, calmMotion, slice, ease, lerp, clamp01 } from '../core/scene.js';
 import { storyMovements } from '../data/story-movements.js';
 import { todoTag } from '../components/todo-tag.js';
-import { STAND, MOVES, movementPose, blendPose, switchPose, lying, figurePaths, feetOf, spinScale, strikesAt, GROUND } from '../components/sprite-rig.js';
+import { STAND, MOVES, movementPose, blendPose, switchPose, lying, feetOf, spinScale, strikesAt, GROUND } from '../components/sprite-rig.js';
 import { STORY_PROPS, PROP_FOR_OFFER } from '../components/story-props.js';
+import { paperPerson } from '../components/paper-person.js';
 
 // The scene's timeline (share of the scene's scrolling, 0 → 1):
 const MOVES_START = 0.16; // before this: the big shoe hands over to the feet
@@ -105,10 +106,10 @@ function makePlayer(svg, { side, className }) {
   group.setAttribute('transform', `translate(${side * PLAYER_X},${top}) scale(${facing * FIGURE_SCALE},${FIGURE_SCALE})`);
   const rings = [el('circle', { class: 'tt-sprite__ring', r: 10 }, group), el('circle', { class: 'tt-sprite__ring', r: 10 }, group)];
   const body = el('g', { class: 'tt-sprite__body' }, group);
-  const far = el('path', { class: 'tt-sprite__far' }, body);
-  const torso = el('path', { class: 'tt-sprite__torso' }, body);
-  const near = el('path', { class: 'tt-sprite__near' }, body);
-  const head = el('circle', { class: 'tt-sprite__head', r: 14 }, body);
+  // The players are paper-cut people (src/components/paper-person.js): the guy
+  // in a beanie leads, the woman with long dark hair copies. Until 2026-11-19
+  // they were stick figures drawn with figurePaths() (sprite-rig.js).
+  const person = paperPerson(body, side < 0 ? 'guy' : 'woman');
 
   let pose = { ...STAND };
   const vel = {};
@@ -141,12 +142,7 @@ function makePlayer(svg, { side, className }) {
       pose = next;
     },
     draw(level, heighten) {
-      const p = figurePaths(pose);
-      far.setAttribute('d', p.far);
-      torso.setAttribute('d', p.torso);
-      near.setAttribute('d', p.near);
-      head.setAttribute('cx', p.head.x.toFixed(1));
-      head.setAttribute('cy', p.head.y.toFixed(1));
+      person.update(pose);
       body.setAttribute('transform', `scale(${spinScale(pose).toFixed(3)},1)`);
       const feet = feetOf(pose);
       [level.A, level.B].forEach((v, i) => {
