@@ -68,9 +68,9 @@ export function shoeStage() {
   scene.add(root);
 
   // The shoes on the figures' feet in the concept (two players, a pair each).
-  // They only show while pose.pair > 0. Until the .glb arrives, each one is a
-  // simple solid shoe shape (not the flat card), so it still reads as a shoe
-  // from the front and the side; with the model, each is a copy of it.
+  // They only show while pose.pair > 0. Until the .glb arrives, each one is the
+  // same Sketch drawing on a card as the hero's shoe; with the model, each is a
+  // copy of it.
   const FEET = 4;
   const footMaterials = [];
   const footShoes = Array.from({ length: FEET }, () => {
@@ -86,6 +86,7 @@ export function shoeStage() {
   let fadeMain = () => {}; // fades the big shoe out as the small ones take over
 
   // A solid stand-in shoe, 1 unit long, toe toward -x: a sole and a rounded upper.
+  // Set aside (2026-11-19): the players wear the Sketch card now (buildStandIn).
   function standInShoe() {
     const upper = new THREE.Shape();
     upper.moveTo(0.48, -0.15);
@@ -131,8 +132,14 @@ export function shoeStage() {
     const cardMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.05, side: THREE.DoubleSide });
     const card = new THREE.Mesh(new THREE.PlaneGeometry(1, SKETCH_RATIO), cardMaterial);
     tiltGroup.add(card);
-    const sharedShoe = standInShoe();
-    footShoes.forEach((f) => f.tilt.add(sharedShoe.clone()));
+    // The players wear the same shoe as the hero: the Sketch drawing on a card
+    // (2026-11-19; they wore standInShoe(), a simpler solid shape, before).
+    // Every movement is seen from the side, so the flat drawing reads well.
+    footShoes.forEach((f) => {
+      const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.05, side: THREE.DoubleSide });
+      footMaterials.push(material);
+      f.tilt.add(new THREE.Mesh(new THREE.PlaneGeometry(1, SKETCH_RATIO), material));
+    });
     let explodeFade = 1;
     let pairFade = 1;
     const applyFade = () => (cardMaterial.opacity = explodeFade * pairFade);
