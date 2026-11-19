@@ -1,12 +1,14 @@
-/* Section 1, "The concept" (src/sections/concept-movements.js), on Veruzka's
-   warm near-black (--color-note) with an electric cyan figure. */
+/* Section 1, "The concept" (src/sections/concept-movements.js), on the beige
+   page colour like the rest of the site (it was on a warm near-black until
+   2026-11-19; no part of the site has a dark background now). */
 .tt-moves {
-  --tt-dark: var(--color-note); /* #2f2a25, from base.css */
+  --tt-dark: var(--color-bg); /* the scene's background: the beige page colour */
+  --tt-forest: #265b69; /* the paper forest's deep teal (the hero), for accents */
   --tt-cyan: #2fd3ff; /* the sprite */
   --tt-cyan-deep: #2f7dff;
-  --tt-badge: rgb(255 255 255 / 0.05); /* the wall's circles, a touch lighter than the background */
+  --tt-badge: rgb(59 48 35 / 0.05); /* the wall's circles, a touch darker than the background */
   background: var(--tt-dark);
-  color: var(--color-bg);
+  color: var(--color-text);
   overflow-x: clip; /* nothing that moves can make the page scroll sideways */
 }
 
@@ -61,26 +63,39 @@
 
 /* The offer's story (src/components/story-props.js): background, so the players stay the hero. */
 .tt-sprite__story {
-  color: #9fe6ff;
+  color: #6f9aa3; /* a soft forest teal, faint on the beige */
 }
 
 .tt-sprite__ground {
-  stroke: rgb(251 250 248 / 0.12);
+  stroke: rgb(59 48 35 / 0.15);
   stroke-width: 2;
   stroke-linecap: round;
 }
 
-/* Player 1 leads in cyan; player 2 copies in Veruzka's sand. */
+/* Player 1 leads in the forest's teal; player 2 copies in coral (both from the
+   paper forest's palette, readable on the beige). */
 .tt-sprite__player--one {
-  color: var(--tt-cyan);
+  color: var(--tt-forest);
 }
 
 .tt-sprite__player--two {
-  color: var(--color-accent);
+  color: #d9705f;
 }
 
-/* Flat, bold, rounded: the far limbs, the torso, the near limbs, the head. */
-.tt-sprite__body path {
+/* The players are paper-cut people (src/components/paper-person.js): each
+   piece carries its own lifted shadow (in the art), the figure a very light
+   one, and the far arm and leg are a touch darker, like paper further back. */
+.tt-sprite__body .paper-person {
+  filter: drop-shadow(0 1px 1px rgb(42 78 87 / 0.15));
+}
+
+.tt-sprite__body .paper-person__far {
+  filter: brightness(0.86);
+}
+
+/* The old stick figures' look (no longer drawn; kept for reference):
+   flat, bold, rounded: the far limbs, the torso, the near limbs, the head. */
+.tt-sprite__body > path {
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -112,7 +127,7 @@
   opacity: 0;
 }
 
-/* The label, at the top: the movement's name, then the rolled "Yes, and…" offer. */
+/* The label, at the top: the movement's name, then its "and imagine…" offer. */
 .tt-sprite__label {
   position: absolute;
   top: 9vh;
@@ -131,19 +146,19 @@
   font-size: clamp(2.2rem, 4.6vw, 4rem);
   line-height: 1;
   letter-spacing: -0.02em;
-  color: var(--color-bg);
+  color: var(--color-text);
 }
 
 .tt-sprite__offer {
   margin: 0.7rem auto 0;
   max-width: 44ch;
   font-size: clamp(1.1rem, 1.8vw, 1.6rem);
-  color: rgb(251 250 248 / 0.8);
+  color: var(--color-muted);
 }
 
 .tt-sprite__roll {
   display: inline-block;
   font-weight: 500;
-  color: var(--tt-cyan);
+  color: var(--tt-forest);
   will-change: transform;
 }

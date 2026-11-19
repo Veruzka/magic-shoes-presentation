@@ -96,7 +96,7 @@ export const storyMovements = [
   },
   {
     id: 'heel-click',
-    pick: 2, // the offer we show (0, 1 or 2); the others are spares
+    pick: 0, // the offer we show (0, 1 or 2); the others are spares. Was 2 (the curtain), removed 2026-11-19
     group: 'whimsy',
     name: 'Heel click',
     motion: 'heelclick',

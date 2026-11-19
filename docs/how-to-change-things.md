@@ -348,10 +348,19 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 
 **Change the words:** each section's file in `src/sections/`. Rule: **one headline and at most one line per scene.**
 
+**The opening paper forest** (`src/sections/tt-hero.js`): as you scroll the first scene, three paper layers rise behind the title like a pop-up book, and "Once upon a step" becomes "Once upon a forest".
+- **When each layer rises:** `RISE` at the top of the file, as slices of the scene's scrolling (0 to 1). Later and shorter = faster. **The word swap:** `SWAP`. **When the text turns light:** `LIGHTEN`. **The three arrow-key stops** (title, forest up, word swapped): `STOPS`. The title itself never moves.
+- **The light text colours:** `.tt-hero .scene__stage` (title) and `.tt-hero__line` (the line under it) in `src/styles/tt-hero.css`.
+- **New forest pictures:** put the new originals in `design/originals/forest-layers/`, then run `uv run --with pillow python tools/forest-layers.py` to remake the three web layers in `src/assets/forest/`. Every layer must be the same size so they line up.
+
+> **Example:** to make the front leaves arrive sooner, change `front: [0.3, 0.85]` to `front: [0.2, 0.75]` in `RISE`.
+
 **Add a movement:** add an entry to `src/data/story-movements.js` (`id`, `name`, `motion`, and its `offers`), and its three story vignettes to `PROP_FOR_OFFER` in `src/components/story-props.js` (same order as the offers). The scene gets one more movement and one more arrow-key stop.
 - **Offers** are the improv prompts: each finishes "Yes, and…" (`offer`) and names the sound that makes it real (`sound`). Each move shows one, chosen by `pick` (0, 1 or 2); the line rolls past the spares and lands on it like a slot machine. To show a different offer, change `pick`. Remove `pick` to go back to a random one per visit.
 - The motions are `step`, `run`, `spin`, `pose`, `kick`, `sky` and `heelclick`, in `MOVES` in `src/components/sprite-rig.js`. A new kind of motion = a new entry there: a `pose(phase)` with joint angles (explained at the top of the file) and its `strikes` (when a foot sends out a sound ring).
 - **How long one loop takes:** `seconds` on each movement in `MOVES` (`src/components/sprite-rig.js`).
+- **How long each "and imagine…" sentence stays:** `HOLD_SECONDS` at the top of `src/sections/concept-movements.js` (the scene's scroll length is `length` in `spriteScene`).
+- **What the players look like:** paper-cut people, one SVG per body part in `src/assets/paper-people/`, drawn by `tools/paper-people.mjs` (colours in `C`, shapes in one function per part). Change it there and run `node tools/paper-people.mjs`. Each part hangs from its joint at (0,0). The same code built the Figma page "Paper people" in "Magic Shoes – assets". Their shadow and the darker far limbs: `.paper-person` in `src/styles/concept-movements.css`.
 - **The two players:** at the top of `src/sections/concept-movements.js`: `COPY_DELAY` (how far behind player 2 starts), `SYNC_SECONDS` (how long it takes to fall into step), `SPRING` (how loose each joint is: lower = floppier), `SWITCH_SECONDS` (how long a change of movement blends).
 - **Colours:** player 1 is `--tt-cyan`, player 2 is Veruzka's sand (`--color-accent`), the story is `.tt-sprite__story` in `src/styles/concept-movements.css`.
 - **The stories behind the players:** one function per vignette in `src/components/story-props.js`.
@@ -360,7 +369,7 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 
 > **Example:** `{ id: 'stomp', group: 'basic', name: 'Stomp', motion: 'run', offers: [{ offer: 'a giant is coming.', sound: 'a deep boom, getting closer' }] },`
 
-**Change what the 3D shoe does in a scene:** `src/data/shoe-path.js`. One entry per scene name. The fields are explained at the top of the file: where it sits (`ax`, `ay`), how big (`size`), spin (`turn`), toe up (`tilt`), hidden (`opacity`), broken apart (`explode`) and labels (`labels`).
+**Change what the 3D shoe does in a scene:** `src/data/shoe-path.js`. One entry per scene name. The fields are explained at the top of the file: where it sits (`ax`, `ay`), how big (`size`), spin (`turn`), toe up (`tilt`), hidden (`opacity`), broken apart (`explode`), labels (`labels`) and the gentle float over time (`float`, 0 to 1). How far and how slowly it floats: `FLOAT` at the top of `src/three/shoe-director.js`.
 
 > **Example:** to make the hero shoe bigger, change `size: 0.6` to `size: 0.75` in `hero`.
 

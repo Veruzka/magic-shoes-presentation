@@ -217,60 +217,57 @@ export const STORY_PROPS = {
     };
   }),
 
-  // WALK · "The floor is thin ice." A pale band of ice; each footfall starts a
-  // crack that spreads out from that foot, and the cracks stay.
+  // WALK · "The floor is thin ice." Each of player 1's steps lays a new sheet of
+  // paper ice: a line grows across the ground from left to right, and a
+  // cut-paper sheet with a slightly wavy top edge follows it. Each new sheet
+  // sits a little lower (nearer to you) in the next blue or white tone, with a
+  // soft paper shadow, so the floor builds up in layers like the hero's forest.
+  // (2026-11-19, Veruzka's review; until then each step drew a jagged crack.)
   ice: prop((g) => {
     const rand = seeded(11);
-    el(g, 'rect', { x: -W, y: GROUND_Y, width: 2 * W, height: 44, ...FILL, opacity: 0.07 });
-    el(g, 'path', { d: `M${-W},${GROUND_Y}H${W}`, 'stroke-width': 2, opacity: 0.35 });
-    let glints = '';
-    for (let i = 0; i < 7; i++) {
-      const x = -440 + i * 140 + rand() * 40;
-      glints += `M${pt(x, GROUND_Y + 32)}l16,-16M${pt(x + 13, GROUND_Y + 34)}l8,-8`;
-    }
-    el(g, 'path', { d: glints, 'stroke-width': 2, opacity: 0.16 });
+    // Back to front: alternating blue-ish and white-ish paper.
+    const TONES = ['#a9cdd6', '#eef6f6', '#8fbcc8', '#f8fbfb', '#7aaebb', '#e2eff1'];
+    const STEP = 17; // how much lower each new sheet's top edge sits
+    const GROW = 0.9; // seconds for a sheet to cross the ground
+    const shadowId = `story-props-paper-${++uid}`;
+    const shadow = el(g, 'filter', { id: shadowId, x: '-5%', y: '-40%', width: '110%', height: '180%' });
+    el(shadow, 'feDropShadow', { dx: 0, dy: -3, stdDeviation: 3, 'flood-color': '#2a4e57', 'flood-opacity': 0.22 });
 
-    // A crack: 3 or 4 jagged arms running along the ice, some with a twig.
-    const crackArms = (x) => {
-      const arms = [];
-      const count = 3 + Math.floor(rand() * 2);
-      for (let a = 0; a < count; a++) {
-        const side = a % 2 ? 1 : -1;
-        const pts = [{ x, y: GROUND_Y + 1 }];
-        let px = x, py = GROUND_Y + 1;
-        const steps = 3 + Math.floor(rand() * 2);
-        for (let s = 0; s < steps; s++) {
-          const len = 16 + rand() * 26;
-          const ang = (0.1 + rand() * 0.5) * (a < 2 ? 1 : 1.6);
-          px += side * len * Math.cos(ang);
-          py = Math.min(GROUND_Y + 40, py + len * Math.sin(ang) * (rand() < 0.3 ? -0.6 : 1));
-          py = Math.max(GROUND_Y + 1, py);
-          pts.push({ x: px, y: py });
-          if (s === 1 && rand() < 0.6) arms.push([{ x: px, y: py }, { x: px + side * 14, y: Math.min(GROUND_Y + 42, py + 12) }]);
-        }
-        arms.push(pts);
-      }
-      return arms;
-    };
-    const cracks = Array.from({ length: 14 }, () => ({ node: el(g, 'path', { 'stroke-width': 2.5, opacity: 0.5 }), arms: null, born: 0, done: true }));
+    const sheets = TONES.map((tone, i) => {
+      const top = GROUND_Y + i * STEP;
+      // A gently wavy top edge, like paper cut by hand.
+      let d = `M${pt(-W - 10, top)}`;
+      for (let x = -W; x <= W + 10; x += 40) d += `L${pt(x, top + (rand() - 0.5) * 5)}`;
+      d += `L${pt(W + 10, BOTTOM + 20)}L${pt(-W - 10, BOTTOM + 20)}Z`;
+      const clipId = `story-props-ice-${++uid}`;
+      const clip = el(g, 'clipPath', { id: clipId });
+      const reveal = el(clip, 'rect', { x: -W - 10, y: TOP, width: 0, height: BOTTOM - TOP + 40 });
+      const sheet = el(g, 'g', { 'clip-path': `url(#${clipId})` });
+      el(sheet, 'path', { d, fill: tone, stroke: 'none', filter: `url(#${shadowId})` });
+      // The line at its leading edge, growing across first.
+      const edge = el(g, 'path', { d: `M${pt(-W - 10, top)}H${W + 10}`, stroke: '#5f97a5', 'stroke-width': 2, opacity: 0 });
+      return { reveal, edge, top, born: null };
+    });
     let next = 0;
-    let stillDrawn = false;
-    const hits = footfalls();
-    const spawn = (x, time) => {
-      const c = cracks[next++ % cracks.length];
-      Object.assign(c, { arms: crackArms(x), born: time, done: false });
+    const hits = footfalls({ onePerPlayer: true });
+    const lay = (time) => {
+      if (next < sheets.length) sheets[next++].born = time;
     };
     return (ctx) => {
-      if (ctx.calm && !stillDrawn) {
-        stillDrawn = true;
-        [0, 1].forEach((i) => (playerOf(ctx, i).feet ?? []).forEach((f) => spawn(f.x, -99)));
+      if (ctx.calm) {
+        // Reduced motion: the whole layered floor, at once.
+        while (next < sheets.length) lay(-99);
+      } else if (hits(ctx).some((h) => h.player === 0)) {
+        lay(ctx.time); // only the leader's steps, so the floor builds up calmly
       }
-      hits(ctx).forEach((h) => spawn(h.x + (rand() - 0.5) * 50, ctx.time));
-      cracks.forEach((c) => {
-        if (c.done || !c.arms) return;
-        const grow = easeOut((ctx.time - c.born) / 0.7);
-        c.node.setAttribute('d', c.arms.map((arm) => partialLine(arm, grow)).join(''));
-        c.done = grow >= 1;
+      sheets.forEach((sh) => {
+        if (sh.born === null) return;
+        const t = clamp01((ctx.time - sh.born) / GROW);
+        const lineT = easeOut(Math.min(1, t * 1.4)); // the line leads, the sheet follows
+        const sheetT = easeOut(t);
+        sh.reveal.setAttribute('width', r1((2 * W + 20) * sheetT));
+        sh.edge.setAttribute('d', `M${pt(-W - 10, sh.top)}H${r1(-W - 10 + (2 * W + 20) * lineT)}`);
+        sh.edge.setAttribute('opacity', r2(0.55 * (1 - sheetT)));
       });
     };
   }),

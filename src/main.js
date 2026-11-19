@@ -27,11 +27,12 @@ import { close } from './sections/close.js';
 // Add new sections here, in page order. Each one returns a DOM element.
 // The Twinkle Toes story: concept first, then what we've built, then the process.
 const sections = [
-  ttHero, // the name, one line, and the 3D shoe doing a full spin
-  conceptMovements, // "Stories! Movement!" + one scene per movement
+  ttHero, // "Once upon a step", the floating 3D shoe, and the paper forest rising behind them
+  conceptMovements, // the two players, one arrow stop per movement ("Stories! Movement!" intro set aside)
   mvpDoes, // what the MVP does: walk and run, spin, whimsy moves (one arrow stop each)
   builtShoeParts, // "What we've built": the 3D shoe breaks apart, each part labeled
-  hero, // then Veruzka's sketch breakdown: the FSR flies out, is drawn and explains itself
+  // hero: Veruzka's "Magic Shoes" story and FSR breakdown, set aside 2026-11-19
+  // (see heroSection below): "Music Sampling Shoes" follows "Inside each shoe".
   builtParts, // the MVP, photos, what's next, takeaways
   processSection, // the timeline and the bodystorm grid
   forward,
@@ -47,7 +48,12 @@ const parallax = createParallax();
 // parts), chapter 2 flies the FSR to the centre as the scene scrolls away,
 // chapter 3 turns it and half of it becomes a labelled sketch, chapter 4 slides it
 // into the paper, fully drawn and flat, with texts on the left.
-const heroSection = app.querySelector('.hero');
+// Veruzka's "Magic Shoes" story (big title on its background, then the FSR
+// breakdown: "What's an FSR", "What does it do in the shoe") is set aside: built
+// but not put on the page, so the Style lab's switches still have something to
+// drive and nothing breaks. To bring it back, add `hero` to `sections` after
+// `builtShoeParts` and change this line back to `app.querySelector('.hero')`.
+const heroSection = hero();
 // The keyboard navigation treats the hero as one scene with a stop per chapter.
 heroSection.dataset.scene = 'built-inside';
 heroSection.dataset.stops = '5';
@@ -96,7 +102,9 @@ const styleLab = switcherPanel(
     },
   }),
 );
-document.body.append(styleLab);
+// Not shown in the presentation (2026-11-19, Veruzka): the panel is still built,
+// so the saved choices apply, but it isn't put on the page.
+// document.body.append(styleLab);
 
 // Arrow keys, space and Page Up/Down jump scene to scene, like slides.
 startKeyboardNav();
@@ -113,4 +121,5 @@ startPresenterNotes();
 document.body.append(infoButton());
 
 // The floating pill (bottom-right, left of "i"): jump to the prototyping lab.
-document.body.append(pageSwitch({ label: 'Start prototyping →', href: `${import.meta.env.BASE_URL}lab/` }));
+// Not shown in the presentation (2026-11-19, Veruzka). The lab is still at /lab/.
+// document.body.append(pageSwitch({ label: 'Start prototyping →', href: `${import.meta.env.BASE_URL}lab/` }));

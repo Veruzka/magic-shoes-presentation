@@ -20,7 +20,7 @@ It lives inside **Veruzka's repo** (the Magic Shoes site). Her original shoe sto
 4. **Less is more.** One headline per scene, one line at most, no em dashes in site copy.
 5. **Refine, don't replace** Veruzka's work. Make the smallest change, one change per commit, and never delete (move to `src/_archive/`). Ask when unsure. See `cassius-agents/claude-code-prompt-keep-integrity.md`.
 6. **The shoe drives the story in 3D:**
-   - the hero: it spins
+   - the hero: it floats, bobbing and rocking on its own (it used to spin), and a paper forest rises behind it
    - the concept: it moves onto the players' feet
    - "What we've built": it breaks apart with labels, then Veruzka's sketch breakdown of the FSR
    - the close: it's whole again
@@ -46,10 +46,10 @@ Everything is pushed to `web-presentation-draft`.
 1. **Look at the paused movement scene by eye** (step with the arrow keys, wait a few seconds on each move). Confirm it's calm, and that the story pictures and the four stand-in shoes on the feet look right.
 2. **Run the full anti-slop audit.** It was started and stopped before it finished, so no report exists yet. Ask your agent to use `anti-slop-reviewer` on the whole site. **Run no other browser checks at the same time:** they all drive the same Chrome and confuse each other.
 3. **Fill in the TODO tags** (they show on the page as stickers):
-   - the name: Twinkle Toes or Music Sampling Shoes (`src/sections/tt-hero.js`)
+   - ~~the name~~: done, the opening and closing title is "Once upon a step" (2026-11-18)
    - the speaker for each part (`src/data/presenter-notes.js`)
    - the MVP demo video and the three takeaways (`src/sections/built-parts.js`)
-   - the timeline and owners for next steps (`src/sections/forward.js`)
+   - ~~the timeline and owners for next steps~~: "What's next" is now just the headline and the floating shoe (2026-11-19)
    - more basic moves after the Kimney meeting (`src/data/story-movements.js`)
    - the per-shoe parts, confirmed with engineering (`src/data/shoe-parts.js`)
 4. **The real 3D shoe:** export the Rhino model (`twinkle_toes.3dm`, Cassius has it; still in progress) to `public/assets/models/shoe.glb`. The part names and orientation it needs are in `public/assets/models/README.md`. The site switches from the stand-in automatically.

@@ -10,6 +10,7 @@
 // It only draws a new picture when the pose changes (never in a constant loop).
 import './shoe-stage.css';
 import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import shoeUrl from '../assets/shoe-sketch.png';
 import { shoeParts } from '../data/shoe-parts.js';
 import { REST } from '../data/shoe-path.js';
@@ -68,9 +69,9 @@ export function shoeStage() {
   scene.add(root);
 
   // The shoes on the figures' feet in the concept (two players, a pair each).
-  // They only show while pose.pair > 0. Until the .glb arrives, each one is a
-  // simple solid shoe shape (not the flat card), so it still reads as a shoe
-  // from the front and the side; with the model, each is a copy of it.
+  // They only show while pose.pair > 0. Until the .glb arrives, each one is the
+  // same Sketch drawing on a card as the hero's shoe; with the model, each is a
+  // copy of it.
   const FEET = 4;
   const footMaterials = [];
   const footShoes = Array.from({ length: FEET }, () => {
@@ -86,6 +87,7 @@ export function shoeStage() {
   let fadeMain = () => {}; // fades the big shoe out as the small ones take over
 
   // A solid stand-in shoe, 1 unit long, toe toward -x: a sole and a rounded upper.
+  // Set aside (2026-11-19): the players wear the Sketch card now (buildStandIn).
   function standInShoe() {
     const upper = new THREE.Shape();
     upper.moveTo(0.48, -0.15);
@@ -109,7 +111,7 @@ export function shoeStage() {
 
   // Each part: its object, where it sits when whole, which way it flies out, and its label.
   let parts = [];
-  let fadeWhole = () => {}; // the stand-in card fades back as the parts fly out
+  let fadeWhole = () => {}; // (the stand-in card used to fade back as the parts flew out)
   let lastPose = { ...REST, opacity: 0 };
 
   function makeLabels(list) {
@@ -124,20 +126,76 @@ export function shoeStage() {
     });
   }
 
-  // The stand-in: the Sketch drawing on a card, and one block per part.
+  // One electronic part, drawn like a small relay (2026-11-19, from Veruzka's
+  // reference photos): a matte dark green-grey box with softly rounded edges,
+  // like a 3D print, tiny white markings on its face (not meant to be read) and
+  // little metal pins underneath. Every part uses the same box, to keep it simple.
+  const PART_BOX = { w: 0.075, h: 0.06, d: 0.055 };
+  const partBodyMaterial = new THREE.MeshStandardMaterial({ color: 0x3e4a46, roughness: 0.88, metalness: 0 });
+  const pinMaterial = new THREE.MeshStandardMaterial({ color: 0xc9cbc7, roughness: 0.35, metalness: 0.7 });
+  function markings(seed) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 192;
+    const g = canvas.getContext('2d');
+    g.fillStyle = 'rgba(255,255,255,0.88)';
+    g.font = '600 30px "Courier New", monospace';
+    // Four short lines of maker's-mark style text, a little uneven, like print on a part.
+    const chars = 'RK0S8LNE6CR5FHVOAQ27X';
+    let n = seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+    const pick = () => chars[(n = (n * 31 + 7) % 997) % chars.length];
+    const lines = [seed.toUpperCase().slice(0, 7), 'RN ' + pick() + pick() + pick() + pick(), pick() + pick() + ' ' + pick() + pick() + pick() + pick(), pick() + pick() + pick() + pick() + pick() + pick() + pick()];
+    lines.forEach((line, i) => {
+      g.save();
+      g.translate(26 + i * 4, 44 + i * 40);
+      g.rotate(-0.04);
+      g.fillText(line, 0, 0);
+      g.restore();
+    });
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return new THREE.MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false });
+  }
+  function partBox(id) {
+    const { w, h, d } = PART_BOX;
+    const group = new THREE.Group();
+    group.add(new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 3, 0.006), partBodyMaterial));
+    const label = new THREE.Mesh(new THREE.PlaneGeometry(w * 0.82, h * 0.7), markings(id));
+    label.position.z = d / 2 + 0.0006;
+    group.add(label);
+    // Pins: two rows of two, poking out of the bottom.
+    [-1, 1].forEach((sx) =>
+      [-1, 1].forEach((sz) => {
+        const pin = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.014, 0.003), pinMaterial);
+        pin.position.set(sx * w * 0.32, -h / 2 - 0.006, sz * d * 0.28);
+        group.add(pin);
+      }),
+    );
+    return group;
+  }
+
+  // The stand-in: the Sketch drawing on a card, and one relay-style box per part.
   function buildStandIn() {
     const texture = new THREE.TextureLoader().load(shoeUrl, () => render(lastPose));
     texture.colorSpace = THREE.SRGBColorSpace;
     const cardMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.05, side: THREE.DoubleSide });
     const card = new THREE.Mesh(new THREE.PlaneGeometry(1, SKETCH_RATIO), cardMaterial);
     tiltGroup.add(card);
-    const sharedShoe = standInShoe();
-    footShoes.forEach((f) => f.tilt.add(sharedShoe.clone()));
+    // The players wear the same shoe as the hero: the Sketch drawing on a card
+    // (2026-11-19; they wore standInShoe(), a simpler solid shape, before).
+    // Every movement is seen from the side, so the flat drawing reads well.
+    footShoes.forEach((f) => {
+      const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: 0.05, side: THREE.DoubleSide });
+      footMaterials.push(material);
+      f.tilt.add(new THREE.Mesh(new THREE.PlaneGeometry(1, SKETCH_RATIO), material));
+    });
     let explodeFade = 1;
     let pairFade = 1;
     const applyFade = () => (cardMaterial.opacity = explodeFade * pairFade);
-    fadeWhole = (explode) => {
-      explodeFade = 1 - 0.65 * explode;
+    // The card stays fully opaque while the parts fly out (2026-11-19,
+    // Veruzka); it used to fade to 35% as the shoe came apart.
+    fadeWhole = () => {
+      explodeFade = 1;
       applyFade();
     };
     fadeMain = (shown) => {
@@ -149,10 +207,7 @@ export function shoeStage() {
       // Where the part sits, from its point on the drawing (0,0 top-left → 1,1 bottom-right).
       const home = new THREE.Vector3(data.point.x - 0.5, (0.5 - data.point.y) * SKETCH_RATIO, 0.02);
       const dir = new THREE.Vector3(home.x, home.y, 0.35).normalize();
-      const block = new THREE.Mesh(
-        new THREE.BoxGeometry(0.09, 0.055, 0.04),
-        new THREE.MeshStandardMaterial({ color: 0x3a332b, roughness: 0.6 }),
-      );
+      const block = partBox(data.id);
       tiltGroup.add(block);
       return { data, object: block, home, dir, standIn: true };
     });
@@ -160,7 +215,7 @@ export function shoeStage() {
   }
 
   // The real model. Each part must be a separate top-level object named after
-  // its id in src/data/shoe-parts.js (fsr, mpu, minima, xiao, power, case).
+  // its id in src/data/shoe-parts.js (fsr, mpu, xiao, power, case).
   function useModel(gltf) {
     const model = gltf.scene;
     const box = new THREE.Box3().setFromObject(model);
@@ -231,7 +286,10 @@ export function shoeStage() {
   // Puts the shoe in a pose and draws one picture.
   function render(pose) {
     lastPose = pose;
-    element.style.opacity = String(pose.opacity);
+    // Only touch the page's styles when the fade really changes (the hero's
+    // float redraws every frame).
+    const opacity = String(pose.opacity);
+    if (element.style.opacity !== opacity) element.style.opacity = opacity;
     if (pose.opacity <= 0.001) return; // nothing to draw
 
     const viewH = 2 * CAMERA_DISTANCE * Math.tan(THREE.MathUtils.degToRad(FOV / 2));

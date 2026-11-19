@@ -1,0 +1,120 @@
+// The paper-cut people for the players' scene: a guy in a beanie and a woman
+// with long dark hair, in the paper forest's colours, like small cut-paper
+// figures. Built in Figma (file "Magic Shoes – assets", page "Paper people"),
+// one component per body part. tools/paper-people.mjs draws the same parts
+// (same seeded shapes) into src/assets/paper-people/, one SVG per part.
+//
+// Each part is drawn hanging straight down from its joint (the shoulder for an
+// upper arm, the knee for a shin, the neck for the torso), so it can follow the
+// same skeleton as the old stick figures (joints() in sprite-rig.js): every
+// frame, each part is moved to its joint and turned along its bone.
+//
+//   const person = paperPerson(group, 'guy');   // or 'woman'
+//   person.update(pose);                         // each frame
+//   paperPerson(group, 'guy', { shoes: true })   // also draws the Sketch shoe on
+//                                                // each foot, flat (for scenes
+//                                                // without the 3D shoes)
+//
+// Each file is in skeleton units with its joint at (0,0). To change a part,
+// change it in tools/paper-people.mjs and run `node tools/paper-people.mjs`
+// (and, to keep Figma in step, rebuild the "Paper people" page from the same code).
+import { joints } from './sprite-rig.js';
+import shoeSketch from '../assets/shoe-sketch.png';
+import guyTorso from '../assets/paper-people/guy-torso.svg?raw';
+import guyUpperArm from '../assets/paper-people/guy-upperArm.svg?raw';
+import guyForearm from '../assets/paper-people/guy-forearm.svg?raw';
+import guyThigh from '../assets/paper-people/guy-thigh.svg?raw';
+import guyShin from '../assets/paper-people/guy-shin.svg?raw';
+import guyHead from '../assets/paper-people/guy-head.svg?raw';
+import womanHairBack from '../assets/paper-people/woman-hairBack.svg?raw';
+import womanTorso from '../assets/paper-people/woman-torso.svg?raw';
+import womanUpperArm from '../assets/paper-people/woman-upperArm.svg?raw';
+import womanForearm from '../assets/paper-people/woman-forearm.svg?raw';
+import womanThigh from '../assets/paper-people/woman-thigh.svg?raw';
+import womanShin from '../assets/paper-people/woman-shin.svg?raw';
+import womanHead from '../assets/paper-people/woman-head.svg?raw';
+
+const SVGNS = 'http://www.w3.org/2000/svg';
+// The flat shoe: as long as the 3D one on the players' feet (1.9 × the foot,
+// 17 units), in the Sketch drawing's proportions (846 / 1356).
+const SHOE_LENGTH = 17 * 1.9;
+const SHOE_HEIGHT = SHOE_LENGTH * (846 / 1356);
+
+const ART = {
+  guy: { torso: guyTorso, upperArm: guyUpperArm, forearm: guyForearm, thigh: guyThigh, shin: guyShin, head: guyHead },
+  woman: { hairBack: womanHairBack, torso: womanTorso, upperArm: womanUpperArm, forearm: womanForearm, thigh: womanThigh, shin: womanShin, head: womanHead },
+};
+
+// The SVG file's shapes, without its outer <svg> tag.
+const inner = (svg) => svg.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+
+// Back to front. "far" = the arm and leg on the far side (drawn first, a touch darker).
+const LAYERS = [
+  ['hairBack', 'head'],
+  ['upperArm', 'armA'],
+  ['forearm', 'armA'],
+  ['thigh', 'legA'],
+  ['shin', 'legA'],
+  ['torso', 'torso'],
+  ['thigh', 'legB'],
+  ['shin', 'legB'],
+  ['head', 'head'],
+  ['upperArm', 'armB'],
+  ['forearm', 'armB'],
+];
+
+// The angle of the bone from a to b, measured from straight down (degrees, + toward +x).
+const boneAngle = (a, b) => (Math.atan2(b.x - a.x, b.y - a.y) * 180) / Math.PI;
+
+export function paperPerson(parent, who, { shoes = false } = {}) {
+  const art = ART[who];
+  const root = document.createElementNS(SVGNS, 'g');
+  root.setAttribute('class', `paper-person paper-person--${who}`);
+  parent.append(root);
+  const layers = shoes ? LAYERS.flatMap((l) => (l[0] === 'shin' ? [l, ['shoe', l[1]]] : [l])) : LAYERS;
+  const parts = layers.filter(([part]) => part === 'shoe' || art[part]).map(([part, bone]) => {
+    const g = document.createElementNS(SVGNS, 'g');
+    if (bone.endsWith('A')) g.setAttribute('class', 'paper-person__far');
+    if (part === 'shoe') {
+      // The drawing's toe is on its left; flip it so the toe points forward (+x).
+      g.innerHTML = `<image href="${shoeSketch}" x="${-SHOE_LENGTH / 2}" y="${-SHOE_HEIGHT / 2}" width="${SHOE_LENGTH}" height="${SHOE_HEIGHT}" transform="scale(-1,1)"/>`;
+    } else {
+      g.innerHTML = inner(art[part]);
+    }
+    root.append(g);
+    return { g, part, bone };
+  });
+
+  return {
+    update(pose) {
+      const j = joints(pose);
+      const torsoAngle = boneAngle(j.neck, j.hip);
+      for (const { g, part, bone } of parts) {
+        let at;
+        let angle;
+        if (part === 'shoe') {
+          // Centred on the foot, along it (ankle → toe).
+          const leg = j[bone];
+          const mid = { x: (leg.ankle.x + leg.toe.x) / 2, y: (leg.ankle.y + leg.toe.y) / 2 };
+          const deg = (Math.atan2(leg.toe.y - leg.ankle.y, leg.toe.x - leg.ankle.x) * 180) / Math.PI;
+          g.setAttribute('transform', `translate(${mid.x.toFixed(2)},${mid.y.toFixed(2)}) rotate(${deg.toFixed(2)})`);
+          continue;
+        }
+        if (part === 'torso') {
+          at = j.neck;
+          angle = torsoAngle;
+        } else if (part === 'head' || part === 'hairBack') {
+          at = j.head;
+          angle = torsoAngle;
+        } else {
+          const limb = j[bone];
+          const from = part === 'upperArm' ? j.neck : part === 'forearm' ? limb.elbow : part === 'thigh' ? j.hip : limb.knee;
+          const to = part === 'upperArm' ? limb.elbow : part === 'forearm' ? limb.hand : part === 'thigh' ? limb.knee : limb.ankle;
+          at = from;
+          angle = boneAngle(from, to);
+        }
+        g.setAttribute('transform', `translate(${at.x.toFixed(2)},${at.y.toFixed(2)}) rotate(${(-angle).toFixed(2)})`);
+      }
+    },
+  };
+}

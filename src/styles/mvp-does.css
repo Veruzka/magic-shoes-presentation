@@ -107,3 +107,13 @@
     transition: none;
   }
 }
+
+/* The guy in a beanie (src/components/paper-person.js), as in the movement
+   scene: a very light figure shadow, the far arm and leg a touch darker. */
+.tt-does__body .paper-person {
+  filter: drop-shadow(0 1px 1px rgb(42 78 87 / 0.15));
+}
+
+.tt-does__body .paper-person__far {
+  filter: brightness(0.86);
+}

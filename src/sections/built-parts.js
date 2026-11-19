@@ -64,21 +64,14 @@ function header({ eyebrow, headline, line }) {
 function partsScene() {
   const { section, stage, onProgress } = scene({ name: 'parts', length: 2, stops: 3 });
   stage.innerHTML = `
-    <div class="tt-built__frame tt-built__parts">
-      <div class="tt-built__parts-todo"></div>
-    </div>
+    <div class="tt-built__frame tt-built__parts"></div>
   `;
   const frame = stage.querySelector('.tt-built__parts');
   const head = header({ headline: 'Inside each shoe' });
   frame.prepend(head);
 
-  // TODO: confirm the per-shoe parts with engineering once the final hardware is decided.
-  const note = stage.querySelector('.tt-built__parts-todo');
-  note.append(todoTag('confirm per-shoe parts with engineering'));
-
   function update(p) {
     reveal(head, slice(p, 0, 0.1));
-    note.style.opacity = slice(p, 0.05, 0.12);
   }
   update(0);
   onProgress(update);

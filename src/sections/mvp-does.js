@@ -8,7 +8,8 @@
 //   03 Whimsy moves    heel click, side kick, feet to the sky, one after another
 import '../styles/mvp-does.css';
 import { scene, calmMotion } from '../core/scene.js';
-import { MOVES, movementPose, switchPose, lying, figurePaths, feetOf, spinScale, strikesAt, GROUND } from '../components/sprite-rig.js';
+import { MOVES, movementPose, switchPose, lying, feetOf, spinScale, strikesAt, GROUND } from '../components/sprite-rig.js';
+import { paperPerson } from '../components/paper-person.js';
 
 const ITEMS = [
   {
@@ -28,7 +29,7 @@ const ITEMS = [
     plan: [['heelclick', 2.2], ['kick', 2.2], ['sky', 3.2]],
   },
 ];
-const FIGURE = '#2fd3ff'; // player 1's cyan, as in the movement scene
+const FIGURE = '#2f6f7b'; // the guy's teal sweater (the rings at his feet)
 const SPIN_RINGS = ['#2fd3ff', '#d2b48c', '#f0846a', '#9b8cff']; // a new colour (a new sound) every turn
 const SWITCH_SECONDS = 0.5;
 const SWITCH_SECONDS_FLOOR = 1; // getting up from (or down to) the floor goes through a sit-up
@@ -69,10 +70,10 @@ export function mvpDoes() {
   el('line', { class: 'tt-does__ground', x1: -120, x2: 120, y1: GROUND + 6, y2: GROUND + 6 }, svg);
   const rings = [el('circle', { class: 'tt-does__ring', r: 8 }, svg), el('circle', { class: 'tt-does__ring', r: 8 }, svg)];
   const body = el('g', { class: 'tt-does__body' }, svg);
-  const far = el('path', { class: 'tt-does__far' }, body);
-  const torso = el('path', { class: 'tt-does__torso' }, body);
-  const near = el('path', { class: 'tt-does__near' }, body);
-  const head = el('circle', { class: 'tt-does__head', r: 14, fill: FIGURE }, body);
+  // The guy in a beanie from the movement scene (src/components/paper-person.js),
+  // with the Sketch shoe drawn flat on each foot. Until 2026-11-19 this was a
+  // cyan stick figure (figurePaths in sprite-rig.js).
+  const person = paperPerson(body, 'guy', { shoes: true });
 
   const calm = calmMotion();
   let p = 0;
@@ -125,12 +126,7 @@ export function mvpDoes() {
     if (blend < 1) target = switchPose(from, target, blend);
     pose = target;
 
-    const paths = figurePaths(pose);
-    far.setAttribute('d', paths.far);
-    torso.setAttribute('d', paths.torso);
-    near.setAttribute('d', paths.near);
-    head.setAttribute('cx', paths.head.x.toFixed(1));
-    head.setAttribute('cy', paths.head.y.toFixed(1));
+    person.update(pose);
     body.setAttribute('transform', `scale(${spinScale(pose).toFixed(3)},1)`);
 
     // The rings at the feet; in the spin they change colour every turn.

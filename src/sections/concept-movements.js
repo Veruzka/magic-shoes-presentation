@@ -5,7 +5,7 @@
 //            sprite-rig.js), each in a pair of shoes, do a movement together:
 //            player 1 (cyan) leads, player 2 (sand) copies a beat late and falls
 //            into sync, and as they sync the sound rings grow ("copy and
-//            heighten"). Above them: the movement and a random "Yes, and…" offer.
+//            heighten"). Above them: the movement and its "and imagine…" offer.
 //            Behind them: that offer's story, drawn in the same flat style
 //            (src/components/story-props.js): the thin ice cracks, the giant
 //            chases. Players piece these together into a world they make up.
@@ -20,12 +20,18 @@ import '../styles/concept-movements.css';
 import { scene, calmMotion, slice, ease, lerp, clamp01 } from '../core/scene.js';
 import { storyMovements } from '../data/story-movements.js';
 import { todoTag } from '../components/todo-tag.js';
-import { STAND, MOVES, movementPose, blendPose, switchPose, lying, figurePaths, feetOf, spinScale, strikesAt, GROUND } from '../components/sprite-rig.js';
+import { STAND, MOVES, movementPose, blendPose, switchPose, lying, feetOf, spinScale, strikesAt, GROUND } from '../components/sprite-rig.js';
 import { STORY_PROPS, PROP_FOR_OFFER } from '../components/story-props.js';
+import { paperPerson } from '../components/paper-person.js';
 
 // The scene's timeline (share of the scene's scrolling, 0 → 1):
 const MOVES_START = 0.16; // before this: the big shoe hands over to the feet
-const MOVES_END = 0.9; // after this: the shoes lift off for "Inside each shoe"
+const MOVES_END = 0.9; // after this: the players stand still, shoes on, as the scene scrolls away
+// Each "and imagine…" offer stays readable: once it has faded in, it stays at
+// least this long before the next movement can take over, even if the scroll
+// has already moved on. The players keep doing the movement on show.
+const HOLD_SECONDS = 3;
+const FADE_SECONDS = 0.5; // how long the offer takes to fade in
 
 // Where the players stand in the scene's drawing (viewBox -480 -270 960 540).
 const GROUND_Y = 150;
@@ -51,11 +57,15 @@ const KEY_PHASE = { step: 0.25, run: 0.25, spin: 0.12, pose: 0.5, kick: 0.5, sky
 export function conceptMovements() {
   const wrapper = document.createElement('div');
   wrapper.className = 'tt-moves';
-  wrapper.append(conceptIntro(), spriteScene());
+  // The "Stories! Movement!" intro (conceptIntro below) is set aside
+  // (2026-11-18): the players follow straight after the hero. To bring it
+  // back: wrapper.append(conceptIntro(), spriteScene());
+  wrapper.append(spriteScene());
   return wrapper;
 }
 
 // The intro screen: the promise in two words, in gradient type, and one line.
+// Set aside: not on the page (see conceptMovements above).
 function conceptIntro() {
   const { section, stage, onProgress } = scene({ name: 'concept', length: 0.6, stops: 1, className: 'tt-moves__intro' });
   stage.innerHTML = `
@@ -96,10 +106,10 @@ function makePlayer(svg, { side, className }) {
   group.setAttribute('transform', `translate(${side * PLAYER_X},${top}) scale(${facing * FIGURE_SCALE},${FIGURE_SCALE})`);
   const rings = [el('circle', { class: 'tt-sprite__ring', r: 10 }, group), el('circle', { class: 'tt-sprite__ring', r: 10 }, group)];
   const body = el('g', { class: 'tt-sprite__body' }, group);
-  const far = el('path', { class: 'tt-sprite__far' }, body);
-  const torso = el('path', { class: 'tt-sprite__torso' }, body);
-  const near = el('path', { class: 'tt-sprite__near' }, body);
-  const head = el('circle', { class: 'tt-sprite__head', r: 14 }, body);
+  // The players are paper-cut people (src/components/paper-person.js): the guy
+  // in a beanie leads, the woman with long dark hair copies. Until 2026-11-19
+  // they were stick figures drawn with figurePaths() (sprite-rig.js).
+  const person = paperPerson(body, side < 0 ? 'guy' : 'woman');
 
   let pose = { ...STAND };
   const vel = {};
@@ -132,12 +142,7 @@ function makePlayer(svg, { side, className }) {
       pose = next;
     },
     draw(level, heighten) {
-      const p = figurePaths(pose);
-      far.setAttribute('d', p.far);
-      torso.setAttribute('d', p.torso);
-      near.setAttribute('d', p.near);
-      head.setAttribute('cx', p.head.x.toFixed(1));
-      head.setAttribute('cy', p.head.y.toFixed(1));
+      person.update(pose);
       body.setAttribute('transform', `scale(${spinScale(pose).toFixed(3)},1)`);
       const feet = feetOf(pose);
       [level.A, level.B].forEach((v, i) => {
@@ -159,13 +164,14 @@ function spriteScene() {
   const each = (MOVES_END - MOVES_START) / n;
   // Arrow-key stops: the start, the handover, the middle of each movement, the end.
   const stops = [0, MOVES_START - 0.02, ...moves.map((_, i) => MOVES_START + (i + 0.55) * each), 1];
-  const { section, stage, onProgress } = scene({ name: 'moves', length: 6, stops: stops.length, className: 'tt-sprite' });
+  // About 1.5 screens of scrolling per movement, so a normal scroll lingers on each.
+  const { section, stage, onProgress } = scene({ name: 'moves', length: 11, stops: stops.length, className: 'tt-sprite' });
   section.dataset.stopAt = stops.map((s) => s.toFixed(3)).join(',');
 
   stage.innerHTML = `
     <div class="tt-sprite__label">
       <h2 class="tt-sprite__name"></h2>
-      <p class="tt-line tt-sprite__offer">Yes, and… <span class="tt-sprite__roll"></span></p>
+      <p class="tt-line tt-sprite__offer">and imagine… <span class="tt-sprite__roll"></span></p>
     </div>
   `;
   const svg = el('svg', { class: 'tt-sprite__svg', viewBox: '-480 -270 960 540', preserveAspectRatio: 'xMidYMid meet', 'aria-hidden': 'true' });
@@ -179,7 +185,7 @@ function spriteScene() {
   const offerEl = stage.querySelector('.tt-sprite__offer');
   const roll = stage.querySelector('.tt-sprite__roll');
 
-  // One random "Yes, and…" offer per movement, per visit.
+  // One "and imagine…" offer per movement (its `pick`).
   const picks = moves.map((m) => m.pick ?? Math.floor(Math.random() * (m.offers?.length || 1))); // one offer per move (`pick`), random if unset
 
   // ---------- State ----------
@@ -252,7 +258,12 @@ function spriteScene() {
   let wasBefore = true;
   function frame(dt) {
     const before = p < MOVES_START;
-    startMovement(movementAt(p));
+    // Switch to the scroll's movement, unless the offer on show hasn't been
+    // readable for HOLD_SECONDS yet (reduced motion: no hold, it only draws
+    // when the scroll changes).
+    const wanted = movementAt(p);
+    const held = !calm && index >= 0 && moveTime < FADE_SECONDS + HOLD_SECONDS;
+    if (!held) startMovement(wanted);
     if (wasBefore && !before) {
       moveTime = 0; // the movements just began: start the roll and the sync fresh
       phase = 0;
@@ -322,18 +333,15 @@ function spriteScene() {
       }
     }
 
-    // The label: the name and its offer, rolling in when a movement starts.
+    // The label: the name and its one offer, fading in when a movement starts.
+    // (Until 2026-11-19 the offer rolled past the spares like a slot machine.)
     const inMove = !before && !after;
     label.style.opacity = String(inMove ? ease(clamp01(moveTime / 0.35)) : 0);
     const offers = move.offers ?? [];
     if (offers.length) {
-      const r = calm ? 1 : ease(clamp01((moveTime - 0.15) / 0.9));
-      const ticks = (1 - r) * offers.length * 3;
-      const text = offers[(picks[index] + Math.ceil(ticks)) % offers.length].offer;
+      const text = offers[picks[index] % offers.length].offer;
       if (roll.textContent !== text) roll.textContent = text;
-      const f = ticks % 1;
-      roll.style.transform = `translateY(${(-f * 0.5).toFixed(3)}em)`;
-      offerEl.style.opacity = String(r >= 1 ? 1 : 0.35 + 0.65 * (1 - f));
+      offerEl.style.opacity = String(calm ? 1 : ease(clamp01(moveTime / FADE_SECONDS)));
     }
 
     // The figures fade in at the start of the scene.

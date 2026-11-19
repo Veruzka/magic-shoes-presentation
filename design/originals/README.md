@@ -17,3 +17,16 @@ All were made in the Figma file **"Magic Shoes – assets"** (Graft team): https
 **Total so far:** 7 credits. The prompts are in `docs/changelog.md`.
 
 The site never loads these files: only the cut-outs in `src/assets/` are published.
+
+## The hero's paper forest (Runway, 2026-11-18)
+
+Made with Runway for the first scene's forest backdrop. Prompts and steps are in `docs/changelog.md`. `tools/forest-layers.py` turns these into the web layers in `src/assets/forest/`.
+
+| Original | What it is | Cost |
+|---|---|---|
+| (kept on Veruzka's computer only, not in git) `forest-option-a.png`, `forest-option-b.png` | The two options from the prompt; B was picked | 40 credits |
+| `forest-b-no-banner.png` (2695 × 1504) | Option B with its blank paper banner removed | 25 credits |
+| `forest-layers/1-background.png`, `3-middle.png`, `4-front.png` | Runway's layer split of the forest: back wall with clearing and moon, middle trees with the deer, front frame of leaves | about 10 credits for the split |
+| (not in git) `forest-layers/0-base.png`, `2-distant-trees.png` | The split's other outputs: a different forest, and gray-topped trees. Not used | (in the split) |
+
+**Total:** about 75 Runway credits.
