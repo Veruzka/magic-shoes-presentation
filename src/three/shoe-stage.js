@@ -111,7 +111,7 @@ export function shoeStage() {
 
   // Each part: its object, where it sits when whole, which way it flies out, and its label.
   let parts = [];
-  let fadeWhole = () => {}; // the stand-in card fades back as the parts fly out
+  let fadeWhole = () => {}; // (the stand-in card used to fade back as the parts flew out)
   let lastPose = { ...REST, opacity: 0 };
 
   function makeLabels(list) {
@@ -192,8 +192,10 @@ export function shoeStage() {
     let explodeFade = 1;
     let pairFade = 1;
     const applyFade = () => (cardMaterial.opacity = explodeFade * pairFade);
-    fadeWhole = (explode) => {
-      explodeFade = 1 - 0.65 * explode;
+    // The card stays fully opaque while the parts fly out (2026-11-19,
+    // Veruzka); it used to fade to 35% as the shoe came apart.
+    fadeWhole = () => {
+      explodeFade = 1;
       applyFade();
     };
     fadeMain = (shown) => {
