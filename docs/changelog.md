@@ -2,6 +2,9 @@
 
 One short entry per work session, newest first.
 
+## 2026-11-19: takeaways (Liz)
+- **"Four shoes, sound effects" has its takeaways** (they were TODO stickers): 01 Sound effects vs. music (curiosity and imagination; music empowered improv), 02 Scenarios and imagination built off friends (building scenarios, sounds, and play), 03 A more open approach (explore instead of define). Each is a numbered title with its points underneath in a lighter style (`TAKEAWAYS` in `built-parts.js`).
+
 ## 2026-11-18 (evening): "Once upon a step" opening (Veruzka, branch `veruzka-opening-scene`)
 - **New title:** the first and last screens now say "Once upon a step" instead of "Twinkle Toes". The browser tab title and Liz's Medium link still say Twinkle Toes.
 - **Hero TODO sticker removed:** the name is decided. The stickers in the other scenes stay as reminders.
