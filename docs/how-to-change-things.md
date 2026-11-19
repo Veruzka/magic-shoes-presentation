@@ -349,7 +349,7 @@ These seam settings are careful territory: `seam`, `cleanup`, `alsoLayer` (trace
 **Change the words:** each section's file in `src/sections/`. Rule: **one headline and at most one line per scene.**
 
 **The opening paper forest** (`src/sections/tt-hero.js`): as you scroll the first scene, three paper layers rise behind the title like a pop-up book, and "Once upon a step" becomes "Once upon a forest".
-- **When each layer rises:** `RISE` at the top of the file, as slices of the scene's scrolling (0 to 1). Later and shorter = faster. **The word swap:** `SWAP`. **When the text turns light:** `LIGHTEN`.
+- **When each layer rises:** `RISE` at the top of the file, as slices of the scene's scrolling (0 to 1). Later and shorter = faster. **The word swap:** `SWAP`. **When the text turns light:** `LIGHTEN`. **The three arrow-key stops** (title, forest up, word swapped): `STOPS`. The title itself never moves.
 - **The light text colours:** `.tt-hero .scene__stage` (title) and `.tt-hero__line` (the line under it) in `src/styles/tt-hero.css`.
 - **New forest pictures:** put the new originals in `design/originals/forest-layers/`, then run `uv run --with pillow python tools/forest-layers.py` to remake the three web layers in `src/assets/forest/`. Every layer must be the same size so they line up.
 
