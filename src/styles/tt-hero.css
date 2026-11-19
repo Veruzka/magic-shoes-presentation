@@ -1,8 +1,39 @@
-/* Twinkle Toes hero (src/sections/tt-hero.js): huge name on top; the 3D shoe
-   spins in the space below it, on the cream page color. */
+/* Twinkle Toes hero (src/sections/tt-hero.js): huge title on top; the 3D shoe
+   floats in the space below it, on the cream page color. As you scroll, a
+   paper-cut forest rises behind them and the text turns light.
+   --forest (0 → 1) is set by the scroll: 0 = cream page, 1 = over the forest. */
 .tt-hero .scene__stage {
+  --forest: 0;
   background: var(--color-bg);
-  color: var(--color-text);
+  color: color-mix(in srgb, var(--color-bg) calc(var(--forest) * 100%), var(--color-text));
+}
+
+/* The forest: three full-screen paper layers, stacked back to front. They
+   start below the screen and rise into place (transforms set in the JS). */
+.tt-hero__forest {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+}
+
+.tt-hero__layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transform: translate3d(0, 100%, 0);
+  will-change: transform;
+  user-select: none;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tt-hero__layer {
+    transform: none;
+    opacity: 0;
+  }
 }
 
 /* Text on top, centered; the lower part of the screen is left for the shoe. */
@@ -27,9 +58,39 @@
 .tt-hero__name {
   font-size: clamp(3.2rem, 9vw, 8.5rem);
   line-height: 0.95;
+  white-space: nowrap;
+}
+
+/* The last word: "step" and "forest" share one box, which clips them, so one
+   slides out of sight as the other slides in. The JS sets its width. */
+.tt-hero__swap {
+  display: inline-grid;
+  vertical-align: bottom;
+  overflow: clip;
+  text-align: left;
+  /* room for the "p" in "step" to hang below the line without being cut off */
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
+}
+
+.tt-hero__word {
+  grid-area: 1 / 1;
+  justify-self: start;
+  white-space: nowrap;
+}
+
+.tt-hero__word[data-word='forest'] {
+  transform: translateY(110%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tt-hero__word[data-word='forest'] {
+    transform: none;
+    opacity: 0;
+  }
 }
 
 .tt-hero__line {
   max-width: 40ch;
-  color: var(--color-muted);
+  color: color-mix(in srgb, #d9e6e2 calc(var(--forest) * 100%), var(--color-muted));
 }
